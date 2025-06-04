@@ -1,5 +1,8 @@
 {
   "text.autoconfig.elements-utils.title": "Elements Utils Config",
+  "text.autoconfig.elements-utils.option.baseDisplay": "Player Base Border",
+  "text.autoconfig.elements-utils.option.baseDisplay.show": "Show Player Base Border",
+  "text.autoconfig.elements-utils.option.baseDisplay.playerNames": "List of other Player Names",
   "text.autoconfig.elements-utils.option.moonPhaseDisplay": "Moon Phase Display",
   "text.autoconfig.elements-utils.option.moonPhaseDisplay.show": "Show Moon Phase Display",
   "text.autoconfig.elements-utils.option.moonPhaseDisplay.position": "Moon Phase Display Position"

@@ -18,8 +18,9 @@ public class MoonPhaseDisplay {
             if (!ModConfig.getConfig().moonPhaseDisplay.show) return;
 
             MinecraftClient client = MinecraftClient.getInstance();
+            if (client.player == null || client.world == null) return;
             ClientWorld world = client.world;
-            if (world == null) return;
+            
             MoonPhase moonPhase = MoonPhase.fromId(world.getMoonPhase());
             if (moonPhase == null) return;
 
