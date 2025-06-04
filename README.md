@@ -2,9 +2,14 @@
 
 A Utility Mod for the gamemode Elements by SparkOfPhoenix.
 
-Required Mods:
+## Features
+- Icon of the current Moon Phase in a corner of the screen
+- Green Sphere showing the Border of any Player Base
+
+## Required Mods
 - [Fabric API](https://modrinth.com/mod/fabric-api)
 - [Cloth Config](https://modrinth.com/mod/cloth-config)
 - [Mod Menu](https://modrinth.com/mod/modmenu)
 
+## Download
 See [latest Release](https://github.com/Eposs10/elements-utils/releases/latest) for download.
