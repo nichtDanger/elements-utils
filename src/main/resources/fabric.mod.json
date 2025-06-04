@@ -1,0 +1,40 @@
+{
+	"schemaVersion": 1,
+	"id": "elements-utils",
+	"version": "${version}",
+	"name": "Elements Utils",
+	"description": "Utility for Elements 3",
+	"authors": [
+		"Eposs"
+	],
+	"contact": {
+		"homepage": "https://eposs.dev/"
+	},
+	"license": "CC0-1.0",
+	"icon": "assets/elements-utils/icon.png",
+	"environment": "client",
+	"entrypoints": {
+		"main": [
+			"dev.eposs.elementsutils.ElementsUtils"
+		],
+		"client": [
+			"dev.eposs.elementsutils.ElementsUtilsClient"
+		]
+	},
+	"mixins": [
+		"elements-utils.mixins.json",
+		{
+			"config": "elements-utils.client.mixins.json",
+			"environment": "client"
+		}
+	],
+	"depends": {
+		"fabricloader": ">=0.16.14",
+		"minecraft": "~1.21.4",
+		"java": ">=21",
+		"fabric-api": "*"
+	},
+	"suggests": {
+		"another-mod": "*"
+	}
+}
