@@ -1,6 +1,7 @@
 package dev.eposs.elementsutils.util;
 
 import dev.eposs.elementsutils.ElementsUtils;
+import dev.eposs.elementsutils.config.ModConfig;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.item.ItemStack;
@@ -16,6 +17,7 @@ public class DevUtil {
 
     public static void rcd(MinecraftClient client) {
         if (client.player == null || client.world == null) return;
+        if (!ModConfig.getConfig().devUtils.enable) return;
 
         // Detect right mouse button (button 1 is right click)
         long windowHandle = MinecraftClient.getInstance().getWindow().getHandle();

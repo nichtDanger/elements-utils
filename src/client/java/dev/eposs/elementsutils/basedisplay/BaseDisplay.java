@@ -3,13 +3,18 @@ package dev.eposs.elementsutils.basedisplay;
 import dev.eposs.elementsutils.config.ModConfig;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.*;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
+import org.joml.Matrix4f;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,11 +30,12 @@ public class BaseDisplay {
         ClientWorld world = client.world;
 
         List<VillagerEntity> villagers = new ArrayList<>();
-        for (Entity entity1 : world.getEntities()) {
-            if (!(entity1 instanceof VillagerEntity villager)) continue;
+        for (Entity entity : world.getEntities()) {
+            if (!(entity instanceof VillagerEntity villager)) continue;
 
             ItemStack offHandStack = villager.getOffHandStack();
             if (offHandStack == null) continue;
+            if (offHandStack.getItem() != Items.WOODEN_SWORD) continue;
 
             Text customName = offHandStack.getCustomName();
             if (customName == null) continue;
@@ -45,46 +51,85 @@ public class BaseDisplay {
         }
 
         if (villagers.isEmpty()) return;
+
+        MatrixStack matrices = context.matrixStack();
+        assert matrices != null;
         
-        var matrices = context.matrixStack();
+        Vec3d camPos = context.camera().getPos();
+
+        int radius = 45;
+        int stacks = 4 * radius; // Number of horizontal slices (like latitude lines)
+        int sectors = 8 * radius; // Number of vertical slices (like longitude lines)
 
         for (VillagerEntity villager : villagers) {
+            Vec3d pos = villager.getPos();
+
             matrices.push();
             
-            var pos = villager.getPos();
-            Vec3d camPos = context.camera().getPos();
+            // Translate to camera-relative space
+            Vec3d target = new Vec3d(pos.x, pos.y, pos.z).subtract(camPos);
 
-            matrices.translate(pos.x - camPos.x, pos.y - camPos.y, pos.z - camPos.z);
-
-            var posMatrix = matrices.peek().getPositionMatrix();
-            var vertexConsumer = context.consumers().getBuffer(RenderLayer.getLines());
-
-            var radius = 45;
-            for (int i = 0; i < 360; i += 1) {
-                var degInRad = Math.toRadians(i);
-                var nextDegInRad = Math.toRadians(i + 1);
-
-                // Current vertex
-                float x = (float) (Math.cos(degInRad) * radius);
-                float z = (float) (Math.sin(degInRad) * radius);
-
-                // Next vertex (to connect the line)
-                float nextX = (float) (Math.cos(nextDegInRad) * radius);
-                float nextZ = (float) (Math.sin(nextDegInRad) * radius);
-
-                // Draw line segment from current to next vertex
-                vertexConsumer
-                        .vertex(posMatrix, x, 0.1f, z)
-                        .color(0, 255, 0, 255)
-                        .normal(x / radius, 0f, z / radius);
-                vertexConsumer
-                        .vertex(posMatrix, nextX, 0.1f, nextZ)
-                        .color(0, 255, 0, 255)
-                        .normal(nextX / radius, 0f, nextZ / radius);
-
-            }
+            VertexConsumerProvider.Immediate vcp = (VertexConsumerProvider.Immediate) context.consumers();
+            assert vcp != null;
+            renderSolidSphere(matrices, vcp, target, radius, stacks, sectors); // Adjust radius and segments
 
             matrices.pop();
+            vcp.draw(); // Flush
         }
     }
+
+    private static void renderSolidSphere(MatrixStack matrices, VertexConsumerProvider.Immediate vertexConsumers, Vec3d center, float radius, int stacks, int sectors) {
+        Matrix4f positionMatrix = matrices.peek().getPositionMatrix();
+        VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getEntityTranslucent(Identifier.of("textures/misc/white.png")));
+
+        for (int i = 0; i < stacks; i++) {
+            float phi1 = (float) (Math.PI * i / stacks);
+            float phi2 = (float) (Math.PI * (i + 1) / stacks);
+
+            for (int j = 0; j < sectors; j++) {
+                float theta1 = (float) (2 * Math.PI * j / sectors);
+                float theta2 = (float) (2 * Math.PI * (j + 1) / sectors);
+
+                // Vertex positions relative to center
+                float x1 = (float) (radius * Math.sin(phi1) * Math.cos(theta1));
+                float y1 = (float) (radius * Math.cos(phi1));
+                float z1 = (float) (radius * Math.sin(phi1) * Math.sin(theta1));
+
+                float x2 = (float) (radius * Math.sin(phi2) * Math.cos(theta1));
+                float y2 = (float) (radius * Math.cos(phi2));
+                float z2 = (float) (radius * Math.sin(phi2) * Math.sin(theta1));
+
+                float x3 = (float) (radius * Math.sin(phi2) * Math.cos(theta2));
+                float y3 = (float) (radius * Math.cos(phi2));
+                float z3 = (float) (radius * Math.sin(phi2) * Math.sin(theta2));
+
+                float x4 = (float) (radius * Math.sin(phi1) * Math.cos(theta2));
+                float y4 = (float) (radius * Math.cos(phi1));
+                float z4 = (float) (radius * Math.sin(phi1) * Math.sin(theta2));
+
+                // Offset to center position
+                x1 += (float) center.x; y1 += (float) center.y; z1 += (float) center.z;
+                x2 += (float) center.x; y2 += (float) center.y; z2 += (float) center.z;
+                x3 += (float) center.x; y3 += (float) center.y; z3 += (float) center.z;
+                x4 += (float) center.x; y4 += (float) center.y; z4 += (float) center.z;
+
+                // Two triangles per quad
+                vertex(vertexConsumer, positionMatrix, x1, y1, z1);
+                vertex(vertexConsumer, positionMatrix, x2, y2, z2);
+                vertex(vertexConsumer, positionMatrix, x3, y3, z3);
+                vertex(vertexConsumer, positionMatrix, x4, y4, z4);
+            }
+        }
+    }
+
+
+    private static void vertex(VertexConsumer vc, Matrix4f matrix, float x, float y, float z) {
+        vc.vertex(matrix, x, y, z)
+                .color(0, 255, 0, 128) // RGBA (green, 50% transparent)
+                .texture(0.0f, 0.0f)
+                .overlay(OverlayTexture.DEFAULT_UV)
+                .light(15728880) // Max brightness
+                .normal(0, 1, 0);
+    }
+
 }

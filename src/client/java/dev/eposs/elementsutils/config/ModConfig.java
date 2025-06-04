@@ -16,9 +16,6 @@ public class ModConfig implements ConfigData {
 
     @ConfigEntry.Gui.CollapsibleObject
     public BaseDisplayConfig baseDisplay = new BaseDisplayConfig();
-    
-    @ConfigEntry.Gui.CollapsibleObject
-    public MoonPhaseDisplayConfig moonPhaseDisplay = new MoonPhaseDisplayConfig();
 
     public static class MoonPhaseDisplayConfig {
         public boolean show = true;
@@ -31,9 +28,19 @@ public class ModConfig implements ConfigData {
             BOTTOM_RIGHT
         }
     }
+    
+    @ConfigEntry.Gui.CollapsibleObject
+    public MoonPhaseDisplayConfig moonPhaseDisplay = new MoonPhaseDisplayConfig();
 
     public static class BaseDisplayConfig {
         public boolean show = false;
         // public List<String> playerNames = List.of();
+    }
+    
+    @ConfigEntry.Gui.CollapsibleObject
+    public DevUtilsConfig devUtils = new DevUtilsConfig();
+    
+    public static class DevUtilsConfig {
+        public boolean enable = false;
     }
 }
