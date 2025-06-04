@@ -7,4 +7,4 @@ Required Mods:
 - [Cloth Config](https://modrinth.com/mod/cloth-config)
 - [Mod Menu](https://modrinth.com/mod/modmenu)
 
-See releases for download.
+See [latest Release](https://github.com/Eposs10/elements-utils/releases/latest) for download.
