@@ -13,8 +13,8 @@ import net.fabricmc.fabric.api.client.rendering.v1.HudLayerRegistrationCallback;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
-import net.minecraft.client.util.InputUtil;
-import org.apache.commons.io.filefilter.TrueFileFilter;
+import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import org.lwjgl.glfw.GLFW;
 
 public class ElementsUtilsClient implements ClientModInitializer {
@@ -35,7 +35,7 @@ public class ElementsUtilsClient implements ClientModInitializer {
     private void registerEvents() {
         HudLayerRegistrationCallback.EVENT.register(MoonPhaseDisplay::register);
         WorldRenderEvents.LAST.register(BaseDisplay::register);
-        
+
         ClientTickEvents.END_CLIENT_TICK.register(this::registerKeyEvents);
     }
 
@@ -47,7 +47,7 @@ public class ElementsUtilsClient implements ClientModInitializer {
                 GLFW.GLFW_KEY_Z,
                 category
         ));
-        
+
         devUtils = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 getKeyBindingTranslation("devUtils"),
                 GLFW.GLFW_KEY_UNKNOWN,
@@ -59,6 +59,12 @@ public class ElementsUtilsClient implements ClientModInitializer {
         while (baseDisplayToggle.wasPressed()) {
             ModConfig.getConfig().baseDisplay.show = !ModConfig.getConfig().baseDisplay.show;
             AutoConfig.getConfigHolder(ModConfig.class).save();
+            if (client.player != null && client.world != null) {
+                sendChatMessage(Text.literal("Base display is now ")
+                        .append(Text.literal(ModConfig.getConfig().baseDisplay.show ? "enabled" : "disabled")
+                                .formatted(ModConfig.getConfig().baseDisplay.show ? Formatting.GREEN : Formatting.RED))
+                );
+            }
         }
         while (devUtils.wasPressed()) {
             DevUtil.entityData(client);
@@ -67,5 +73,15 @@ public class ElementsUtilsClient implements ClientModInitializer {
 
     private String getKeyBindingTranslation(String keyBinding) {
         return "key." + ElementsUtils.MOD_ID + "." + keyBinding;
+    }
+
+    public static void sendChatMessage(Text message) {
+        MinecraftClient client = MinecraftClient.getInstance();
+        if (client.player == null || client.world == null) return;
+
+        client.player.sendMessage(Text.literal("")
+                        .append(Text.literal("[ElementsUtils] ").formatted(Formatting.GOLD))
+                        .append(message)
+                , false);
     }
 }
