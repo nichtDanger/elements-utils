@@ -19,6 +19,9 @@
 		],
 		"client": [
 			"dev.eposs.elementsutils.ElementsUtilsClient"
+		],
+		"modmenu": [
+			"dev.eposs.elementsutils.config.ModMenuIntegration"
 		]
 	},
 	"mixins": [

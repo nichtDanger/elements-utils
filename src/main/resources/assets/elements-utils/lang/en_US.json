@@ -1,0 +1,6 @@
+{
+  "text.autoconfig.elements-utils.title": "Elements Utils Config",
+  "text.autoconfig.elements-utils.option.moonPhaseDisplay": "Moon Phase Display",
+  "text.autoconfig.elements-utils.option.moonPhaseDisplay.show": "Show Moon Phase Display",
+  "text.autoconfig.elements-utils.option.moonPhaseDisplay.position": "Moon Phase Display Position"
+}
