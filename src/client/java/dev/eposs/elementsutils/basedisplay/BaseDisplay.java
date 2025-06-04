@@ -32,14 +32,16 @@ public class BaseDisplay {
         List<VillagerEntity> villagers = new ArrayList<>();
         for (Entity entity : world.getEntities()) {
             if (!(entity instanceof VillagerEntity villager)) continue;
+            
+            if (!config.devUtils.enable) {
+                ItemStack offHandStack = villager.getOffHandStack();
+                if (offHandStack == null) continue;
+                if (offHandStack.getItem() != Items.WOODEN_SWORD) continue;
 
-            ItemStack offHandStack = villager.getOffHandStack();
-            if (offHandStack == null) continue;
-            if (offHandStack.getItem() != Items.WOODEN_SWORD) continue;
-
-            Text customName = offHandStack.getCustomName();
-            if (customName == null) continue;
-
+                Text customName = offHandStack.getCustomName();
+                if (customName == null) continue;
+            };
+            
             // String baseOwnerName = customName.getString();
             //
             // List<String> playerNames = new ArrayList<>(config.baseDisplay.playerNames);

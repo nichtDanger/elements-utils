@@ -14,7 +14,7 @@ public class ModConfig implements ConfigData {
         return AutoConfig.getConfigHolder(ModConfig.class).getConfig();
     }
 
-    @ConfigEntry.Gui.CollapsibleObject
+    @ConfigEntry.Gui.TransitiveObject
     public BaseDisplayConfig baseDisplay = new BaseDisplayConfig();
 
     public static class MoonPhaseDisplayConfig {
@@ -29,7 +29,7 @@ public class ModConfig implements ConfigData {
         }
     }
     
-    @ConfigEntry.Gui.CollapsibleObject
+    @ConfigEntry.Gui.TransitiveObject
     public MoonPhaseDisplayConfig moonPhaseDisplay = new MoonPhaseDisplayConfig();
 
     public static class BaseDisplayConfig {

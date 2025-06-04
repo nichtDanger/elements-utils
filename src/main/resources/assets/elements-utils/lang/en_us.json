@@ -6,6 +6,10 @@
   "text.autoconfig.elements-utils.option.moonPhaseDisplay": "Moon Phase Display",
   "text.autoconfig.elements-utils.option.moonPhaseDisplay.show": "Show Moon Phase Display",
   "text.autoconfig.elements-utils.option.moonPhaseDisplay.position": "Moon Phase Display Position",
-  "text.autoconfig.elements-utils.option.devUtils": "Developer Utils (please ignore)",
-  "text.autoconfig.elements-utils.option.devUtils.enable": "Enabled"
+  "text.autoconfig.elements-utils.option.devUtils": "Development Utils (please ignore)",
+  "text.autoconfig.elements-utils.option.devUtils.enable": "Enabled",
+
+  "category.elements-utils.keys": "Elements Utils",
+  "key.elements-utils.baseDisplayToggle": "Toggle Base Borders",
+  "key.elements-utils.devUtils": "Dev Utils (please ignore)"
 }
