@@ -21,22 +21,15 @@ public class TimeDisplay {
 
             long timeOfDay = client.world.getTimeOfDay() % 24000L;
 
-            String texturePath;
-            if (timeOfDay > 1000L && timeOfDay < 13000L) {
-                // Day
-                texturePath = "gui/containers/day.png";
-            } else {
-                // Night
-                texturePath = "gui/containers/night.png";
-            }
-
+            String texturePath = getClockTexture(timeOfDay);
+            
             int size = 16;
 
             Position position = Position.fromConfig(ModConfig.getConfig().timeDisplay.position, client.getWindow(),
                     size, size, 0, 0);
 
             // Draw image
-            var texture = Identifier.of(ElementsUtils.MOD_ID, texturePath);
+            var texture = Identifier.of(texturePath);
             context.drawTexture(
                     identifier -> RenderLayer.getGuiTextured(texture),
                     texture,
@@ -45,5 +38,21 @@ public class TimeDisplay {
                     size, size, size, size
             );
         });
+    }
+
+    private static String getClockTexture(long time) {
+        // 00 : noon ( 6000 )
+        // 16 : night start ( 13000 )
+        // 32 : midnight ( 18000 )
+        // 48 : day start ( 1000 )
+
+        // Shift the timeline so that noon (6000) becomes position 0
+        long shifted = (time - 6000 + 24000) % 24000;
+
+        // Map the shifted value to 0-63 range
+        int id = (int) (shifted * 64 / 24000);
+        
+        // Add zero padding
+        return String.format("textures/item/clock_%02d.png", id);
     }
 }
