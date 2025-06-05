@@ -60,8 +60,8 @@ public class BaseDisplay {
         Vec3d camPos = context.camera().getPos();
 
         int radius = 45;
-        int stacks = 4 * radius; // Number of horizontal slices (like latitude lines)
-        int sectors = 8 * radius; // Number of vertical slices (like longitude lines)
+        int stacks = 32; // Number of horizontal slices (like latitude lines)
+        int sectors = 64; // Number of vertical slices (like longitude lines)
 
         for (VillagerEntity villager : villagers) {
             Vec3d pos = villager.getPos();
