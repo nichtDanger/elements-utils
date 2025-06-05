@@ -1,69 +1,51 @@
 package dev.eposs.elementsutils.rendering;
 
 import dev.eposs.elementsutils.config.ModConfig;
-import dev.eposs.elementsutils.util.Position;
 import net.minecraft.client.util.Window;
 
-import java.util.Arrays;
-
 public class ScreenPositioning {
-    public enum DisplayType {
-        MOON_PHASE, TIME
-    }
+    public static final int IMAGE_SIZE = 16;
+    public static final int GAP = 4;
 
-    public static Position getDisplayPosition(DisplayType displayType, Window window, int size) {
-        ModConfig config = ModConfig.getConfig();
-        // Get all display configurations
-        DisplayInfo[] displays = {
-                new DisplayInfo(DisplayType.MOON_PHASE, config.moonPhaseDisplay.position, size),
-                new DisplayInfo(DisplayType.TIME, config.timeDisplay.position, size),
-        };
+    public static Position getMoonPhasePosition(Window window) {
+        ModConfig.Position displayPosition = ModConfig.getConfig().displayPosition;
 
-        DisplayInfo targetDisplay = Arrays.stream(displays).filter(display -> display.type == displayType)
-                .findFirst().orElse(null);
-
-        if (targetDisplay == null) {
-            return new Position(0, 0); // Fallback
-        }
-
-        // Calculate offset based on other displays in the same position
-        int offsetX = calculateOffset(targetDisplay, displays);
-        int offsetY = 0;
-
-        return Position.fromConfig(targetDisplay.position, window, size, size, offsetX, offsetY);
-    }
-
-    private static int calculateOffset(DisplayInfo targetDisplay, DisplayInfo[] displays) {
-        int offset = 0;
-        final int GAP = 4;
-
-        for (DisplayInfo display : displays) {
-            // Skip the target display itself
-            if (display.type == targetDisplay.type) {
-                continue;
+        switch (displayPosition) {
+            case TOP_LEFT -> {
+                return new Position(0, 0);
             }
-
-            // Only consider displays in the same position
-            if (display.position != targetDisplay.position) {
-                continue;
+            case TOP_RIGHT -> {
+                return new Position(window.getScaledWidth() - IMAGE_SIZE, 0);
+            }
+            case BOTTOM_LEFT -> {
+                return new Position(0, window.getScaledHeight() - IMAGE_SIZE);
+            }
+            case BOTTOM_RIGHT -> {
+                return new Position(window.getScaledWidth() - IMAGE_SIZE, window.getScaledHeight() - IMAGE_SIZE);
             }
         }
 
-        // Add offset based on position type
-        switch (targetDisplay.position) {
-            case TOP_LEFT, BOTTOM_LEFT -> {
-                // For left positions, stack displays to the right
-                return targetDisplay.size + offset;
-            }
-            case TOP_RIGHT, BOTTOM_RIGHT -> {
-                // For right positions, stack displays to the left (negative offset)
-                return -targetDisplay.size - offset;
-            }
-        }
-
-        return offset;
+        return new Position(0, 0);
     }
 
-    private record DisplayInfo(DisplayType type, ModConfig.Position position, int size) {
+    public static Position getTimePosition(Window window) {
+        ModConfig.Position displayPosition = ModConfig.getConfig().displayPosition;
+
+        switch (displayPosition) {
+            case TOP_LEFT -> {
+                return new Position(IMAGE_SIZE + GAP, 0);
+            }
+            case TOP_RIGHT -> {
+                return new Position(window.getScaledWidth() - (IMAGE_SIZE * 2) - GAP, 0);
+            }
+            case BOTTOM_LEFT -> {
+                return new Position(IMAGE_SIZE + GAP, window.getScaledHeight() - IMAGE_SIZE);
+            }
+            case BOTTOM_RIGHT -> {
+                return new Position(window.getScaledWidth() - (IMAGE_SIZE * 2) - GAP, window.getScaledHeight() - IMAGE_SIZE);
+            }
+        }
+        
+        return new Position(0, 0);
     }
 }
