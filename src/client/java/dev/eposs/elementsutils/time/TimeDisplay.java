@@ -6,8 +6,6 @@ import dev.eposs.elementsutils.util.Position;
 import net.fabricmc.fabric.api.client.rendering.v1.IdentifiedLayer;
 import net.fabricmc.fabric.api.client.rendering.v1.LayeredDrawerWrapper;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.Font;
-import net.minecraft.text.Text;
 import net.minecraft.util.Colors;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
@@ -24,22 +22,25 @@ public class TimeDisplay {
             long timeOfDay = client.world.getTimeOfDay() % 24000L;
 
             String timeText;
+            int color;
             if (timeOfDay > 1000L && timeOfDay < 13000L) {
                 // Day
-                timeText = "Day";
+                timeText = "☀";
+                color = Colors.YELLOW;
             } else {
                 // Night
-                timeText = "Night";
+                timeText = "🌙";
+                color = Colors.BLUE;
             }
 
-            Position position = Position.fromConfig(ModConfig.getConfig().timeDisplay.position, client.getWindow(), 
+            Position position = Position.fromConfig(ModConfig.getConfig().timeDisplay.position, client.getWindow(),
                     32, 16, 10, 10);
 
             context.drawText(
                     client.textRenderer,
                     timeText,
                     position.x(), position.y(),
-                    Colors.WHITE, false
+                    color, false
             );
         });
     }
