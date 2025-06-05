@@ -2,42 +2,22 @@ package dev.eposs.elementsutils.moonphase;
 
 import dev.eposs.elementsutils.ElementsUtils;
 import dev.eposs.elementsutils.config.ModConfig;
-import dev.eposs.elementsutils.util.Position;
-import net.fabricmc.fabric.api.client.rendering.v1.IdentifiedLayer;
-import net.fabricmc.fabric.api.client.rendering.v1.LayeredDrawerWrapper;
+import dev.eposs.elementsutils.rendering.RenderData;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.Identifier;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class MoonPhaseDisplay {
 
-    public static void register(@NotNull LayeredDrawerWrapper layeredDrawer) {
-        layeredDrawer.attachLayerAfter(IdentifiedLayer.MISC_OVERLAYS, Identifier.of(ElementsUtils.MOD_ID, "moonphase_layer_after_misc_overlays"), (context, tickCounter) -> {
-            if (!ModConfig.getConfig().moonPhaseDisplay.show) return;
+    public static @Nullable RenderData getRenderData(MinecraftClient client) {
+        if (!ModConfig.getConfig().showMoonPhaseDisplay) return null;
 
-            MinecraftClient client = MinecraftClient.getInstance();
-            if (client.player == null || client.world == null) return;
-            ClientWorld world = client.world;
+        assert client.world != null;
+        MoonPhase moonPhase = MoonPhase.fromId(client.world.getMoonPhase());
+        if (moonPhase == null) return null;
 
-            MoonPhase moonPhase = MoonPhase.fromId(world.getMoonPhase());
-            if (moonPhase == null) return;
+        var texture = Identifier.of(ElementsUtils.MOD_ID, moonPhase.getTexturePath());
 
-            int size = 16;
-
-            Position position = Position.fromConfig(ModConfig.getConfig().moonPhaseDisplay.position, client.getWindow(),
-                    size, size, 0, 0);
-
-            // Draw image
-            var texture = Identifier.of(ElementsUtils.MOD_ID, moonPhase.getTexturePath());
-            context.drawTexture(
-                    identifier -> RenderLayer.getGuiTextured(texture),
-                    texture,
-                    position.x(), position.y(),
-                    0.0f, 0.0f,
-                    size, size, size, size
-            );
-        });
+        return new RenderData(texture, 16);
     }
 }

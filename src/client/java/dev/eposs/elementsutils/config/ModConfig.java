@@ -13,35 +13,15 @@ public class ModConfig implements ConfigData {
     }
 
 
-    @ConfigEntry.Gui.TransitiveObject
-    public BaseDisplayConfig baseDisplay = new BaseDisplayConfig();
+    public boolean showMoonPhaseDisplay = true;
+    public boolean showTimeDisplay = true;
+    public Position displayPosition = Position.BOTTOM_RIGHT;
 
-    @ConfigEntry.Gui.TransitiveObject
-    public MoonPhaseDisplayConfig moonPhaseDisplay = new MoonPhaseDisplayConfig();
-    
-    @ConfigEntry.Gui.TransitiveObject
-    public TimeDisplayConfig timeDisplay = new TimeDisplayConfig();
+    public boolean showBaseDisplay = false;
 
     @ConfigEntry.Gui.CollapsibleObject
     public DevUtilsConfig devUtils = new DevUtilsConfig();
 
-
-    public static class BaseDisplayConfig {
-        public boolean show = false;
-        // public List<String> playerNames = List.of();
-    }
-
-    public static class MoonPhaseDisplayConfig {
-        public boolean show = true;
-        public Position position = Position.BOTTOM_RIGHT;
-
-    }
-    
-    public static class TimeDisplayConfig {
-        public boolean show = true;
-        public Position position = Position.TOP_RIGHT;
-    }
-    
     public static class DevUtilsConfig {
         public boolean enable = false;
     }
