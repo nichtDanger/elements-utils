@@ -2,8 +2,7 @@ package dev.eposs.elementsutils;
 
 import dev.eposs.elementsutils.basedisplay.BaseDisplay;
 import dev.eposs.elementsutils.config.ModConfig;
-import dev.eposs.elementsutils.moonphase.MoonPhaseDisplay;
-import dev.eposs.elementsutils.time.TimeDisplay;
+import dev.eposs.elementsutils.rendering.ScreenRendering;
 import dev.eposs.elementsutils.util.DevUtil;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.Toml4jConfigSerializer;
@@ -34,8 +33,7 @@ public class ElementsUtilsClient implements ClientModInitializer {
     }
 
     private void registerEvents() {
-        HudLayerRegistrationCallback.EVENT.register(MoonPhaseDisplay::register);
-        HudLayerRegistrationCallback.EVENT.register(TimeDisplay::register);
+        HudLayerRegistrationCallback.EVENT.register(ScreenRendering::register);
 
         WorldRenderEvents.LAST.register(BaseDisplay::register);
 
@@ -60,14 +58,7 @@ public class ElementsUtilsClient implements ClientModInitializer {
 
     private void registerKeyEvents(MinecraftClient client) {
         while (baseDisplayToggle.wasPressed()) {
-            ModConfig.getConfig().baseDisplay.show = !ModConfig.getConfig().baseDisplay.show;
-            AutoConfig.getConfigHolder(ModConfig.class).save();
-            if (client.player != null && client.world != null) {
-                sendChatMessage(Text.literal("Base display is now ")
-                        .append(Text.literal(ModConfig.getConfig().baseDisplay.show ? "enabled" : "disabled")
-                                .formatted(ModConfig.getConfig().baseDisplay.show ? Formatting.GREEN : Formatting.RED))
-                );
-            }
+            BaseDisplay.toggleDisplay(client);
         }
         while (devUtils.wasPressed()) {
             DevUtil.entityData(client);
@@ -76,15 +67,5 @@ public class ElementsUtilsClient implements ClientModInitializer {
 
     private String getKeyBindingTranslation(String keyBinding) {
         return "key." + ElementsUtils.MOD_ID + "." + keyBinding;
-    }
-
-    public static void sendChatMessage(Text message) {
-        MinecraftClient client = MinecraftClient.getInstance();
-        if (client.player == null || client.world == null) return;
-
-        client.player.sendMessage(Text.literal("")
-                        .append(Text.literal("[ElementsUtils] ").formatted(Formatting.GOLD))
-                        .append(message)
-                , false);
     }
 }

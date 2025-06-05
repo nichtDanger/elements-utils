@@ -1,44 +1,24 @@
 package dev.eposs.elementsutils.time;
 
-import dev.eposs.elementsutils.ElementsUtils;
 import dev.eposs.elementsutils.config.ModConfig;
-import dev.eposs.elementsutils.util.Position;
-import net.fabricmc.fabric.api.client.rendering.v1.IdentifiedLayer;
-import net.fabricmc.fabric.api.client.rendering.v1.LayeredDrawerWrapper;
+import dev.eposs.elementsutils.rendering.RenderData;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.RenderLayer;
 import net.minecraft.util.Identifier;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class TimeDisplay {
 
-    public static void register(@NotNull LayeredDrawerWrapper layeredDrawer) {
-        layeredDrawer.attachLayerAfter(IdentifiedLayer.MISC_OVERLAYS, Identifier.of(ElementsUtils.MOD_ID, "time_layer_after_misc_overlays"), (context, tickCounter) -> {
-            if (!ModConfig.getConfig().timeDisplay.show) return;
+    public static @Nullable RenderData getRenderData(MinecraftClient client) {
+        if (!ModConfig.getConfig().showTimeDisplay) return null;
 
-            MinecraftClient client = MinecraftClient.getInstance();
-            if (client.player == null || client.world == null) return;
+        assert client.world != null;
+        long timeOfDay = client.world.getTimeOfDay() % 24000L;
 
-            long timeOfDay = client.world.getTimeOfDay() % 24000L;
+        String texturePath = getClockTexture(timeOfDay);
 
-            String texturePath = getClockTexture(timeOfDay);
-            
-            int size = 16;
+        var texture = Identifier.of(texturePath);
 
-            // Position position = Position.fromConfig(ModConfig.getConfig().timeDisplay.position, client.getWindow(),
-            //         size, size, 0, 0);
-            Position position = Position.getDisplayPosition(Position.DisplayType.TIME, client.getWindow(), size);
-
-            // Draw image
-            var texture = Identifier.of(texturePath);
-            context.drawTexture(
-                    identifier -> RenderLayer.getGuiTextured(texture),
-                    texture,
-                    position.x(), position.y(),
-                    0.0f, 0.0f,
-                    size, size, size, size
-            );
-        });
+        return new RenderData(texture, 16);
     }
 
     private static String getClockTexture(long time) {
@@ -52,7 +32,7 @@ public class TimeDisplay {
 
         // Map the shifted value to 0-63 range
         int id = (int) (shifted * 64 / 24000);
-        
+
         // Add zero padding
         return String.format("textures/item/clock_%02d.png", id);
     }

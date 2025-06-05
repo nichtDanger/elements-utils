@@ -1,6 +1,8 @@
 package dev.eposs.elementsutils.basedisplay;
 
 import dev.eposs.elementsutils.config.ModConfig;
+import dev.eposs.elementsutils.util.Util;
+import me.shedaniel.autoconfig.AutoConfig;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.*;
@@ -11,18 +13,32 @@ import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
+import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class BaseDisplay {
+    public static void toggleDisplay(@NotNull MinecraftClient client) {
+        if (client.player == null || client.world == null) return;
+
+        ModConfig.getConfig().showBaseDisplay = !ModConfig.getConfig().showBaseDisplay;
+        AutoConfig.getConfigHolder(ModConfig.class).save();
+        
+        Util.sendChatMessage(Text.literal("Base display is now ")
+                .append(Text.literal(ModConfig.getConfig().showBaseDisplay ? "enabled" : "disabled")
+                        .formatted(ModConfig.getConfig().showBaseDisplay ? Formatting.GREEN : Formatting.RED))
+        );
+    }
+    
     public static void register(WorldRenderContext context) {
         ModConfig config = ModConfig.getConfig();
-        if (!config.baseDisplay.show) return;
+        if (!config.showBaseDisplay) return;
 
         MinecraftClient client = MinecraftClient.getInstance();
         if (client.player == null || client.world == null) return;
