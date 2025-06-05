@@ -2,11 +2,11 @@ package dev.eposs.elementsutils.moonphase;
 
 import dev.eposs.elementsutils.ElementsUtils;
 import dev.eposs.elementsutils.config.ModConfig;
+import dev.eposs.elementsutils.util.Position;
 import net.fabricmc.fabric.api.client.rendering.v1.IdentifiedLayer;
 import net.fabricmc.fabric.api.client.rendering.v1.LayeredDrawerWrapper;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.util.Window;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
@@ -20,43 +20,24 @@ public class MoonPhaseDisplay {
             MinecraftClient client = MinecraftClient.getInstance();
             if (client.player == null || client.world == null) return;
             ClientWorld world = client.world;
-            
+
             MoonPhase moonPhase = MoonPhase.fromId(world.getMoonPhase());
             if (moonPhase == null) return;
 
-            Position position = getPosition(ModConfig.getConfig().moonPhaseDisplay.position, client.getWindow());
+            int size = 16;
+
+            Position position = Position.fromConfig(ModConfig.getConfig().moonPhaseDisplay.position, client.getWindow(),
+                    size, size, 0, 0);
 
             // Draw image
             var texture = Identifier.of(ElementsUtils.MOD_ID, moonPhase.getTexturePath());
             context.drawTexture(
                     identifier -> RenderLayer.getGuiTextured(texture),
                     texture,
-                    position.x, position.y,
+                    position.x(), position.y(),
                     0.0f, 0.0f,
-                    16, 16,
-                    16, 16
+                    size, size, size, size
             );
         });
-    }
-
-    private record Position(int x, int y) {
-    }
-
-    private static Position getPosition(ModConfig.MoonPhaseDisplayConfig.Position  position, Window window) {
-        switch (position) {
-            case TOP_LEFT -> {
-                return new Position(0, 0);
-            }
-            case TOP_RIGHT -> {
-                return new Position(window.getScaledWidth() - 16, 0);
-            }
-            case BOTTOM_LEFT -> {
-                return new Position(0, window.getScaledHeight() - 16);
-            }
-            default -> {
-                // also BOTTOM_RIGHT
-                return new Position(window.getScaledWidth() - 16, window.getScaledHeight() - 16);
-            }
-        }
     }
 }

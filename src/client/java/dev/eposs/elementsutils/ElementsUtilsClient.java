@@ -3,6 +3,7 @@ package dev.eposs.elementsutils;
 import dev.eposs.elementsutils.basedisplay.BaseDisplay;
 import dev.eposs.elementsutils.config.ModConfig;
 import dev.eposs.elementsutils.moonphase.MoonPhaseDisplay;
+import dev.eposs.elementsutils.time.TimeDisplay;
 import dev.eposs.elementsutils.util.DevUtil;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.Toml4jConfigSerializer;
@@ -34,6 +35,8 @@ public class ElementsUtilsClient implements ClientModInitializer {
 
     private void registerEvents() {
         HudLayerRegistrationCallback.EVENT.register(MoonPhaseDisplay::register);
+        HudLayerRegistrationCallback.EVENT.register(TimeDisplay::register);
+
         WorldRenderEvents.LAST.register(BaseDisplay::register);
 
         ClientTickEvents.END_CLIENT_TICK.register(this::registerKeyEvents);

@@ -1,11 +1,18 @@
 {
   "text.autoconfig.elements-utils.title": "Elements Utils Config",
+  
   "text.autoconfig.elements-utils.option.baseDisplay": "Player Base Border",
   "text.autoconfig.elements-utils.option.baseDisplay.show": "Show Player Base Border",
   "text.autoconfig.elements-utils.option.baseDisplay.playerNames": "List of other Player Names",
+  
   "text.autoconfig.elements-utils.option.moonPhaseDisplay": "Moon Phase Display",
   "text.autoconfig.elements-utils.option.moonPhaseDisplay.show": "Show Moon Phase Display",
   "text.autoconfig.elements-utils.option.moonPhaseDisplay.position": "Moon Phase Display Position",
+  
+  "text.autoconfig.elements-utils.option.timeDisplay": "Time Display",
+  "text.autoconfig.elements-utils.option.timeDisplay.show": "Show Time Display",
+  "text.autoconfig.elements-utils.option.timeDisplay.position": "Time Display Position",
+  
   "text.autoconfig.elements-utils.option.devUtils": "Development Utils (please ignore)",
   "text.autoconfig.elements-utils.option.devUtils.enable": "Enabled",
 
