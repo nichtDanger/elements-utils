@@ -6,7 +6,7 @@ import dev.eposs.elementsutils.util.Position;
 import net.fabricmc.fabric.api.client.rendering.v1.IdentifiedLayer;
 import net.fabricmc.fabric.api.client.rendering.v1.LayeredDrawerWrapper;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.util.Colors;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 
@@ -21,26 +21,28 @@ public class TimeDisplay {
 
             long timeOfDay = client.world.getTimeOfDay() % 24000L;
 
-            String timeText;
-            int color;
+            String texturePath;
             if (timeOfDay > 1000L && timeOfDay < 13000L) {
                 // Day
-                timeText = "☀";
-                color = Colors.YELLOW;
+                texturePath = "gui/containers/day.png";
             } else {
                 // Night
-                timeText = "🌙";
-                color = Colors.BLUE;
+                texturePath = "gui/containers/night.png";
             }
 
-            Position position = Position.fromConfig(ModConfig.getConfig().timeDisplay.position, client.getWindow(),
-                    32, 16, 10, 10);
+            int size = 16;
 
-            context.drawText(
-                    client.textRenderer,
-                    timeText,
+            Position position = Position.fromConfig(ModConfig.getConfig().timeDisplay.position, client.getWindow(),
+                    size, size, 0, 0);
+
+            // Draw image
+            var texture = Identifier.of(ElementsUtils.MOD_ID, texturePath);
+            context.drawTexture(
+                    identifier -> RenderLayer.getGuiTextured(texture),
+                    texture,
                     position.x(), position.y(),
-                    color, false
+                    0.0f, 0.0f,
+                    size, size, size, size
             );
         });
     }
