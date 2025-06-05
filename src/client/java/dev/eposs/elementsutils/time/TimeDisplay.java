@@ -25,8 +25,9 @@ public class TimeDisplay {
             
             int size = 16;
 
-            Position position = Position.fromConfig(ModConfig.getConfig().timeDisplay.position, client.getWindow(),
-                    size, size, 0, 0);
+            // Position position = Position.fromConfig(ModConfig.getConfig().timeDisplay.position, client.getWindow(),
+            //         size, size, 0, 0);
+            Position position = Position.getDisplayPosition(Position.DisplayType.TIME, client.getWindow(), size);
 
             // Draw image
             var texture = Identifier.of(texturePath);

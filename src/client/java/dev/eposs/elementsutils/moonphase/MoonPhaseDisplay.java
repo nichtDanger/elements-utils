@@ -26,8 +26,9 @@ public class MoonPhaseDisplay {
 
             int size = 16;
 
-            Position position = Position.fromConfig(ModConfig.getConfig().moonPhaseDisplay.position, client.getWindow(),
-                    size, size, 0, 0);
+            // Position position = Position.fromConfig(ModConfig.getConfig().moonPhaseDisplay.position, client.getWindow(),
+            //         size, size, 0, 0);
+            Position position = Position.getDisplayPosition(Position.DisplayType.MOON_PHASE, client.getWindow(), size);
 
             // Draw image
             var texture = Identifier.of(ElementsUtils.MOD_ID, moonPhase.getTexturePath());
