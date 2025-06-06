@@ -62,11 +62,11 @@ public class BossTimerDisplay {
         
         long hours = duration.toHours();
         
-        if (hours > 36 && hours < 48) {
+        if (hours >= 36 && hours < 48) {
             return Formatting.YELLOW;
         }
         
-        if (hours > 48) {
+        if (hours >= 48) {
             return Formatting.RED;
         }
         
