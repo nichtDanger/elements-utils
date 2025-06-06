@@ -5,7 +5,11 @@
   "text.autoconfig.elements-utils.option.showTimeDisplay": "Show Time Display",
   "text.autoconfig.elements-utils.option.displayPosition": "Display Position",
   
-  "text.autoconfig.elements-utils.option.showBossTimers": "Show Dungeon Boss Death Times",
+  "text.autoconfig.elements-utils.option.bossTimer": "Dungeon Boss Death Times",
+  "text.autoconfig.elements-utils.option.bossTimer.show": "Show Dungeon Boss Death Times",
+  "text.autoconfig.elements-utils.option.bossTimer.timeFormat": "Time Format",
+  "text.autoconfig.elements-utils.option.bossTimer.colorBossNames": "Show colored Boss Names",
+  "text.autoconfig.elements-utils.option.bossTimer.colorTime": "Show colored Time",
   
   "text.autoconfig.elements-utils.option.showBaseDisplay": "Show Player Base Borders",
   

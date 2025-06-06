@@ -16,9 +16,22 @@ public class ModConfig implements ConfigData {
     public boolean showMoonPhaseDisplay = true;
     public boolean showTimeDisplay = true;
     public Position displayPosition = Position.BOTTOM_RIGHT;
-
-    public boolean showBossTimers = true;
     
+    @ConfigEntry.Gui.CollapsibleObject
+    public BossTimerConfig bossTimer = new BossTimerConfig();
+
+    public static class BossTimerConfig {
+        public boolean show = true;
+        public TimeFormat timeFormat = TimeFormat.RELATIVE;
+        public boolean colorBossNames = true;
+        public boolean colorTime = true;
+
+        public enum TimeFormat {
+            RELATIVE,
+            ABSOLUTE,
+        }
+    }
+
     public boolean showBaseDisplay = false;
 
     @ConfigEntry.Gui.CollapsibleObject

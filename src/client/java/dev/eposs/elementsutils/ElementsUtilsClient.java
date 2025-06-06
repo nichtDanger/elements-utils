@@ -31,8 +31,8 @@ public class ElementsUtilsClient implements ClientModInitializer {
 
         registerKeyBinding();
         registerEvents();
-
-        BossTimerData.updateData();
+        
+        BossTimerData.startUpdateTimers();
     }
 
     private void registerEvents() {

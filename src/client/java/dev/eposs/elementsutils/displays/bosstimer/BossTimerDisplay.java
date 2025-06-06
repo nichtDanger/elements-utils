@@ -1,7 +1,6 @@
 package dev.eposs.elementsutils.displays.bosstimer;
 
 import dev.eposs.elementsutils.config.ModConfig;
-import dev.eposs.elementsutils.util.Util;
 import me.shedaniel.autoconfig.AutoConfig;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
@@ -10,39 +9,96 @@ import net.minecraft.util.Colors;
 import net.minecraft.util.Formatting;
 import org.jetbrains.annotations.NotNull;
 
+import java.time.Duration;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
+import java.time.temporal.ChronoUnit;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class BossTimerDisplay {
     public static void toggleDisplay(@NotNull MinecraftClient client) {
         if (client.player == null || client.world == null) return;
 
-        ModConfig.getConfig().showBossTimers = !ModConfig.getConfig().showBossTimers;
+        ModConfig.getConfig().bossTimer.show = !ModConfig.getConfig().bossTimer.show;
         AutoConfig.getConfigHolder(ModConfig.class).save();
-        
-        if (ModConfig.getConfig().showBossTimers) {
+
+        if (ModConfig.getConfig().bossTimer.show) {
             BossTimerData.updateData();
         }
     }
 
     public static void render(DrawContext context, MinecraftClient client) {
-        if (!ModConfig.getConfig().showBossTimers) return;
+        ModConfig.BossTimerConfig config = ModConfig.getConfig().bossTimer;
+        if (!config.show) return;
 
         BossTimerData timerData = BossTimerData.getInstance();
 
         drawText(client, context, 0, Text.literal("Dungeon Boss Death Time:").formatted(Formatting.UNDERLINE));
-        drawText(client, context, 1, formattedText("Axolotl", Formatting.LIGHT_PURPLE, timerData.getAxolotl()));
-        drawText(client, context, 2, formattedText("Zombie", Formatting.GREEN, timerData.getZombie()));
-        drawText(client, context, 3, formattedText("Spider", Formatting.DARK_GRAY, timerData.getSpider()));
-        drawText(client, context, 4, formattedText("Bogged", Formatting.DARK_GREEN, timerData.getBogged()));
-        drawText(client, context, 5, formattedText("Piglin", Formatting.RED, timerData.getPiglin()));
+        drawText(client, context, 1, formattedText("Axolotl", Formatting.LIGHT_PURPLE, timerData.getAxolotl(), config));
+        drawText(client, context, 2, formattedText("Zombie", Formatting.GREEN, timerData.getZombie(), config));
+        drawText(client, context, 3, formattedText("Spider", Formatting.DARK_GRAY, timerData.getSpider(), config));
+        drawText(client, context, 4, formattedText("Bogged", Formatting.DARK_GREEN, timerData.getBogged(), config));
+        drawText(client, context, 5, formattedText("Piglin", Formatting.RED, timerData.getPiglin(), config));
     }
 
-    private static Text formattedText(String name, Formatting nameColor, ZonedDateTime time) {
+    private static Text formattedText(String name, Formatting nameColor, ZonedDateTime time, ModConfig.BossTimerConfig config) {
         return Text.literal("")
-                .append(Text.literal(name + ": ").formatted(nameColor))
-                .append(time == null ? "unknown" : time.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT)));
+                .append(Text.literal(name + ": ").formatted(config.colorBossNames ? nameColor : Formatting.WHITE))
+                .append(time == null ? "unknown" :
+                        config.timeFormat == ModConfig.BossTimerConfig.TimeFormat.RELATIVE
+                                ? toRelativeTimeString(time)
+                                : time.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT)))
+                .formatted(config.colorTime ? getTimeColor(time) : Formatting.WHITE);
+    }
+
+    private static Formatting getTimeColor(ZonedDateTime dateTime) {
+        if (dateTime == null) return Formatting.WHITE;
+        
+        Duration duration = getDuration(dateTime);
+        
+        if (duration.isNegative()) return Formatting.WHITE;
+        
+        long hours = duration.toHours();
+        
+        if (hours > 36 && hours < 48) {
+            return Formatting.YELLOW;
+        }
+        
+        if (hours > 48) {
+            return Formatting.RED;
+        }
+        
+        return Formatting.GREEN;
+    }
+
+    private static String toRelativeTimeString(@NotNull ZonedDateTime dateTime) {
+        Duration duration = getDuration(dateTime);
+
+        if (duration.isNegative()) {
+            return "in the future";
+        }
+
+        long days = duration.toDays();
+        duration = duration.minus(days, ChronoUnit.DAYS);
+        long hours = duration.toHours();
+        duration = duration.minus(hours, ChronoUnit.HOURS);
+        long minutes = duration.toMinutes();
+
+        StringBuilder sb = new StringBuilder();
+        if (days > 0) {
+            sb.append(days).append("d ");
+        }
+        if (hours > 0 || days > 0) {
+            sb.append(hours).append("h ");
+        }
+        if (days == 0 && hours == 0) {
+            sb.append(minutes).append("m ");
+        }
+
+        sb.append("ago");
+        return sb.toString().trim();
     }
 
     private static void drawText(MinecraftClient client, DrawContext context, int line, Text text) {
@@ -53,5 +109,10 @@ public class BossTimerDisplay {
                 4, (client.getWindow().getScaledHeight() / 2) - (lineHeight * 3) + (lineHeight * line),
                 Colors.WHITE, false
         );
+    }
+    
+    private static Duration getDuration(@NotNull ZonedDateTime dateTime) {
+        ZonedDateTime now = ZonedDateTime.now();
+        return Duration.between(dateTime, now);
     }
 }
