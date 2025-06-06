@@ -45,7 +45,7 @@ public class ScreenPositioning {
                 return new Position(window.getScaledWidth() - (IMAGE_SIZE * 2) - GAP, window.getScaledHeight() - IMAGE_SIZE);
             }
         }
-        
+
         return new Position(0, 0);
     }
 }

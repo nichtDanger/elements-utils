@@ -1,4 +1,4 @@
-package dev.eposs.elementsutils.moonphase;
+package dev.eposs.elementsutils.displays.moonphase;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -12,7 +12,7 @@ public enum MoonPhase {
     WAXING_CRESCENT("waxing-crescent-moon.png"),
     FIRST_QUARTER("first-quarter-moon.png"),
     WAXING_GIBBOUS("waxing-gibbous-moon.png");
-    
+
     private final String texture;
 
     MoonPhase(String texture) {

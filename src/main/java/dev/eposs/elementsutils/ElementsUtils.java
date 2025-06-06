@@ -1,6 +1,5 @@
 package dev.eposs.elementsutils;
 
-import me.shedaniel.autoconfig.AutoConfig;
 import net.fabricmc.api.ModInitializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

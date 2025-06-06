@@ -17,6 +17,8 @@ public class ModConfig implements ConfigData {
     public boolean showTimeDisplay = true;
     public Position displayPosition = Position.BOTTOM_RIGHT;
 
+    public boolean showBossTimers = true;
+    
     public boolean showBaseDisplay = false;
 
     @ConfigEntry.Gui.CollapsibleObject

@@ -1,13 +1,13 @@
 package dev.eposs.elementsutils.rendering;
 
 import dev.eposs.elementsutils.ElementsUtils;
-import dev.eposs.elementsutils.moonphase.MoonPhaseDisplay;
-import dev.eposs.elementsutils.time.TimeDisplay;
+import dev.eposs.elementsutils.displays.bosstimer.BossTimerDisplay;
+import dev.eposs.elementsutils.displays.moonphase.MoonPhaseDisplay;
+import dev.eposs.elementsutils.displays.time.TimeDisplay;
 import net.fabricmc.fabric.api.client.rendering.v1.IdentifiedLayer;
 import net.fabricmc.fabric.api.client.rendering.v1.LayeredDrawerWrapper;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
@@ -26,32 +26,8 @@ public class ScreenRendering {
         MinecraftClient client = MinecraftClient.getInstance();
         if (client.player == null || client.world == null) return;
 
-        RenderData moonPhaseRenderData = MoonPhaseDisplay.getRenderData(client);
-        if (moonPhaseRenderData != null) {
-            Position position = ScreenPositioning.getMoonPhasePosition(client.getWindow());
-
-            context.drawTexture(
-                    identifier -> RenderLayer.getGuiTextured(moonPhaseRenderData.texture()),
-                    moonPhaseRenderData.texture(),
-                    position.x(), position.y(),
-                    0.0f, 0.0f,
-                    moonPhaseRenderData.size(), moonPhaseRenderData.size(),
-                    moonPhaseRenderData.size(), moonPhaseRenderData.size()
-            );
-        }
-
-        RenderData timeRenderData = TimeDisplay.getRenderData(client);
-        if (timeRenderData != null) {
-            Position position = ScreenPositioning.getTimePosition(client.getWindow());
-
-            context.drawTexture(
-                    identifier -> RenderLayer.getGuiTextured(timeRenderData.texture()),
-                    timeRenderData.texture(),
-                    position.x(), position.y(),
-                    0.0f, 0.0f,
-                    timeRenderData.size(), timeRenderData.size(),
-                    timeRenderData.size(), timeRenderData.size()
-            );
-        }
+        MoonPhaseDisplay.render(context, client);
+        TimeDisplay.render(context, client);
+        BossTimerDisplay.render(context, client);
     }
 }

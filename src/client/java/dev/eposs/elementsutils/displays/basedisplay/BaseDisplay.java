@@ -1,4 +1,4 @@
-package dev.eposs.elementsutils.basedisplay;
+package dev.eposs.elementsutils.displays.basedisplay;
 
 import dev.eposs.elementsutils.config.ModConfig;
 import dev.eposs.elementsutils.util.Util;
@@ -15,7 +15,6 @@ import net.minecraft.item.Items;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
@@ -56,7 +55,7 @@ public class BaseDisplay {
 
                 Text customName = offHandStack.getCustomName();
                 if (customName == null) continue;
-            };
+            }
             
             // String baseOwnerName = customName.getString();
             //

@@ -1,15 +1,17 @@
-package dev.eposs.elementsutils.time;
+package dev.eposs.elementsutils.displays.time;
 
 import dev.eposs.elementsutils.config.ModConfig;
-import dev.eposs.elementsutils.rendering.RenderData;
+import dev.eposs.elementsutils.rendering.Position;
+import dev.eposs.elementsutils.rendering.ScreenPositioning;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.util.Identifier;
-import org.jetbrains.annotations.Nullable;
 
 public class TimeDisplay {
 
-    public static @Nullable RenderData getRenderData(MinecraftClient client) {
-        if (!ModConfig.getConfig().showTimeDisplay) return null;
+    public static void render(DrawContext context, MinecraftClient client) {
+        if (!ModConfig.getConfig().showTimeDisplay) return;
 
         assert client.world != null;
         long timeOfDay = client.world.getTimeOfDay() % 24000L;
@@ -18,7 +20,16 @@ public class TimeDisplay {
 
         var texture = Identifier.of(texturePath);
 
-        return new RenderData(texture, 16);
+        Position position = ScreenPositioning.getTimePosition(client.getWindow());
+        final int size = 16;
+
+        context.drawTexture(
+                identifier -> RenderLayer.getGuiTextured(texture),
+                texture,
+                position.x(), position.y(),
+                0.0f, 0.0f,
+                size, size, size, size
+        );
     }
 
     private static String getClockTexture(long time) {

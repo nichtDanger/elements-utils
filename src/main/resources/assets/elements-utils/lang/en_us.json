@@ -5,6 +5,8 @@
   "text.autoconfig.elements-utils.option.showTimeDisplay": "Show Time Display",
   "text.autoconfig.elements-utils.option.displayPosition": "Display Position",
   
+  "text.autoconfig.elements-utils.option.showBossTimers": "Show Dungeon Boss Death Times",
+  
   "text.autoconfig.elements-utils.option.showBaseDisplay": "Show Player Base Borders",
   
   "text.autoconfig.elements-utils.option.devUtils": "Development Utils (please ignore)",
@@ -12,5 +14,6 @@
 
   "category.elements-utils.keys": "Elements Utils",
   "key.elements-utils.baseDisplayToggle": "Toggle Base Borders",
+  "key.elements-utils.bossTimerToggle": "Toggle Boss Death Times",
   "key.elements-utils.devUtils": "Dev Utils (please ignore)"
 }

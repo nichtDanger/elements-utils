@@ -1,7 +1,9 @@
 package dev.eposs.elementsutils;
 
-import dev.eposs.elementsutils.basedisplay.BaseDisplay;
 import dev.eposs.elementsutils.config.ModConfig;
+import dev.eposs.elementsutils.displays.basedisplay.BaseDisplay;
+import dev.eposs.elementsutils.displays.bosstimer.BossTimerData;
+import dev.eposs.elementsutils.displays.bosstimer.BossTimerDisplay;
 import dev.eposs.elementsutils.rendering.ScreenRendering;
 import dev.eposs.elementsutils.util.DevUtil;
 import me.shedaniel.autoconfig.AutoConfig;
@@ -13,12 +15,11 @@ import net.fabricmc.fabric.api.client.rendering.v1.HudLayerRegistrationCallback;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
 import org.lwjgl.glfw.GLFW;
 
 public class ElementsUtilsClient implements ClientModInitializer {
     private static KeyBinding baseDisplayToggle;
+    private static KeyBinding bossTimerToggle;
     private static KeyBinding devUtils;
 
     @Override
@@ -30,6 +31,8 @@ public class ElementsUtilsClient implements ClientModInitializer {
 
         registerKeyBinding();
         registerEvents();
+
+        BossTimerData.updateData();
     }
 
     private void registerEvents() {
@@ -49,6 +52,12 @@ public class ElementsUtilsClient implements ClientModInitializer {
                 category
         ));
 
+        bossTimerToggle = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+                getKeyBindingTranslation("bossTimerToggle"),
+                GLFW.GLFW_KEY_V,
+                category
+        ));
+
         devUtils = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 getKeyBindingTranslation("devUtils"),
                 GLFW.GLFW_KEY_UNKNOWN,
@@ -59,6 +68,9 @@ public class ElementsUtilsClient implements ClientModInitializer {
     private void registerKeyEvents(MinecraftClient client) {
         while (baseDisplayToggle.wasPressed()) {
             BaseDisplay.toggleDisplay(client);
+        }
+        while (bossTimerToggle.wasPressed()) {
+            BossTimerDisplay.toggleDisplay(client);
         }
         while (devUtils.wasPressed()) {
             DevUtil.entityData(client);
