@@ -4,7 +4,7 @@ A Utility Mod for the gamemode Elements by SparkOfPhoenix.
 
 ## Features
 - Dungeon Boss Death Times
-    - Relative and abolute time
+    - Relative and absolute time
     - Colored Time and Boss Names
 - Green Sphere showing the Border of any Player Base
 - Icon of the current Moon Phase in a corner of the screen
