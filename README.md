@@ -17,3 +17,7 @@ A Utility Mod for the gamemode Elements by SparkOfPhoenix.
 
 ## Download
 See [latest Release](https://github.com/Eposs10/elements-utils/releases/latest) for download.
+
+## Updates / Feedback
+Updates: https://discord.gg/AjnHNV5Gt7  
+Feedback: Discord @eposs 
