@@ -1,7 +1,7 @@
 package dev.eposs.elementsutils;
 
 import dev.eposs.elementsutils.config.ModConfig;
-import dev.eposs.elementsutils.feature.luckydrop.LuckydropSound;
+import dev.eposs.elementsutils.feature.loot.LootSound;
 import dev.eposs.elementsutils.feature.playerbase.BaseBorderDisplay;
 import dev.eposs.elementsutils.feature.bosstimer.BossTimerData;
 import dev.eposs.elementsutils.feature.bosstimer.BossTimerDisplay;
@@ -51,7 +51,7 @@ public class ElementsUtilsClient implements ClientModInitializer {
 
         ClientTickEvents.END_CLIENT_TICK.register(this::onKeyEvent);
 
-        ClientReceiveMessageEvents.ALLOW_GAME.register(LuckydropSound::onGameMessage);
+        ClientReceiveMessageEvents.ALLOW_GAME.register(LootSound::onGameMessage);
     }
 
     private void runServerCheck(ClientPlayNetworkHandler clientPlayNetworkHandler, PacketSender packetSender, MinecraftClient minecraftClient) {

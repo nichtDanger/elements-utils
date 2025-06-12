@@ -11,6 +11,8 @@
   "text.autoconfig.elements-utils.option.bossTimer.colorBossNames": "Show colored Boss Names",
   "text.autoconfig.elements-utils.option.bossTimer.colorTime": "Show colored Time",
   
+  "text.autoconfig.elements-utils.option.playLootSound": "Play sound on Loot drop",
+  
   "text.autoconfig.elements-utils.option.showBaseDisplay": "Show Player Base Borders",
   
   "text.autoconfig.elements-utils.option.devUtils": "Development Utils (please ignore)",

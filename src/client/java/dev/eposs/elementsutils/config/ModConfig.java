@@ -46,6 +46,8 @@ public class ModConfig implements ConfigData {
         }
     }
 
+    public boolean playLootSound = true;
+    
     public boolean showBaseDisplay = false;
 
     @ConfigEntry.Gui.CollapsibleObject

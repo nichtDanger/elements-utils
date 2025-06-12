@@ -1,15 +1,21 @@
-package dev.eposs.elementsutils.feature.luckydrop;
+package dev.eposs.elementsutils.feature.loot;
 
+import dev.eposs.elementsutils.config.ModConfig;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.client.sound.SoundManager;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 
-public class LuckydropSound {
+public class LootSound {
     public static boolean onGameMessage(Text text, boolean b) {
-        if (text.contains(Text.literal("Loot:"))) playsound();
-        // TODO: Add all other loot text options
+        if (ModConfig.getConfig().playLootSound) {
+            String string = text.getString();
+            // TODO: check actual messages
+            if (string.startsWith("Loot:")) playsound();
+            if (string.startsWith("Sb-Loot:")) playsound();
+            if (string.startsWith("Pb-Loot:")) playsound();
+        }
 
         return true;
     }
