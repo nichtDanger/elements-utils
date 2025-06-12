@@ -3,7 +3,7 @@ package dev.eposs.elementsutils.api.bosstimer;
 import com.google.gson.Gson;
 import dev.eposs.elementsutils.ElementsUtils;
 import dev.eposs.elementsutils.config.ModConfig;
-import dev.eposs.elementsutils.displays.bosstimer.BossTimerData;
+import dev.eposs.elementsutils.feature.bosstimer.BossTimerData;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;

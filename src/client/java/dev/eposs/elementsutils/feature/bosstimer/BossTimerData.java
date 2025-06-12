@@ -1,4 +1,4 @@
-package dev.eposs.elementsutils.displays.bosstimer;
+package dev.eposs.elementsutils.feature.bosstimer;
 
 import dev.eposs.elementsutils.api.bosstimer.BossTimerApi;
 

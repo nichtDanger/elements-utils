@@ -1,4 +1,4 @@
-package dev.eposs.elementsutils.displays.moonphase;
+package dev.eposs.elementsutils.feature.moonphase;
 
 import dev.eposs.elementsutils.ElementsUtils;
 import dev.eposs.elementsutils.config.ModConfig;

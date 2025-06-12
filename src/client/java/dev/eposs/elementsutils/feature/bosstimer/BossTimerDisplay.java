@@ -1,7 +1,6 @@
-package dev.eposs.elementsutils.displays.bosstimer;
+package dev.eposs.elementsutils.feature.bosstimer;
 
 import dev.eposs.elementsutils.config.ModConfig;
-import me.shedaniel.autoconfig.AutoConfig;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.text.Text;
@@ -14,8 +13,6 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.time.temporal.ChronoUnit;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class BossTimerDisplay {
     public static void toggleDisplay(@NotNull MinecraftClient client) {

@@ -1,4 +1,4 @@
-package dev.eposs.elementsutils.displays.time;
+package dev.eposs.elementsutils.feature.time;
 
 import dev.eposs.elementsutils.config.ModConfig;
 import dev.eposs.elementsutils.rendering.Position;

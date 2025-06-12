@@ -1,8 +1,7 @@
-package dev.eposs.elementsutils.displays.basedisplay;
+package dev.eposs.elementsutils.feature.playerbase;
 
 import dev.eposs.elementsutils.config.ModConfig;
 import dev.eposs.elementsutils.util.Util;
-import me.shedaniel.autoconfig.AutoConfig;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.*;
@@ -22,7 +21,7 @@ import org.joml.Matrix4f;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BaseDisplay {
+public class BaseBorderDisplay {
     public static void toggleDisplay(@NotNull MinecraftClient client) {
         if (client.player == null || client.world == null) return;
 

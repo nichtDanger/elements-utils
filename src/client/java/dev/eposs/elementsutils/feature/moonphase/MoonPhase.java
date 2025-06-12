@@ -1,4 +1,4 @@
-package dev.eposs.elementsutils.displays.moonphase;
+package dev.eposs.elementsutils.feature.moonphase;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

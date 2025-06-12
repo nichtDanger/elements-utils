@@ -1,9 +1,9 @@
 package dev.eposs.elementsutils.rendering;
 
 import dev.eposs.elementsutils.ElementsUtils;
-import dev.eposs.elementsutils.displays.bosstimer.BossTimerDisplay;
-import dev.eposs.elementsutils.displays.moonphase.MoonPhaseDisplay;
-import dev.eposs.elementsutils.displays.time.TimeDisplay;
+import dev.eposs.elementsutils.feature.bosstimer.BossTimerDisplay;
+import dev.eposs.elementsutils.feature.moonphase.MoonPhaseDisplay;
+import dev.eposs.elementsutils.feature.time.TimeDisplay;
 import net.fabricmc.fabric.api.client.rendering.v1.IdentifiedLayer;
 import net.fabricmc.fabric.api.client.rendering.v1.LayeredDrawerWrapper;
 import net.minecraft.client.MinecraftClient;
