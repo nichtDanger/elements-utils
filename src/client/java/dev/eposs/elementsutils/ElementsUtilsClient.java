@@ -1,9 +1,10 @@
 package dev.eposs.elementsutils;
 
 import dev.eposs.elementsutils.config.ModConfig;
-import dev.eposs.elementsutils.displays.basedisplay.BaseDisplay;
-import dev.eposs.elementsutils.displays.bosstimer.BossTimerData;
-import dev.eposs.elementsutils.displays.bosstimer.BossTimerDisplay;
+import dev.eposs.elementsutils.feature.luckydrop.LuckydropSound;
+import dev.eposs.elementsutils.feature.playerbase.BaseBorderDisplay;
+import dev.eposs.elementsutils.feature.bosstimer.BossTimerData;
+import dev.eposs.elementsutils.feature.bosstimer.BossTimerDisplay;
 import dev.eposs.elementsutils.rendering.ScreenRendering;
 import dev.eposs.elementsutils.util.DevUtil;
 import me.shedaniel.autoconfig.AutoConfig;
@@ -11,6 +12,7 @@ import me.shedaniel.autoconfig.serializer.Toml4jConfigSerializer;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.HudLayerRegistrationCallback;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
@@ -43,11 +45,13 @@ public class ElementsUtilsClient implements ClientModInitializer {
     private void registerEvents() {
         HudLayerRegistrationCallback.EVENT.register(ScreenRendering::register);
 
-        WorldRenderEvents.LAST.register(BaseDisplay::register);
+        WorldRenderEvents.LAST.register(BaseBorderDisplay::render);
 
         ClientPlayConnectionEvents.JOIN.register(this::runServerCheck);
 
-        ClientTickEvents.END_CLIENT_TICK.register(this::registerKeyEvents);
+        ClientTickEvents.END_CLIENT_TICK.register(this::onKeyEvent);
+
+        ClientReceiveMessageEvents.ALLOW_GAME.register(LuckydropSound::onGameMessage);
     }
 
     private void runServerCheck(ClientPlayNetworkHandler clientPlayNetworkHandler, PacketSender packetSender, MinecraftClient minecraftClient) {
@@ -93,15 +97,15 @@ public class ElementsUtilsClient implements ClientModInitializer {
         ));
     }
 
-    private void registerKeyEvents(MinecraftClient client) {
+    private void onKeyEvent(MinecraftClient client) {
         while (baseDisplayToggle.wasPressed()) {
-            BaseDisplay.toggleDisplay(client);
+            BaseBorderDisplay.toggleDisplay(client);
         }
         while (bossTimerToggle.wasPressed()) {
             BossTimerDisplay.toggleDisplay(client);
         }
         while (devUtils.wasPressed()) {
-            DevUtil.entityData(client);
+            DevUtil.doSomething(client);
         }
     }
 

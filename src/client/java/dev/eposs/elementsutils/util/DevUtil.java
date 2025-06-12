@@ -10,7 +10,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.hit.EntityHitResult;
 
 public class DevUtil {
-    public static void entityData(MinecraftClient client) {
+    public static void doSomething(MinecraftClient client) {
         if (client.player == null || client.world == null) return;
         if (!ModConfig.getConfig().devUtils.enable) return;
 

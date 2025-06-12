@@ -34,7 +34,7 @@ public class BaseBorderDisplay {
         );
     }
     
-    public static void register(WorldRenderContext context) {
+    public static void render(WorldRenderContext context) {
         ModConfig config = ModConfig.getConfig();
         if (!config.showBaseDisplay) return;
 
