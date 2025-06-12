@@ -9,6 +9,7 @@ A Utility Mod for the gamemode Elements by SparkOfPhoenix.
 - Green Sphere showing the Border of any Player Base
 - Icon of the current Moon Phase in a corner of the screen
 - Clock displaying the current time
+- Sound on Loot drop
 
 ## Required Mods
 - [Fabric API](https://modrinth.com/mod/fabric-api)
