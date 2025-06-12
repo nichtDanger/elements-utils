@@ -22,7 +22,7 @@ public class BossTimerDisplay {
         if (client.player == null || client.world == null) return;
 
         ModConfig.getConfig().bossTimer.show = !ModConfig.getConfig().bossTimer.show;
-        AutoConfig.getConfigHolder(ModConfig.class).save();
+        ModConfig.save();
 
         if (ModConfig.getConfig().bossTimer.show) {
             BossTimerData.updateData();

@@ -27,7 +27,7 @@ public class BaseDisplay {
         if (client.player == null || client.world == null) return;
 
         ModConfig.getConfig().showBaseDisplay = !ModConfig.getConfig().showBaseDisplay;
-        AutoConfig.getConfigHolder(ModConfig.class).save();
+        ModConfig.save();
         
         Util.sendChatMessage(Text.literal("Base display is now ")
                 .append(Text.literal(ModConfig.getConfig().showBaseDisplay ? "enabled" : "disabled")

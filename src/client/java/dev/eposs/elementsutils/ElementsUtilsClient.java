@@ -11,10 +11,15 @@ import me.shedaniel.autoconfig.serializer.Toml4jConfigSerializer;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.HudLayerRegistrationCallback;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
+import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ClientPlayNetworkHandler;
+import net.minecraft.client.network.ServerInfo;
 import net.minecraft.client.option.KeyBinding;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.lwjgl.glfw.GLFW;
 
 public class ElementsUtilsClient implements ClientModInitializer {
@@ -31,7 +36,7 @@ public class ElementsUtilsClient implements ClientModInitializer {
 
         registerKeyBinding();
         registerEvents();
-        
+
         BossTimerData.startUpdateTimers();
     }
 
@@ -40,7 +45,30 @@ public class ElementsUtilsClient implements ClientModInitializer {
 
         WorldRenderEvents.LAST.register(BaseDisplay::register);
 
+        ClientPlayConnectionEvents.JOIN.register(this::runServerCheck);
+
         ClientTickEvents.END_CLIENT_TICK.register(this::registerKeyEvents);
+    }
+
+    private void runServerCheck(ClientPlayNetworkHandler clientPlayNetworkHandler, PacketSender packetSender, MinecraftClient minecraftClient) {
+        ServerInfo serverEntry = minecraftClient.getCurrentServerEntry();
+        if (serverEntry == null) return;
+
+        String server1 = "d2228bebe6cb6b55feb3258bc4aff39ffa41b6222a145951ba88916af1706553";
+        String server2 = "1f4492b5647f7b11ebd28bc0bcea28bddebe39d83961803c9038ece28defda70";
+        String hash = DigestUtils.sha3_256Hex(serverEntry.address);
+
+        if (hash.equals(server1)) {
+            ModConfig.getConfig().server = ModConfig.Servers.COMMUNITY_SERVER_1;
+            ModConfig.save();
+            ElementsUtils.LOGGER.info("Detected elements community server 1");
+        } else if (hash.equals(server2)) {
+            ModConfig.getConfig().server = ModConfig.Servers.COMMUNITY_SERVER_2;
+            ModConfig.save();
+            ElementsUtils.LOGGER.info("Detected elements community server 2");
+        } else {
+            ElementsUtils.LOGGER.warn("Unable to detect elements community server");
+        }
     }
 
     private void registerKeyBinding() {

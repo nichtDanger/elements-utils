@@ -2,6 +2,7 @@ package dev.eposs.elementsutils.api.bosstimer;
 
 import com.google.gson.Gson;
 import dev.eposs.elementsutils.ElementsUtils;
+import dev.eposs.elementsutils.config.ModConfig;
 import dev.eposs.elementsutils.displays.bosstimer.BossTimerData;
 import org.jetbrains.annotations.Nullable;
 
@@ -12,11 +13,20 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
 public class BossTimerApi {
-    private static final URI TIMER_URI = URI.create("https://elements-utils.eposs.dev/api/bosstimers");
+    private static final String TIMER_URI = "https://elements-utils.eposs.dev/api/bosstimers?server=$SERVER_ID";
 
     public static @Nullable BossTimerData getBossTimerData() {
+        String serverID;
+        switch (ModConfig.getConfig().server) {
+            case COMMUNITY_SERVER_1 -> serverID = "server1";
+            case COMMUNITY_SERVER_2 -> serverID = "server2";
+            default -> {
+                return null;
+            }
+        }
+
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(TIMER_URI)
+                .uri(URI.create(TIMER_URI.replace("$SERVER_ID", serverID)))
                 .GET()
                 .build();
 

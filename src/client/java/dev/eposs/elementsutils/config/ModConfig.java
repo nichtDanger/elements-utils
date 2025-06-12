@@ -11,6 +11,20 @@ public class ModConfig implements ConfigData {
     public static ModConfig getConfig() {
         return AutoConfig.getConfigHolder(ModConfig.class).getConfig();
     }
+    
+    public static void save() {
+        AutoConfig.getConfigHolder(ModConfig.class).save();
+    }
+
+
+    @ConfigEntry.Gui.Excluded
+    public Servers server = Servers.UNKNOWN;
+
+    public enum Servers {
+        UNKNOWN,
+        COMMUNITY_SERVER_1,
+        COMMUNITY_SERVER_2,
+    }
 
 
     public boolean showMoonPhaseDisplay = true;
