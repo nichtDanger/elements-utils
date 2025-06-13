@@ -8,19 +8,18 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 
 public class LootSound {
-    public static boolean onGameMessage(Text text, boolean b) {
-        if (ModConfig.getConfig().playLootSound) {
-            String string = text.getString();
-            // TODO: check actual messages
-            if (string.startsWith("Loot:")) playsound();
-            if (string.startsWith("Sb-Loot:")) playsound();
-            if (string.startsWith("Pb-Loot:")) playsound();
-        }
-
-        return true;
+    public static void onGameMessage(Text text, boolean b) {
+        if (!ModConfig.getConfig().playLootSound) return;
+        if (b) return;
+        
+        String msg = text.getString();
+        // TODO: check actual messages
+        if (msg.startsWith("Loot:")) playCoolSound();
+        if (msg.startsWith("Sb-Loot:")) playCoolSound();
+        if (msg.startsWith("Pb-Loot:")) playCoolSound();
     }
 
-    private static void playsound() {
+    private static void playCoolSound() {
         SoundManager soundManager = MinecraftClient.getInstance().getSoundManager();
         float pitch = 1.0F;
         float pitchIncrease = 0.5F;

@@ -3,6 +3,7 @@
   
   "text.autoconfig.elements-utils.option.showMoonPhaseDisplay": "Show Moon Phase Display",
   "text.autoconfig.elements-utils.option.showTimeDisplay": "Show Time Display",
+  "text.autoconfig.elements-utils.option.showPetDisplay": "Show Pet Display",
   "text.autoconfig.elements-utils.option.displayPosition": "Display Position",
   
   "text.autoconfig.elements-utils.option.bossTimer": "Dungeon Boss Death Times",

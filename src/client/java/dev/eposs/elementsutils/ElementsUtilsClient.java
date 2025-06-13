@@ -2,6 +2,7 @@ package dev.eposs.elementsutils;
 
 import dev.eposs.elementsutils.config.ModConfig;
 import dev.eposs.elementsutils.feature.loot.LootSound;
+import dev.eposs.elementsutils.feature.pet.PetDisplay;
 import dev.eposs.elementsutils.feature.playerbase.BaseBorderDisplay;
 import dev.eposs.elementsutils.feature.bosstimer.BossTimerData;
 import dev.eposs.elementsutils.feature.bosstimer.BossTimerDisplay;
@@ -21,6 +22,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.network.ServerInfo;
 import net.minecraft.client.option.KeyBinding;
+import net.minecraft.text.Text;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.lwjgl.glfw.GLFW;
 
@@ -51,7 +53,7 @@ public class ElementsUtilsClient implements ClientModInitializer {
 
         ClientTickEvents.END_CLIENT_TICK.register(this::onKeyEvent);
 
-        ClientReceiveMessageEvents.ALLOW_GAME.register(LootSound::onGameMessage);
+        ClientReceiveMessageEvents.ALLOW_GAME.register(this::onGameMessage);
     }
 
     private void runServerCheck(ClientPlayNetworkHandler clientPlayNetworkHandler, PacketSender packetSender, MinecraftClient minecraftClient) {
@@ -74,6 +76,13 @@ public class ElementsUtilsClient implements ClientModInitializer {
             ElementsUtils.LOGGER.warn("Unable to detect elements community server");
         }
     }
+
+    private boolean onGameMessage(Text text, boolean b) {
+        LootSound.onGameMessage(text, b);
+        
+        return true;
+    }
+    
 
     private void registerKeyBinding() {
         String category = "category." + ElementsUtils.MOD_ID + ".keys";
