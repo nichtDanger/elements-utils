@@ -24,7 +24,7 @@ public class MoonPhaseDisplay {
         final int size = 16;
 
         context.drawTexture(
-                identifier -> RenderLayer.getGuiTextured(texture),
+                RenderLayer::getGuiTextured,
                 texture,
                 position.x(), position.y(),
                 0.0f, 0.0f,
