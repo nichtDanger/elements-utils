@@ -26,7 +26,7 @@
 
   "elements-utils.display.pet.no_pet": "Unknown Pet",
   
-  "elements-utils.display.bosstimer.relative": "$1 ago",
+  "elements-utils.display.bosstimer.relative": "%s ago",
   
   "elements-utils.display.base.toggle": "Base display is now ",
 
