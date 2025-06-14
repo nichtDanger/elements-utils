@@ -5,6 +5,7 @@ import dev.eposs.elementsutils.api.bosstimer.BossTimerApi;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.ZonedDateTime;
+import java.util.TimeZone;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicReference;
@@ -49,30 +50,31 @@ public class BossTimerData {
 
     public ZonedDateTime getAxolotl() {
         if (axolotl == null || axolotl.isEmpty()) return null;
-        return checkIfValid(ZonedDateTime.parse(axolotl));
+        return parseTime(axolotl);
     }
 
     public ZonedDateTime getZombie() {
         if (zombie == null || zombie.isEmpty()) return null;
-        return checkIfValid(ZonedDateTime.parse(zombie));
+        return parseTime(zombie);
     }
 
     public ZonedDateTime getSpider() {
         if (spider == null || spider.isEmpty()) return null;
-        return checkIfValid(ZonedDateTime.parse(spider));
+        return parseTime(spider);
     }
 
     public ZonedDateTime getBogged() {
         if (bogged == null || bogged.isEmpty()) return null;
-        return checkIfValid(ZonedDateTime.parse(bogged));
+        return parseTime(bogged);
     }
 
     public ZonedDateTime getPiglin() {
         if (piglin == null || piglin.isEmpty()) return null;
-        return checkIfValid(ZonedDateTime.parse(piglin));
+        return parseTime(piglin);
     }
 
-    private ZonedDateTime checkIfValid(ZonedDateTime time) {
-        return time.isBefore(ZonedDateTime.ofInstant(Instant.EPOCH, time.getZone())) ? null : time;
+    private ZonedDateTime parseTime(String time) {
+        ZonedDateTime zonedDateTime = ZonedDateTime.parse(time).withZoneSameLocal(TimeZone.getDefault().toZoneId());
+        return zonedDateTime.isBefore(ZonedDateTime.ofInstant(Instant.EPOCH, zonedDateTime.getZone())) ? null : zonedDateTime;
     }
 }

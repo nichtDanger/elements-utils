@@ -87,13 +87,13 @@ public class BossTimerDisplay {
         if (days > 0) {
             sb.append(days).append("d ");
         }
-        if (hours > 0 || days > 0) {
+        if (hours > 0) {
             sb.append(hours).append("h ");
         }
-        if (days == 0 && hours == 0) {
+        if (minutes > 0) {
             sb.append(minutes).append("m ");
         }
-        
+
         return Text.translatable("elements-utils.display.bosstimer.relative", sb.toString().trim());
     }
 
