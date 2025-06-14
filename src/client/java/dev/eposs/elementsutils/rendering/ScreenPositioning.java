@@ -4,8 +4,7 @@ import dev.eposs.elementsutils.config.ModConfig;
 import net.minecraft.client.util.Window;
 
 public class ScreenPositioning {
-    // TODO: change pet width/height
-    public static final int PET_WIDTH = 64;
+    public static int PET_WIDTH = 64;
     public static final int PET_HEIGHT = 32;
     public static final int IMAGE_SIZE = 16;
     public static final int GAP = 4;

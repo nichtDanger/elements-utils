@@ -1,45 +1,109 @@
 package dev.eposs.elementsutils.feature.pet;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import dev.eposs.elementsutils.ElementsUtils;
 import dev.eposs.elementsutils.config.ModConfig;
 import dev.eposs.elementsutils.rendering.Position;
 import dev.eposs.elementsutils.rendering.ScreenPositioning;
+import dev.eposs.elementsutils.util.Util;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.ShaderProgramKeys;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.gui.screen.ingame.GenericContainerScreen;
 import net.minecraft.client.render.*;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.item.tooltip.TooltipType;
+import net.minecraft.screen.GenericContainerScreenHandler;
+import net.minecraft.screen.slot.Slot;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
+import net.minecraft.util.Colors;
 import net.minecraft.util.math.MathHelper;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 
+import java.util.List;
+
 public class PetDisplay {
+    private static ItemStack pet = ItemStack.EMPTY;
     private static int currentXP = 0;
     private static int nextLvlXP = 0;
 
-    public static void updateCurrentPetXP(Text text) {
-        String msg = text.getString();
-        if (!msg.contains("Pet: ")) return;
+    public static void updatePetXP(Text text, boolean fromTooltip) {
+        String startText = fromTooltip ? "Pet XP: " : "Pet: ";
+        String slashText = fromTooltip ? " / " : "/";
 
-        int start = msg.indexOf("Pet: ");
-        int slash = msg.indexOf("/", start);
+        String msg = text.getString();
+        if (!msg.contains(startText)) return;
+
+        int start = msg.indexOf(startText);
+        int slash = msg.indexOf(slashText, start);
         int end = msg.indexOf(" XP", slash);
 
-        currentXP = Integer.parseInt(msg.substring(start + 5, slash));
-        nextLvlXP = Integer.parseInt(msg.substring(slash + 1, end));
+        try {
+            currentXP = Integer.parseInt(msg.substring(start + startText.length(), slash));
+            nextLvlXP = Integer.parseInt(msg.substring(slash + slashText.length(), fromTooltip ? msg.length() : end));
+        } catch (NumberFormatException e) {
+            ElementsUtils.LOGGER.debug("Failed to parse pet XP");
+        }
+    }
+
+    public static void updatePet(MinecraftClient client) {
+        if (client.player == null || client.world == null) return;
+
+        GenericContainerScreen enderChestScreen = Util.getEnderChestScreen();
+        if (enderChestScreen == null) return;
+
+        GenericContainerScreenHandler screenHandler = enderChestScreen.getScreenHandler();
+        Slot checkSlot = screenHandler.slots.get(4);
+        Slot petSlot = screenHandler.slots.get(13);
+        if (checkSlot.hasStack() && petSlot.hasStack()) {
+
+            ItemStack checkStack = checkSlot.getStack();
+            if (checkStack.getItem() == Items.OAK_HANGING_SIGN && checkStack.getName().getString().equals("Pets")) {
+
+                ItemStack petStack = petSlot.getStack();
+                if (petStack.getItem() == Items.PLAYER_HEAD) {
+                    pet = petStack;
+                    List<Text> tooltip = petStack.getTooltip(Item.TooltipContext.DEFAULT, client.player, TooltipType.BASIC);
+                    tooltip.stream()
+                            .filter(text -> text.getString().contains("Pet XP:"))
+                            .findFirst()
+                            .ifPresent(text -> PetDisplay.updatePetXP(text, true));
+                }
+            }
+        }
     }
 
     public static void render(DrawContext context, MinecraftClient client) {
         if (!ModConfig.getConfig().showPetDisplay) return;
 
+        if (pet.isEmpty()) {
+            MutableText noPet = Text.translatable("elements-utils.display.pet.no_pet");
+            int textLength = client.textRenderer.getWidth(noPet);
+            ScreenPositioning.PET_WIDTH = textLength + 12; // text + gap * 2
+            Position position = ScreenPositioning.getPetPosition(client.getWindow());
+            context.drawText(
+                    client.textRenderer,
+                    noPet,
+                    position.x() + 6, position.y() + 12,
+                    Colors.WHITE, false
+            );
+            return;
+        }
+
+        int textLength = client.textRenderer.getWidth(pet.getName());
+        ScreenPositioning.PET_WIDTH = textLength + 32 + 6; // text + circleWidth + gap
+
         Position position = ScreenPositioning.getPetPosition(client.getWindow());
 
         renderCircle(context, new Position(position.x() + 16, position.y() + 16));
-    }
 
-    // TODO
-    private static void renderIcon(@NotNull DrawContext context, @NotNull Position centerPosition) {
-
+        context.drawItem(pet, position.x() + 8, position.y() + 8);
+        context.drawText(client.textRenderer, pet.getName(), position.x() + 32, position.y() + 6, Colors.WHITE, false); // x: circleWidth
+        context.drawText(client.textRenderer, "Level " + getPetLevel(), position.x() + 32, position.y() + 6 + 8 + 4, Colors.WHITE, false); // y: marginTop + textHeight + gap
     }
 
     private static void renderCircle(@NotNull DrawContext context, @NotNull Position centerPosition) {
@@ -48,9 +112,7 @@ public class PetDisplay {
         float outerRadius = 12;
         float centerX = centerPosition.x();
         float centerY = centerPosition.y();
-        int white = 0xFFFFFFFF;
-        int green = 0xFF00FF00;
-        
+
         Matrix4f transformationMatrix = context.getMatrices().peek().getPositionMatrix();
         Tessellator tessellator = Tessellator.getInstance();
 
@@ -72,8 +134,8 @@ public class PetDisplay {
             float innerX2 = centerX + MathHelper.cos(angleNext) * innerRadius;
             float innerY2 = centerY + MathHelper.sin(angleNext) * innerRadius;
 
-            int color = green;
-            if (nextLvlXP > 0 && (float) i / segments > (float) currentXP / nextLvlXP) color = white;
+            int color = Colors.GREEN;
+            if (nextLvlXP > 0 && (float) i / segments > (float) currentXP / nextLvlXP) color = Colors.LIGHT_GRAY;
 
             buffer.vertex(transformationMatrix, innerX1, innerY1, 0).color(color);
             buffer.vertex(transformationMatrix, innerX2, innerY2, 0).color(color);
@@ -83,5 +145,19 @@ public class PetDisplay {
         RenderSystem.setShader(ShaderProgramKeys.POSITION_COLOR);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         BufferRenderer.drawWithGlobalProgram(buffer.end());
+    }
+
+    private static int getPetLevel() {
+        if (nextLvlXP == 5000) return 1;
+        if (nextLvlXP == 20000) return 2;
+        if (nextLvlXP == 50000) return 3;
+        if (nextLvlXP == 100000) return 4;
+        if (nextLvlXP == 200000) return 5;
+        if (nextLvlXP == 350000) return 6;
+        if (nextLvlXP == 550000) return 7;
+        if (nextLvlXP == 750000) return 8;
+        if (nextLvlXP == 1000000) return 9;
+        if (nextLvlXP == -1) return 10;
+        return 0;
     }
 }

@@ -1,11 +1,11 @@
 package dev.eposs.elementsutils;
 
 import dev.eposs.elementsutils.config.ModConfig;
+import dev.eposs.elementsutils.feature.bosstimer.BossTimerData;
+import dev.eposs.elementsutils.feature.bosstimer.BossTimerDisplay;
 import dev.eposs.elementsutils.feature.loot.LootSound;
 import dev.eposs.elementsutils.feature.pet.PetDisplay;
 import dev.eposs.elementsutils.feature.playerbase.BaseBorderDisplay;
-import dev.eposs.elementsutils.feature.bosstimer.BossTimerData;
-import dev.eposs.elementsutils.feature.bosstimer.BossTimerDisplay;
 import dev.eposs.elementsutils.rendering.ScreenRendering;
 import dev.eposs.elementsutils.util.DevUtil;
 import me.shedaniel.autoconfig.AutoConfig;
@@ -52,6 +52,7 @@ public class ElementsUtilsClient implements ClientModInitializer {
         ClientPlayConnectionEvents.JOIN.register(this::runServerCheck);
 
         ClientTickEvents.END_CLIENT_TICK.register(this::onKeyEvent);
+        ClientTickEvents.END_CLIENT_TICK.register(PetDisplay::updatePet);
 
         ClientReceiveMessageEvents.ALLOW_GAME.register(this::onGameMessage);
     }
@@ -79,10 +80,10 @@ public class ElementsUtilsClient implements ClientModInitializer {
 
     private boolean onGameMessage(Text text, boolean b) {
         LootSound.onGameMessage(text, b);
-        
+
         return true;
     }
-    
+
 
     private void registerKeyBinding() {
         String category = "category." + ElementsUtils.MOD_ID + ".keys";

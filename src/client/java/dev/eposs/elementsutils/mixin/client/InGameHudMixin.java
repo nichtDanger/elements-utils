@@ -22,7 +22,7 @@ public abstract class InGameHudMixin {
     @Inject(at = @At("HEAD"), method = "renderOverlayMessage")
     private void renderOverlayMessage(DrawContext context, RenderTickCounter tickCounter, CallbackInfo ci) {
         if (this.overlayMessage != null && this.overlayRemaining > 0) {
-            PetDisplay.updateCurrentPetXP(this.overlayMessage);
+            PetDisplay.updatePetXP(this.overlayMessage, false);
         }
     }
 }
