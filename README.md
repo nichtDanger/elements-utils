@@ -2,6 +2,10 @@
 
 A Utility Mod for the gamemode Elements by SparkOfPhoenix.
 
+## Supported languages
+- English
+- German / Deutsch
+
 ## Features
 
 - Dungeon Boss Death Times
