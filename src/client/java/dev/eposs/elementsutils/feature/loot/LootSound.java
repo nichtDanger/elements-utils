@@ -15,8 +15,9 @@ public class LootSound {
         String msg = text.getString();
         // TODO: check actual messages
         if (msg.startsWith("Loot:")) playCoolSound();
-        if (msg.startsWith("Sb-Loot:")) playCoolSound();
-        if (msg.startsWith("Pb-Loot:")) playCoolSound();
+        if (msg.startsWith("SB Loot:")) playCoolSound();
+        if (msg.startsWith("PB Loot:")) playCoolSound();
+        if (msg.startsWith("Pet Loot:")) playCoolSound();
     }
 
     private static void playCoolSound() {
