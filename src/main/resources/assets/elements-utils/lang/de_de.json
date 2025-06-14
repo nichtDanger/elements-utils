@@ -1,0 +1,36 @@
+{
+  "text.autoconfig.elements-utils.title": "Elements Utils Config",
+
+  "text.autoconfig.elements-utils.option.showMoonPhaseDisplay": "Mond Phase anzeigen",
+  "text.autoconfig.elements-utils.option.showTimeDisplay": "Zeit anzeigen",
+  "text.autoconfig.elements-utils.option.showPetDisplay": "Pet anzeigen",
+  "text.autoconfig.elements-utils.option.displayPosition": "Display Position",
+
+  "text.autoconfig.elements-utils.option.bossTimer": "Dungeon Boss Todeszeiten",
+  "text.autoconfig.elements-utils.option.bossTimer.show": "Dungeon Boss Todeszeiten anzeigen",
+  "text.autoconfig.elements-utils.option.bossTimer.timeFormat": "Zeit Format",
+  "text.autoconfig.elements-utils.option.bossTimer.colorBossNames": "Farbige Boss Namen",
+  "text.autoconfig.elements-utils.option.bossTimer.colorTime": "Farbige Zeit",
+
+  "text.autoconfig.elements-utils.option.playLootSound": "Sound bei Loot drop",
+
+  "text.autoconfig.elements-utils.option.showBaseDisplay": "Spieler Base Grenzen anzeigen",
+
+  "text.autoconfig.elements-utils.option.devUtils": "Development Utils (please ignore)",
+  "text.autoconfig.elements-utils.option.devUtils.enable": "Enabled",
+
+  "category.elements-utils.keys": "Elements Utils",
+  "key.elements-utils.baseDisplayToggle": "Spieler Base Grenzen umschalten",
+  "key.elements-utils.bossTimerToggle": "Dungeon Boss Todeszeiten umschalten",
+  "key.elements-utils.devUtils": "Dev Utils (please ignore)",
+
+  "elements-utils.display.pet.no_pet": "Unbekanntes Pet",
+
+  "elements-utils.display.bosstimer.relative": "Vor $1",
+
+  "elements-utils.display.base.toggle": "Base Anzeige is jetzt ",
+  
+  "elements-utils.enabled": "aktiviert",
+  "elements-utils.disabled": "deaktiviert",
+  "elements-utils.unknown": "unbekannt"
+}

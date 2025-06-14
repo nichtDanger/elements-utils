@@ -4,7 +4,10 @@ import dev.eposs.elementsutils.config.ModConfig;
 import dev.eposs.elementsutils.util.Util;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.*;
+import net.minecraft.client.render.OverlayTexture;
+import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.VertexConsumer;
+import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
@@ -27,13 +30,14 @@ public class BaseBorderDisplay {
 
         ModConfig.getConfig().showBaseDisplay = !ModConfig.getConfig().showBaseDisplay;
         ModConfig.save();
-        
-        Util.sendChatMessage(Text.literal("Base display is now ")
-                .append(Text.literal(ModConfig.getConfig().showBaseDisplay ? "enabled" : "disabled")
-                        .formatted(ModConfig.getConfig().showBaseDisplay ? Formatting.GREEN : Formatting.RED))
-        );
+
+        Util.sendChatMessage(Text.translatable("elements-utils.display.base.toggle")
+                .append(ModConfig.getConfig().showBaseDisplay ?
+                        Text.translatable("elements-utils.enabled").formatted(Formatting.GREEN) :
+                        Text.translatable("elements-utils.disabled").formatted(Formatting.RED)
+                ));
     }
-    
+
     public static void render(WorldRenderContext context) {
         ModConfig config = ModConfig.getConfig();
         if (!config.showBaseDisplay) return;
@@ -46,7 +50,7 @@ public class BaseBorderDisplay {
         List<VillagerEntity> villagers = new ArrayList<>();
         for (Entity entity : world.getEntities()) {
             if (!(entity instanceof VillagerEntity villager)) continue;
-            
+
             if (!config.devUtils.enable) {
                 ItemStack offHandStack = villager.getOffHandStack();
                 if (offHandStack == null) continue;
@@ -55,13 +59,6 @@ public class BaseBorderDisplay {
                 Text customName = offHandStack.getCustomName();
                 if (customName == null) continue;
             }
-            
-            // String baseOwnerName = customName.getString();
-            //
-            // List<String> playerNames = new ArrayList<>(config.baseDisplay.playerNames);
-            // playerNames.add(client.player.getName().getString());
-            //
-            // if (!playerNames.contains(baseOwnerName)) continue;
 
             villagers.add(villager);
         }
@@ -70,7 +67,7 @@ public class BaseBorderDisplay {
 
         MatrixStack matrices = context.matrixStack();
         assert matrices != null;
-        
+
         Vec3d camPos = context.camera().getPos();
 
         int radius = 45;
@@ -81,7 +78,7 @@ public class BaseBorderDisplay {
             Vec3d pos = villager.getPos();
 
             matrices.push();
-            
+
             // Translate to camera-relative space
             Vec3d target = new Vec3d(pos.x, pos.y, pos.z).subtract(camPos);
 
@@ -124,10 +121,18 @@ public class BaseBorderDisplay {
                 float z4 = (float) (radius * Math.sin(phi1) * Math.sin(theta2));
 
                 // Offset to center position
-                x1 += (float) center.x; y1 += (float) center.y; z1 += (float) center.z;
-                x2 += (float) center.x; y2 += (float) center.y; z2 += (float) center.z;
-                x3 += (float) center.x; y3 += (float) center.y; z3 += (float) center.z;
-                x4 += (float) center.x; y4 += (float) center.y; z4 += (float) center.z;
+                x1 += (float) center.x;
+                y1 += (float) center.y;
+                z1 += (float) center.z;
+                x2 += (float) center.x;
+                y2 += (float) center.y;
+                z2 += (float) center.z;
+                x3 += (float) center.x;
+                y3 += (float) center.y;
+                z3 += (float) center.z;
+                x4 += (float) center.x;
+                y4 += (float) center.y;
+                z4 += (float) center.z;
 
                 // Two triangles per quad
                 vertex(vertexConsumer, positionMatrix, x1, y1, z1);
