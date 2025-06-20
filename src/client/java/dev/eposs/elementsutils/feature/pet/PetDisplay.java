@@ -94,7 +94,8 @@ public class PetDisplay {
             return;
         }
 
-        int textLength = client.textRenderer.getWidth(pet.getName());
+        String levelText = "Level " + getPetLevel();
+        int textLength = Math.max(client.textRenderer.getWidth(pet.getName()), client.textRenderer.getWidth(levelText));
         ScreenPositioning.PET_WIDTH = textLength + 32 + 6; // text + circleWidth + gap
 
         Position position = ScreenPositioning.getPetPosition(client.getWindow());
@@ -103,7 +104,7 @@ public class PetDisplay {
 
         context.drawItem(pet, position.x() + 8, position.y() + 8);
         context.drawText(client.textRenderer, pet.getName(), position.x() + 32, position.y() + 6, Colors.WHITE, false); // x: circleWidth
-        context.drawText(client.textRenderer, "Level " + getPetLevel(), position.x() + 32, position.y() + 6 + 8 + 4, Colors.WHITE, false); // y: marginTop + textHeight + gap
+        context.drawText(client.textRenderer, levelText, position.x() + 32, position.y() + 6 + 8 + 4, Colors.WHITE, false); // y: marginTop + textHeight + gap
     }
 
     private static void renderCircle(@NotNull DrawContext context, @NotNull Position centerPosition) {
