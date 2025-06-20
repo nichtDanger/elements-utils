@@ -1,6 +1,7 @@
 package dev.eposs.elementsutils.feature.pet;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import dev.eposs.elementsutils.ElementsUtils;
 import dev.eposs.elementsutils.config.ModConfig;
 import dev.eposs.elementsutils.rendering.Position;
@@ -11,10 +12,13 @@ import net.minecraft.client.gl.ShaderProgramKeys;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ingame.GenericContainerScreen;
 import net.minecraft.client.render.*;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.tooltip.TooltipType;
+import net.minecraft.nbt.StringNbtReader;
+import net.minecraft.nbt.visitor.StringNbtWriter;
 import net.minecraft.screen.GenericContainerScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.text.MutableText;
@@ -160,5 +164,41 @@ public class PetDisplay {
         if (nextLvlXP == 1000000) return 9;
         if (nextLvlXP == -1) return 10;
         return 0;
+    }
+
+    public static void savePet(@NotNull ClientWorld world) {
+        // ClientWorld world = MinecraftClient.getInstance().world;
+        // if (world == null) {
+        //     return;
+        // }
+        ElementsUtils.LOGGER.info("Saving Pet Data...");
+
+        ModConfig.InternalConfig.PetData petData = new ModConfig.InternalConfig.PetData();
+
+        petData.data = new StringNbtWriter().apply(pet.toNbt(world.getRegistryManager()));
+        petData.currentXP = currentXP;
+        petData.nextLvlXP = nextLvlXP;
+
+        ModConfig.getConfig().internal.petData = petData;
+        ModConfig.save();
+    }
+
+    public static void loadPet(@NotNull ClientWorld world) {
+        // ClientWorld world = MinecraftClient.getInstance().world;
+        // if (world == null) {
+        //     return;
+        // }
+        ElementsUtils.LOGGER.info("Loading pet data...");
+
+        ModConfig.InternalConfig.PetData petData = ModConfig.getConfig().internal.petData;
+
+        try {
+            pet = ItemStack.fromNbtOrEmpty(world.getRegistryManager(), StringNbtReader.parse(petData.data));
+        } catch (CommandSyntaxException e) {
+            throw new RuntimeException(e);
+        }
+
+        currentXP = petData.currentXP;
+        nextLvlXP = petData.nextLvlXP;
     }
 }

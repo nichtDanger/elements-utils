@@ -11,19 +11,31 @@ public class ModConfig implements ConfigData {
     public static ModConfig getConfig() {
         return AutoConfig.getConfigHolder(ModConfig.class).getConfig();
     }
-    
+
     public static void save() {
         AutoConfig.getConfigHolder(ModConfig.class).save();
     }
 
 
     @ConfigEntry.Gui.Excluded
-    public Servers server = Servers.UNKNOWN;
+    public InternalConfig internal = new InternalConfig();
 
-    public enum Servers {
-        UNKNOWN,
-        COMMUNITY_SERVER_1,
-        COMMUNITY_SERVER_2,
+    public static class InternalConfig {
+        public Servers server = Servers.UNKNOWN;
+
+        public enum Servers {
+            UNKNOWN,
+            COMMUNITY_SERVER_1,
+            COMMUNITY_SERVER_2,
+        }
+
+        public PetData petData = new PetData();
+
+        public static class PetData {
+            public String data;
+            public int currentXP;
+            public int nextLvlXP;
+        }
     }
 
 
@@ -31,7 +43,7 @@ public class ModConfig implements ConfigData {
     public boolean showTimeDisplay = true;
     public boolean showPetDisplay = true;
     public Position displayPosition = Position.TOP_RIGHT;
-    
+
     @ConfigEntry.Gui.CollapsibleObject
     public BossTimerConfig bossTimer = new BossTimerConfig();
 
@@ -48,7 +60,7 @@ public class ModConfig implements ConfigData {
     }
 
     public boolean playLootSound = true;
-    
+
     public boolean showBaseDisplay = false;
 
     @ConfigEntry.Gui.CollapsibleObject

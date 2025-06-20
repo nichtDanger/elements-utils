@@ -50,6 +50,8 @@ public class ElementsUtilsClient implements ClientModInitializer {
         WorldRenderEvents.LAST.register(BaseBorderDisplay::render);
 
         ClientPlayConnectionEvents.JOIN.register(this::runServerCheck);
+        ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> PetDisplay.loadPet(handler.getWorld()));
+        ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> PetDisplay.savePet(handler.getWorld()));
 
         ClientTickEvents.END_CLIENT_TICK.register(this::onKeyEvent);
         ClientTickEvents.END_CLIENT_TICK.register(PetDisplay::updatePet);
@@ -66,11 +68,11 @@ public class ElementsUtilsClient implements ClientModInitializer {
         String hash = DigestUtils.sha3_256Hex(serverEntry.address);
 
         if (hash.equals(server1)) {
-            ModConfig.getConfig().server = ModConfig.Servers.COMMUNITY_SERVER_1;
+            ModConfig.getConfig().internal.server = ModConfig.InternalConfig.Servers.COMMUNITY_SERVER_1;
             ModConfig.save();
             ElementsUtils.LOGGER.info("Detected elements community server 1");
         } else if (hash.equals(server2)) {
-            ModConfig.getConfig().server = ModConfig.Servers.COMMUNITY_SERVER_2;
+            ModConfig.getConfig().internal.server = ModConfig.InternalConfig.Servers.COMMUNITY_SERVER_2;
             ModConfig.save();
             ElementsUtils.LOGGER.info("Detected elements community server 2");
         } else {

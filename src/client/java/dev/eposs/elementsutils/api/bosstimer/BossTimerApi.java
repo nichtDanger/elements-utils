@@ -17,7 +17,7 @@ public class BossTimerApi {
 
     public static @Nullable BossTimerData getBossTimerData() {
         String serverID;
-        switch (ModConfig.getConfig().server) {
+        switch (ModConfig.getConfig().internal.server) {
             case COMMUNITY_SERVER_1 -> serverID = "server1";
             case COMMUNITY_SERVER_2 -> serverID = "server2";
             default -> {
