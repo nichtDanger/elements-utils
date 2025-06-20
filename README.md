@@ -36,7 +36,7 @@ Key Binds can be changed in the vanilla settings (Options > Controls > Key Binds
 
 ## Download
 
-See [latest Release](https://github.com/Eposs10/elements-utils/releases/latest) for download.
+See [Modrinth](https://modrinth.com/mod/elements-utils) for download.
 
 ## Updates / Feedback
 
