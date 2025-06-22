@@ -8,9 +8,8 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 
 public class LootSound {
-    public static void onGameMessage(Text text, boolean b) {
+    public static void onGameMessage(Text text) {
         if (!ModConfig.getConfig().playLootSound) return;
-        if (b) return;
         
         String msg = text.getString();
         // TODO: check actual messages

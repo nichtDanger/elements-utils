@@ -81,7 +81,7 @@ public class ElementsUtilsClient implements ClientModInitializer {
     }
 
     private boolean onGameMessage(Text text, boolean b) {
-        LootSound.onGameMessage(text, b);
+        LootSound.onGameMessage(text);
 
         return true;
     }
