@@ -78,16 +78,15 @@ public class PetDisplay {
                             .ifPresent(text -> PetDisplay.updatePetXP(text, true));
 
                     petNbtData = new StringNbtWriter().apply(pet.toNbt(client.world.getRegistryManager()));
-                    return;
+                } else {
+                    // Set empty if no pet was found
+                    pet = ItemStack.EMPTY;
+                    petNbtData = null;
+                    currentXP = 0;
+                    nextLvlXP = 0;
                 }
             }
         }
-
-        // Set empty if no pet was found
-        pet = ItemStack.EMPTY;
-        petNbtData = null;
-        currentXP = 0;
-        nextLvlXP = 0;
     }
 
     public static void render(DrawContext context, MinecraftClient client) {
