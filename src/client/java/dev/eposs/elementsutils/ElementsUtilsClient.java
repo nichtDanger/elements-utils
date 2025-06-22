@@ -50,8 +50,8 @@ public class ElementsUtilsClient implements ClientModInitializer {
         WorldRenderEvents.LAST.register(BaseBorderDisplay::render);
 
         ClientPlayConnectionEvents.JOIN.register(this::runServerCheck);
-        ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> PetDisplay.loadPet(handler.getWorld()));
-        ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> PetDisplay.savePet(handler.getWorld()));
+        ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> PetDisplay.loadPet(handler.getRegistryManager()));
+        ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> PetDisplay.savePet());
 
         ClientTickEvents.END_CLIENT_TICK.register(this::onKeyEvent);
         ClientTickEvents.END_CLIENT_TICK.register(PetDisplay::updatePet);

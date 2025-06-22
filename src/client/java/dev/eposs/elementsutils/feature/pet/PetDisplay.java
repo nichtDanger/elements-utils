@@ -1,7 +1,6 @@
 package dev.eposs.elementsutils.feature.pet;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import dev.eposs.elementsutils.ElementsUtils;
 import dev.eposs.elementsutils.config.ModConfig;
 import dev.eposs.elementsutils.rendering.Position;
@@ -12,13 +11,13 @@ import net.minecraft.client.gl.ShaderProgramKeys;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ingame.GenericContainerScreen;
 import net.minecraft.client.render.*;
-import net.minecraft.client.world.ClientWorld;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.nbt.StringNbtReader;
 import net.minecraft.nbt.visitor.StringNbtWriter;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.screen.GenericContainerScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.text.MutableText;
@@ -32,6 +31,7 @@ import java.util.List;
 
 public class PetDisplay {
     private static ItemStack pet = ItemStack.EMPTY;
+    private static String petNbtData;
     private static int currentXP = 0;
     private static int nextLvlXP = 0;
 
@@ -76,9 +76,18 @@ public class PetDisplay {
                             .filter(text -> text.getString().contains("Pet XP:"))
                             .findFirst()
                             .ifPresent(text -> PetDisplay.updatePetXP(text, true));
+
+                    petNbtData = new StringNbtWriter().apply(pet.toNbt(client.world.getRegistryManager()));
+                    return;
                 }
             }
         }
+
+        // Set empty if no pet was found
+        pet = ItemStack.EMPTY;
+        petNbtData = null;
+        currentXP = 0;
+        nextLvlXP = 0;
     }
 
     public static void render(DrawContext context, MinecraftClient client) {
@@ -166,16 +175,12 @@ public class PetDisplay {
         return 0;
     }
 
-    public static void savePet(@NotNull ClientWorld world) {
-        // ClientWorld world = MinecraftClient.getInstance().world;
-        // if (world == null) {
-        //     return;
-        // }
+    public static void savePet() {
         ElementsUtils.LOGGER.info("Saving Pet Data...");
 
         ModConfig.InternalConfig.PetData petData = new ModConfig.InternalConfig.PetData();
 
-        petData.data = new StringNbtWriter().apply(pet.toNbt(world.getRegistryManager()));
+        petData.data = petNbtData;
         petData.currentXP = currentXP;
         petData.nextLvlXP = nextLvlXP;
 
@@ -183,21 +188,19 @@ public class PetDisplay {
         ModConfig.save();
     }
 
-    public static void loadPet(@NotNull ClientWorld world) {
-        // ClientWorld world = MinecraftClient.getInstance().world;
-        // if (world == null) {
-        //     return;
-        // }
+    public static void loadPet(RegistryWrapper.WrapperLookup registry) {
         ElementsUtils.LOGGER.info("Loading pet data...");
 
         ModConfig.InternalConfig.PetData petData = ModConfig.getConfig().internal.petData;
 
         try {
-            pet = ItemStack.fromNbtOrEmpty(world.getRegistryManager(), StringNbtReader.parse(petData.data));
-        } catch (CommandSyntaxException e) {
-            throw new RuntimeException(e);
+            pet = ItemStack.fromNbtOrEmpty(registry, StringNbtReader.parse(petData.data));
+        } catch (Exception e) {
+            ElementsUtils.LOGGER.error("Failed to parse pet data. Error: {}", e.getMessage());
+            return;
         }
 
+        petNbtData = petData.data;
         currentXP = petData.currentXP;
         nextLvlXP = petData.nextLvlXP;
     }
