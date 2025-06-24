@@ -69,6 +69,9 @@ public class PetDisplay {
             if (checkStack.getItem() == Items.OAK_HANGING_SIGN && checkStack.getName().getString().equals("Pets")) {
 
                 ItemStack petStack = petSlot.getStack();
+                // Only update if new stack
+                if (pet == petStack) return;
+                
                 if (petStack.getItem() == Items.PLAYER_HEAD) {
                     pet = petStack;
                     List<Text> tooltip = petStack.getTooltip(Item.TooltipContext.DEFAULT, client.player, TooltipType.BASIC);
