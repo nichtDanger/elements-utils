@@ -16,6 +16,10 @@
 
   "text.autoconfig.elements-utils.option.showBaseDisplay": "Spieler Base Grenzen anzeigen",
 
+  "text.autoconfig.elements-utils.option.potionDisplay": "Heil/Mana-Tränke Display",
+  "text.autoconfig.elements-utils.option.potionDisplay.show": "Tränke anzeigen",
+  "text.autoconfig.elements-utils.option.potionDisplay.position": "Display Position",
+
   "text.autoconfig.elements-utils.option.devUtils": "Development Utils (please ignore)",
   "text.autoconfig.elements-utils.option.devUtils.enable": "Enabled",
 

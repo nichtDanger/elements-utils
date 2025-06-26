@@ -16,6 +16,10 @@
   
   "text.autoconfig.elements-utils.option.showBaseDisplay": "Show Player Base Borders",
   
+  "text.autoconfig.elements-utils.option.potionDisplay": "Health/Mana Potion Display",
+  "text.autoconfig.elements-utils.option.potionDisplay.show": "Show Potion Display",
+  "text.autoconfig.elements-utils.option.potionDisplay.position": "Display Position",
+  
   "text.autoconfig.elements-utils.option.devUtils": "Development Utils (please ignore)",
   "text.autoconfig.elements-utils.option.devUtils.enable": "Enabled",
 

@@ -6,11 +6,13 @@ import dev.eposs.elementsutils.feature.bosstimer.BossTimerDisplay;
 import dev.eposs.elementsutils.feature.loot.LootSound;
 import dev.eposs.elementsutils.feature.pet.PetDisplay;
 import dev.eposs.elementsutils.feature.playerbase.BaseBorderDisplay;
+import dev.eposs.elementsutils.feature.potion.PotionDisplay;
 import dev.eposs.elementsutils.rendering.ScreenRendering;
 import dev.eposs.elementsutils.util.DevUtil;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.Toml4jConfigSerializer;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
@@ -49,18 +51,31 @@ public class ElementsUtilsClient implements ClientModInitializer {
 
         WorldRenderEvents.LAST.register(BaseBorderDisplay::render);
 
-        ClientPlayConnectionEvents.JOIN.register(this::runServerCheck);
-        ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> PetDisplay.loadPet(handler.getRegistryManager()));
-        ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> PetDisplay.savePet());
+        ClientPlayConnectionEvents.JOIN.register(this::onJoin);
+        ClientPlayConnectionEvents.DISCONNECT.register(this::onLeave);
 
-        ClientTickEvents.END_CLIENT_TICK.register(this::onKeyEvent);
-        ClientTickEvents.END_CLIENT_TICK.register(PetDisplay::updatePet);
+        ClientTickEvents.END_CLIENT_TICK.register(this::clientTick);
 
         ClientReceiveMessageEvents.ALLOW_GAME.register(this::onGameMessage);
     }
 
-    private void runServerCheck(ClientPlayNetworkHandler clientPlayNetworkHandler, PacketSender packetSender, MinecraftClient minecraftClient) {
-        ServerInfo serverEntry = minecraftClient.getCurrentServerEntry();
+    private void clientTick(MinecraftClient client) {
+        onKeyEvent(client);
+        PetDisplay.updatePet(client);
+        PotionDisplay.updatePotions(client);
+    }
+
+    private void onJoin(ClientPlayNetworkHandler handler, PacketSender sender, MinecraftClient client) {
+        runServerCheck(client);
+        PetDisplay.loadPet(handler.getRegistryManager());
+    }
+
+    private void onLeave(ClientPlayNetworkHandler handler, MinecraftClient client) {
+        PetDisplay.savePet();
+    }
+
+    private void runServerCheck(MinecraftClient client) {
+        ServerInfo serverEntry = client.getCurrentServerEntry();
         if (serverEntry == null) return;
 
         String server1 = "d2228bebe6cb6b55feb3258bc4aff39ffa41b6222a145951ba88916af1706553";
@@ -85,7 +100,6 @@ public class ElementsUtilsClient implements ClientModInitializer {
 
         return true;
     }
-
 
     private void registerKeyBinding() {
         String category = "category." + ElementsUtils.MOD_ID + ".keys";

@@ -44,19 +44,26 @@ public class ModConfig implements ConfigData {
     public boolean showPetDisplay = true;
     public Position displayPosition = Position.TOP_RIGHT;
 
+    public enum Position {
+        TOP_LEFT,
+        TOP_RIGHT,
+        BOTTOM_LEFT,
+        BOTTOM_RIGHT
+    }
+
     @ConfigEntry.Gui.CollapsibleObject
     public BossTimerConfig bossTimer = new BossTimerConfig();
-
     public static class BossTimerConfig {
         public boolean show = true;
         public TimeFormat timeFormat = TimeFormat.RELATIVE;
         public boolean colorBossNames = true;
-        public boolean colorTime = true;
 
+        public boolean colorTime = true;
         public enum TimeFormat {
             RELATIVE,
             ABSOLUTE,
-        }
+            }
+
     }
 
     public boolean playLootSound = true;
@@ -64,16 +71,22 @@ public class ModConfig implements ConfigData {
     public boolean showBaseDisplay = false;
 
     @ConfigEntry.Gui.CollapsibleObject
-    public DevUtilsConfig devUtils = new DevUtilsConfig();
+    public PotionDisplayConfig potionDisplay = new PotionDisplayConfig();
+    public static class PotionDisplayConfig {
+        public boolean show = true;
 
-    public static class DevUtilsConfig {
-        public boolean enable = false;
+        public Position position = Position.RIGHT;
+        public enum Position {
+            LEFT,
+            RIGHT,
+            }
+
     }
 
-    public enum Position {
-        TOP_LEFT,
-        TOP_RIGHT,
-        BOTTOM_LEFT,
-        BOTTOM_RIGHT
+    @ConfigEntry.Gui.CollapsibleObject
+    public DevUtilsConfig devUtils = new DevUtilsConfig();
+    public static class DevUtilsConfig {
+        public boolean enable = false;
+
     }
 }
