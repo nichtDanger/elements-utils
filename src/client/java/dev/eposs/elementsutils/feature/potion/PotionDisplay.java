@@ -1,13 +1,18 @@
 package dev.eposs.elementsutils.feature.potion;
 
+import dev.eposs.elementsutils.ElementsUtils;
 import dev.eposs.elementsutils.config.ModConfig;
+import dev.eposs.elementsutils.rendering.Position;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.NbtComponent;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.Colors;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
 
 public class PotionDisplay {
@@ -18,7 +23,7 @@ public class PotionDisplay {
 
     public static void updatePotions(MinecraftClient client) {
         if (client.player == null || client.world == null) return;
-        
+
         smallHeal = 0;
         largeHeal = 0;
         smallMana = 0;
@@ -46,13 +51,39 @@ public class PotionDisplay {
     public static void render(DrawContext context, MinecraftClient client) {
         if (!ModConfig.getConfig().potionDisplay.show) return;
 
+        int start = 100;
+        int gap = 20;
+        int y = context.getScaledWindowHeight() - 25;
 
-        context.drawText(client.textRenderer,
-                "sh: " + smallHeal +
-                        " lh: " + largeHeal +
-                        " sm: " + smallMana +
-                        " lm: " + largeMana,
-                100, 100, Colors.WHITE, false
+        switch (ModConfig.getConfig().potionDisplay.position) {
+            case LEFT -> start = context.getScaledWindowWidth() / 2 - 200;
+            case RIGHT -> start = context.getScaledWindowWidth() / 2 + 200 - (gap * 4);
+        }
+
+        draw(context, client.textRenderer, "small_heal.png", smallHeal, new Position(start, y));
+        draw(context, client.textRenderer, "large_heal.png", largeHeal, new Position(start + gap, y));
+        draw(context, client.textRenderer, "small_mana.png", smallMana, new Position(start + gap * 2, y));
+        draw(context, client.textRenderer, "large_mana.png", largeMana, new Position(start + gap * 3, y));
+    }
+
+    private static void draw(DrawContext context, TextRenderer textRenderer, String texture, int count, Position position) {
+        var size = 16;
+        context.drawTexture(
+                RenderLayer::getGuiTextured,
+                Identifier.of(ElementsUtils.MOD_ID, "gui/containers/" + texture),
+                position.x(), position.y(),
+                0.0f, 0.0f,
+                size, size, size, size
+        );
+
+        String countString = String.valueOf(count);
+        context.drawText(
+                textRenderer,
+                countString,
+                position.x() + size - textRenderer.getWidth(countString),
+                position.y() + size,
+                Colors.WHITE,
+                false
         );
     }
 }
