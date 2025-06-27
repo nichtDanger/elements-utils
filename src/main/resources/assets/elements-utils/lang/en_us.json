@@ -1,4 +1,6 @@
 {
+  "death.attack.magic.item": "%1$s was slain by %2$s using the magic of %3$s",
+  
   "text.autoconfig.elements-utils.title": "Elements Utils Config",
   
   "text.autoconfig.elements-utils.option.showMoonPhaseDisplay": "Show Moon Phase Display",

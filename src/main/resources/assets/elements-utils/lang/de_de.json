@@ -1,4 +1,6 @@
 {
+  "death.attack.magic.item": "%1$s wurde von %2$s mit der Magie von %3$s getötet",
+  
   "text.autoconfig.elements-utils.title": "Elements Utils Config",
 
   "text.autoconfig.elements-utils.option.showMoonPhaseDisplay": "Mond Phase anzeigen",
