@@ -1,10 +1,8 @@
-# Elements Utils Mod (1.21.4)
+# Elements Utils
 
-A Utility Mod for the gamemode Elements by SparkOfPhoenix.
+A Utility Mod for the gamemode Elements by SparkOfPhoenix
 
-## Supported languages
-- English
-- German / Deutsch
+_Elements 3 - 1.21.4_
 
 ## Features
 
@@ -21,6 +19,8 @@ A Utility Mod for the gamemode Elements by SparkOfPhoenix.
 - Icon of the current Moon Phase
 - Green Sphere showing the Border of any Player Base
     - Hotkey to toggle (default: Z)
+- Potion display (count of heal/mana potions in inv)
+- Translation for death.attack.magic.item (Player killed by magic damage)
 
 ## Config
 
@@ -28,17 +28,17 @@ Use Modmenu to toggle features or change the position of the display
 
 Key Binds can be changed in the vanilla settings (Options > Controls > Key Binds).
 
+
+## Supported languages
+
+- English
+- German / Deutsch
+
+  
 ## Required Mods
 
 - [Fabric API](https://modrinth.com/mod/fabric-api)
 - [Cloth Config](https://modrinth.com/mod/cloth-config)
 - [Mod Menu](https://modrinth.com/mod/modmenu)
 
-## Download
 
-See [Modrinth](https://modrinth.com/mod/elements-utils) for download.
-
-## Updates / Feedback
-
-Updates: https://discord.gg/AjnHNV5Gt7  
-Feedback: Discord @eposs 
