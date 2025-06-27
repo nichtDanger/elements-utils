@@ -17,17 +17,17 @@ import net.minecraft.util.collection.DefaultedList;
 
 public class PotionDisplay {
     private static int smallHeal = 0;
-    private static int largeHeal = 0;
+    private static int bigHeal = 0;
     private static int smallMana = 0;
-    private static int largeMana = 0;
+    private static int bigMana = 0;
 
     public static void updatePotions(MinecraftClient client) {
         if (client.player == null || client.world == null) return;
 
         smallHeal = 0;
-        largeHeal = 0;
+        bigHeal = 0;
         smallMana = 0;
-        largeMana = 0;
+        bigMana = 0;
 
         DefaultedList<ItemStack> stacks = client.player.getInventory().main;
         stacks.stream()
@@ -40,9 +40,9 @@ public class PotionDisplay {
 
                         switch (tag) {
                             case "heal_potion_small" -> smallHeal += count;
-                            case "heal_potion_large" -> largeHeal += count;
+                            case "heal_potion_big" -> bigHeal += count;
                             case "mana_potion_small" -> smallMana += count;
-                            case "mana_potion_large" -> largeMana += count;
+                            case "mana_potion_big" -> bigMana += count;
                         }
                     }
                 });
@@ -61,9 +61,9 @@ public class PotionDisplay {
         }
 
         draw(context, client.textRenderer, "small_heal.png", smallHeal, new Position(start, y));
-        draw(context, client.textRenderer, "large_heal.png", largeHeal, new Position(start + gap, y));
+        draw(context, client.textRenderer, "big_heal.png", bigHeal, new Position(start + gap, y));
         draw(context, client.textRenderer, "small_mana.png", smallMana, new Position(start + gap * 2, y));
-        draw(context, client.textRenderer, "large_mana.png", largeMana, new Position(start + gap * 3, y));
+        draw(context, client.textRenderer, "big_mana.png", bigMana, new Position(start + gap * 3, y));
     }
 
     private static void draw(DrawContext context, TextRenderer textRenderer, String texture, int count, Position position) {
