@@ -7,6 +7,7 @@ import dev.eposs.elementsutils.feature.loot.LootSound;
 import dev.eposs.elementsutils.feature.pet.PetDisplay;
 import dev.eposs.elementsutils.feature.playerbase.BaseBorderDisplay;
 import dev.eposs.elementsutils.feature.potion.PotionDisplay;
+import dev.eposs.elementsutils.feature.xpmeter.XpMeter;
 import dev.eposs.elementsutils.rendering.ScreenRendering;
 import dev.eposs.elementsutils.util.DevUtil;
 import me.shedaniel.autoconfig.AutoConfig;
@@ -31,6 +32,7 @@ import org.lwjgl.glfw.GLFW;
 public class ElementsUtilsClient implements ClientModInitializer {
     private static KeyBinding baseDisplayToggle;
     private static KeyBinding bossTimerToggle;
+    private static KeyBinding measureTrigger;
     private static KeyBinding devUtils;
 
     @Override
@@ -63,6 +65,7 @@ public class ElementsUtilsClient implements ClientModInitializer {
         onKeyEvent(client);
         PetDisplay.updatePet(client);
         PotionDisplay.updatePotions(client);
+        XpMeter.updateXpMeter(client);
     }
 
     private void onJoin(ClientPlayNetworkHandler handler, PacketSender sender, MinecraftClient client) {
@@ -116,6 +119,12 @@ public class ElementsUtilsClient implements ClientModInitializer {
                 category
         ));
 
+        measureTrigger = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+                getKeyBindingTranslation("measureTrigger"),
+                GLFW.GLFW_KEY_UNKNOWN,
+                category
+        ));
+
         devUtils = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 getKeyBindingTranslation("devUtils"),
                 GLFW.GLFW_KEY_UNKNOWN,
@@ -129,6 +138,9 @@ public class ElementsUtilsClient implements ClientModInitializer {
         }
         while (bossTimerToggle.wasPressed()) {
             BossTimerDisplay.toggleDisplay(client);
+        }
+        while (measureTrigger.wasPressed()) {
+            XpMeter.startMeasuring(client);
         }
         while (devUtils.wasPressed()) {
             DevUtil.doSomething(client);

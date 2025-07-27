@@ -5,7 +5,8 @@
 	"name": "Elements Utils",
 	"description": "Utility for Elements 3",
 	"authors": [
-		"Eposs"
+		"Eposs",
+		"nichtDanger"
 	],
 	"contact": {
 		"homepage": "https://eposs.dev/"

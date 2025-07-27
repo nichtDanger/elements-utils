@@ -6,6 +6,7 @@ import dev.eposs.elementsutils.feature.moonphase.MoonPhaseDisplay;
 import dev.eposs.elementsutils.feature.pet.PetDisplay;
 import dev.eposs.elementsutils.feature.potion.PotionDisplay;
 import dev.eposs.elementsutils.feature.time.TimeDisplay;
+import dev.eposs.elementsutils.feature.xpmeter.XpMeter;
 import net.fabricmc.fabric.api.client.rendering.v1.IdentifiedLayer;
 import net.fabricmc.fabric.api.client.rendering.v1.LayeredDrawerWrapper;
 import net.minecraft.client.MinecraftClient;
@@ -33,5 +34,6 @@ public class ScreenRendering {
         BossTimerDisplay.render(context, client);
         PetDisplay.render(context, client);
         PotionDisplay.render(context, client);
+        XpMeter.render(context, client);
     }
 }

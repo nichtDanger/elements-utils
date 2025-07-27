@@ -22,12 +22,15 @@
   "text.autoconfig.elements-utils.option.potionDisplay.show": "Tränke anzeigen",
   "text.autoconfig.elements-utils.option.potionDisplay.position": "Display Position",
 
+  "text.autoconfig.elements-utils.option.measuringXpTarget": "XP Messung Ziel",
+
   "text.autoconfig.elements-utils.option.devUtils": "Development Utils (please ignore)",
   "text.autoconfig.elements-utils.option.devUtils.enable": "Enabled",
 
   "category.elements-utils.keys": "Elements Utils",
   "key.elements-utils.baseDisplayToggle": "Spieler Base Grenzen umschalten",
   "key.elements-utils.bossTimerToggle": "Dungeon Boss Todeszeiten umschalten",
+  "key.elements-utils.measureTrigger": "XP Messung starten",
   "key.elements-utils.devUtils": "Dev Utils (please ignore)",
 
   "elements-utils.display.pet.no_pet": "Unbekanntes Pet",

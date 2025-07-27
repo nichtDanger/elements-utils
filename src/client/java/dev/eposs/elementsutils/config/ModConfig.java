@@ -83,6 +83,8 @@ public class ModConfig implements ConfigData {
 
     }
 
+    public Integer measuringXpTarget = 500;
+
     @ConfigEntry.Gui.CollapsibleObject
     public DevUtilsConfig devUtils = new DevUtilsConfig();
     public static class DevUtilsConfig {

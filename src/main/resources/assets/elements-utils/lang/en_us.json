@@ -21,6 +21,8 @@
   "text.autoconfig.elements-utils.option.potionDisplay": "Health/Mana Potion Display",
   "text.autoconfig.elements-utils.option.potionDisplay.show": "Show Potion Display",
   "text.autoconfig.elements-utils.option.potionDisplay.position": "Display Position",
+
+  "text.autoconfig.elements-utils.option.measuringXpTarget": "XP Measurement Target",
   
   "text.autoconfig.elements-utils.option.devUtils": "Development Utils (please ignore)",
   "text.autoconfig.elements-utils.option.devUtils.enable": "Enabled",
@@ -28,6 +30,7 @@
   "category.elements-utils.keys": "Elements Utils",
   "key.elements-utils.baseDisplayToggle": "Toggle Base Borders",
   "key.elements-utils.bossTimerToggle": "Toggle Dungeon Boss Death Times",
+  "key.elements-utils.measureTrigger": "XP Measure Trigger",
   "key.elements-utils.devUtils": "Dev Utils (please ignore)",
 
   "elements-utils.display.pet.no_pet": "Unknown Pet",
