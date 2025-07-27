@@ -24,8 +24,8 @@ _Elements 3 - 1.21.4_
 
 ## Additional Features (nichtDanger)
 
-- XP Meter Mining
-  - Measuring Basalt Gen's with Keybind (default: none) and Target XP (Config)
+- XP Meter (Basalt)
+  - Measuring Basalt Gen's with Keybind (default: none) and Target XP / Target Time (Config)
 
 ## Config
 
