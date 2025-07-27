@@ -22,6 +22,11 @@ _Elements 3 - 1.21.4_
 - Potion display (count of heal/mana potions in inv)
 - Translation for death.attack.magic.item (Player killed by magic damage)
 
+## Additional Features (nichtDanger)
+
+- XP Meter Mining
+  - Measuring Basalt Gen's with Keybind (default: none) and Target XP (Config)
+
 ## Config
 
 Use Modmenu to toggle features or change the position of the display
