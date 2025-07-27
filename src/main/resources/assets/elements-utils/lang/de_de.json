@@ -22,7 +22,9 @@
   "text.autoconfig.elements-utils.option.potionDisplay.show": "Tränke anzeigen",
   "text.autoconfig.elements-utils.option.potionDisplay.position": "Display Position",
 
-  "text.autoconfig.elements-utils.option.measuringXpTarget": "XP Messung Ziel",
+  "text.autoconfig.elements-utils.option.xpMeterConfig": "XP-Meter Config (Basalt)",
+  "text.autoconfig.elements-utils.option.xpMeterConfig.measuringXpTarget": "XP-Messung Ziel (XP)",
+  "text.autoconfig.elements-utils.option.xpMeterConfig.measuringTimeTarget": "Zeit-Messung Ziel (Sekunden)",
 
   "text.autoconfig.elements-utils.option.devUtils": "Development Utils (please ignore)",
   "text.autoconfig.elements-utils.option.devUtils.enable": "Enabled",
@@ -30,14 +32,24 @@
   "category.elements-utils.keys": "Elements Utils",
   "key.elements-utils.baseDisplayToggle": "Spieler Base Grenzen umschalten",
   "key.elements-utils.bossTimerToggle": "Dungeon Boss Todeszeiten umschalten",
-  "key.elements-utils.measureTrigger": "XP Messung starten",
+  "key.elements-utils.xpMeasureTrigger": "XP-Messung (Basalt) starten",
+  "key.elements-utils.timeMeasureTrigger": "Zeit-Messung (Basalt) starten",
   "key.elements-utils.devUtils": "Dev Utils (please ignore)",
 
   "elements-utils.display.pet.no_pet": "Unbekanntes Pet",
 
-  "elements-utils.display.bosstimer.relative": "Vor %s",
+  "elements-utils.display.bossTimer.relative": "Vor %s",
 
   "elements-utils.display.base.toggle": "Base Anzeige is jetzt ",
+
+  "elements-utils.message.xpMeter.failed": "Messung abgebrochen: 5 Sekunden keine XP angezeigt",
+  "elements-utils.message.xpMeter.startFailed": "Messung konnte nicht gestartet werden (keine Mining XP erkannt)",
+  "elements-utils.message.xpMeter.xpMode": "XP-Messung: ",
+  "elements-utils.message.xpMeter.timeMode": "Zeit-Messung: ",
+  "elements-utils.message.xpMeter.compressed": "Komprimierte",
+
+  "elements-utils.message.xpMeter.cpFinished": "XP§r in §e%ss§r erreicht | §bØ %a XP/s §r| Komprimierte: §a+%i§r (§a+%c 2er§r)",
+  "elements-utils.message.xpMeter.timeFinished": "s§r vorbei. | §aTotal: %pXP§r | §bØ %a XP/s §r| Komprimierte: §a+%i§r (§a+%c 2er§r)",
   
   "elements-utils.enabled": "aktiviert",
   "elements-utils.disabled": "deaktiviert",

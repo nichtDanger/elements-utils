@@ -11,7 +11,14 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class XpMeter {
-	private static boolean measuringXp = false;
+	public enum MeasurementMode {
+		XP_TARGET,
+		TIME_BASED
+	}
+
+	private static MeasurementMode mode = MeasurementMode.XP_TARGET;
+
+	private static boolean measuringInProgress = false;
 	private static int startXp = 0;
 	private static int currentProgress = 0;
 	private static long startTime = 0;
@@ -21,27 +28,34 @@ public class XpMeter {
 	private static double displayedXpPerSecond = 0.0;
 	private static long lastDisplayUpdate = 0;
 
+	private static final Pattern MINING_XP_PATTERN = Pattern.compile("Mining: (\\d+)");
+	private static final String trackedItemName = "Komprimiertes Basalt";
+	private static int lastItemCount = 0;
+	private static int itemsGainedTotal = 0;
+
 	private static int getTargetXp() {
-		return ModConfig.getConfig().measuringXpTarget;
+		return ModConfig.getConfig().xpMeterConfig.measuringXpTarget;
 	}
 
-	public static boolean isMeasuringXp() {
-		return measuringXp;
+	private static int getTargetTime() {
+		return ModConfig.getConfig().xpMeterConfig.measuringTimeTarget * 1000;
+	}
+
+	public static boolean isMeasuringInProgress() {
+		return measuringInProgress;
 	}
 
 	public static float getXpProgress() {
-		return Math.min(currentProgress / (float) getTargetXp(), 1.0f);
+		if (mode == MeasurementMode.XP_TARGET) {
+			return Math.min(currentProgress / (float) getTargetXp(), 1.0f);
+		} else {
+			return Math.min((System.currentTimeMillis() - startTime) / (float) getTargetTime(), 1.0f);
+		}
 	}
 
 	public static int getCurrentProgress() {
 		return currentProgress;
 	}
-
-	private static final Pattern MINING_XP_PATTERN = Pattern.compile("Mining: (\\d+)");
-
-	private static final String trackedItemName = "Komprimiertes Basalt";
-	private static int lastItemCount = 0;
-	private static int itemsGainedTotal = 0;
 
 	private static int countItemInInventory(MinecraftClient client) {
 		int count = 0;
@@ -56,8 +70,18 @@ public class XpMeter {
 		return count;
 	}
 
-	public static void startMeasuring(MinecraftClient client) {
-		if (client.player == null || client.world == null) return;
+	public static void startXPMeasurement(MinecraftClient client) {
+		if (startMeasurement(client)) return;
+		mode = MeasurementMode.XP_TARGET;
+	}
+
+	public static void startTimeMeasurement(MinecraftClient client) {
+		if (startMeasurement(client)) return;
+		mode = MeasurementMode.TIME_BASED;
+	}
+
+	private static boolean startMeasurement(MinecraftClient client) {
+		if (client.player == null || client.world == null) return true;
 
 		Text overlayMessage = ((InGameHudAccessor) client.inGameHud).getOverlayMessage();
 		String overlayText = (overlayMessage != null) ? overlayMessage.getString() : "";
@@ -65,14 +89,14 @@ public class XpMeter {
 		Matcher matcher = MINING_XP_PATTERN.matcher(overlayText);
 
 		if (!matcher.find()) {
-			Util.sendChatMessage(Text.literal("Messung konnte nicht gestartet werden (keine Mining XP erkannt)."));
-			return;
+			Util.sendChatMessage(Text.translatable("elements-utils.message.xpMeter.startFailed"));
+			return true;
 		}
 
 		startXp = Integer.parseInt(matcher.group(1));
 		startTime = System.currentTimeMillis();
 		currentProgress = 0;
-		measuringXp = true;
+		measuringInProgress = true;
 		noXpTicks = 0;
 		displayedElapsedSeconds = 0.0;
 		displayedXpPerSecond = 0.0;
@@ -80,10 +104,11 @@ public class XpMeter {
 
 		lastItemCount = countItemInInventory(client);
 		itemsGainedTotal = 0;
+		return false;
 	}
 
 	public static void updateXpMeter(MinecraftClient client) {
-		if (!measuringXp) return;
+		if (!measuringInProgress) return;
 
 		Text overlayMessage = ((InGameHudAccessor) client.inGameHud).getOverlayMessage();
 		String overlayText = (overlayMessage != null) ? overlayMessage.getString() : "";
@@ -93,8 +118,8 @@ public class XpMeter {
 		if (!matcher.find()) {
 			noXpTicks++;
 			if (noXpTicks >= 100) {
-				Util.sendChatMessage(Text.literal("Messung abgebrochen: 5 Sekunden keine XP angezeigt."));
-				measuringXp = false;
+				Util.sendChatMessage(Text.translatable("elements-utils.message.xpMeter.failed"));
+				measuringInProgress = false;
 			}
 			return;
 		}
@@ -109,21 +134,40 @@ public class XpMeter {
 		}
 		lastItemCount = currentCount;
 
-		if (currentProgress >= getTargetXp()) {
-			double elapsed = (System.currentTimeMillis() - startTime) / 1000.0;
-			double averageXpPerSecond = elapsed > 0 ? currentProgress / elapsed : 0.0;
-			Util.sendChatMessage(Text.literal(
-					"§3" + getTargetXp() + "XP§r in §e" + String.format("%.2f", elapsed) +
-							"s§r erreicht |§b Ø " + String.format("%.2f", averageXpPerSecond) + " XP/s §r| " +
-							"compressed: §a+" + itemsGainedTotal +
-							"§r (§a+" + String.format("%.2f", itemsGainedTotal / 99.0) + " 2er§r)"
-			));
-			measuringXp = false;
+		if (mode == MeasurementMode.XP_TARGET) {
+			if (currentProgress >= getTargetXp()) {
+				double elapsed = (System.currentTimeMillis() - startTime) / 1000.0;
+				double averageXpPerSecond = elapsed > 0 ? currentProgress / elapsed : 0.0;
+				Util.sendChatMessage(Text.literal(
+						"§3" + getTargetXp() +
+								Text.translatable("elements-utils.message.xpMeter.xpFinished").getString()
+										.replace("%s", String.format("%.2f", elapsed))
+										.replace("%a", String.format("%.2f", averageXpPerSecond))
+										.replace("%i", String.valueOf(itemsGainedTotal))
+										.replace("%c", String.format("%.2f", itemsGainedTotal / 99.0))
+				));
+				measuringInProgress = false;
+			}
+		} else if (mode == MeasurementMode.TIME_BASED) {
+			long elapsed = System.currentTimeMillis() - startTime;
+			if (elapsed >= getTargetTime()) {
+				double seconds = elapsed / 1000.0;
+				double averageXpPerSecond = seconds > 0 ? currentProgress / seconds : 0.0;
+				Util.sendChatMessage(Text.literal(
+						"§e" + String.format("%.2f", seconds) +
+								Text.translatable("elements-utils.message.xpMeter.timeFinished").getString()
+										.replace("%p", String.valueOf(currentProgress))
+										.replace("%a", String.format("%.2f", averageXpPerSecond))
+										.replace("%i", String.valueOf(itemsGainedTotal))
+										.replace("%c", String.format("%.2f", itemsGainedTotal / 99.0))
+				));
+				measuringInProgress = false;
+			}
 		}
 	}
 
 	public static void render(DrawContext context, MinecraftClient client) {
-		if (!isMeasuringXp()) return;
+		if (!isMeasuringInProgress()) return;
 
 		long now = System.currentTimeMillis();
 		double elapsedSeconds = (now - startTime) / 1000.0;
@@ -139,47 +183,79 @@ public class XpMeter {
 		int y = 20;
 		String timeText = String.format("%.2f", displayedElapsedSeconds);
 		String xpPerSecondText = String.format("%.2f", displayedXpPerSecond);
-
-		String textPrefix = "XP-Messung: ";
-		String progressText = getCurrentProgress() + "/" + getTargetXp();
-		String timePrefix = " (";
-		String timeSuffix = "s, ";
-		String textSuffix = "XP/s)";
-		String itemsText = " +" + itemsGainedTotal + " compressed";
-
-		int prefixWidth = client.textRenderer.getWidth(textPrefix);
-		int progressWidth = client.textRenderer.getWidth(progressText);
-		int timePrefixWidth = client.textRenderer.getWidth(timePrefix);
-		int timeTextWidth = client.textRenderer.getWidth(timeText);
-		int timeSuffixWidth = client.textRenderer.getWidth(timeSuffix);
-		int xpPerSecondWidth = client.textRenderer.getWidth(xpPerSecondText);
-		int textSuffixWidth = client.textRenderer.getWidth(textSuffix);
-		int itemsWidth = client.textRenderer.getWidth(itemsText);
-
-		int totalWidth = prefixWidth + progressWidth + timePrefixWidth + timeTextWidth + timeSuffixWidth + xpPerSecondWidth + textSuffixWidth + itemsWidth;
-		int x = width / 2 - totalWidth / 2;
-
-		context.drawText(client.textRenderer, textPrefix, x, y, 0xFFFFFF00, true);
-		x += prefixWidth;
-		context.drawText(client.textRenderer, progressText, x, y, 0xFF99FF99, true);
-		x += progressWidth;
-		context.drawText(client.textRenderer, timePrefix, x, y, 0xFFFFFF, true);
-		x += timePrefixWidth;
-		context.drawText(client.textRenderer, timeText, x, y, 0xFFFFFF00, true);
-		x += timeTextWidth;
-		context.drawText(client.textRenderer, timeSuffix, x, y, 0xFFFFFF, true);
-		x += timeSuffixWidth;
-		context.drawText(client.textRenderer, xpPerSecondText, x, y, 0xFF00FFFF, true);
-		x += xpPerSecondWidth;
-		context.drawText(client.textRenderer, textSuffix, x, y, 0xFFFFFF, true);
-		x += textSuffixWidth;
-		context.drawText(client.textRenderer, itemsText, x, y, 0xFFD3D3D3, true);
+		String itemsText = " +" + itemsGainedTotal + " " + Text.translatable("elements-utils.message.xpMeter.compressed").getString();
 
 		int barWidth = 200;
 		int barHeight = 10;
 		int barX = width / 2 - barWidth / 2;
 		int filled = (int)(barWidth * getXpProgress());
-		context.fill(barX, y + 15, barX + filled, y + 15 + barHeight, 0xFF00FF00);
-		context.fill(barX + filled, y + 15, barX + barWidth, y + 15 + barHeight, 0xFF555555);
+
+		if (mode == MeasurementMode.XP_TARGET) {
+			String textPrefix = Text.translatable("elements-utils.message.xpMeter.xpMode").getString();
+			String progressText = getCurrentProgress() + "XP/" + getTargetXp() + "XP";
+			String timePrefix = " (";
+			String timeSuffix = "§es §r| ";
+			String textSuffix = "§bXP/s§r)";
+
+			int prefixWidth = client.textRenderer.getWidth(textPrefix);
+			int progressWidth = client.textRenderer.getWidth(progressText);
+			int timePrefixWidth = client.textRenderer.getWidth(timePrefix);
+			int timeTextWidth = client.textRenderer.getWidth(timeText);
+			int timeSuffixWidth = client.textRenderer.getWidth(timeSuffix);
+			int xpPerSecondWidth = client.textRenderer.getWidth(xpPerSecondText);
+			int textSuffixWidth = client.textRenderer.getWidth(textSuffix);
+			int itemsWidth = client.textRenderer.getWidth(itemsText);
+
+			int totalWidth = prefixWidth + progressWidth + timePrefixWidth + timeTextWidth + timeSuffixWidth + xpPerSecondWidth + textSuffixWidth + itemsWidth;
+			int x = width / 2 - totalWidth / 2;
+
+			context.drawText(client.textRenderer, textPrefix, x, y, 0xFFFFFF00, true);
+			x += prefixWidth;
+			context.drawText(client.textRenderer, progressText, x, y, 0xFF99FF99, true);
+			x += progressWidth;
+			context.drawText(client.textRenderer, timePrefix, x, y, 0xFFFFFF, true);
+			x += timePrefixWidth;
+			context.drawText(client.textRenderer, timeText, x, y, 0xFFFFFF00, true);
+			x += timeTextWidth;
+			context.drawText(client.textRenderer, timeSuffix, x, y, 0xFFFFFF, true);
+			x += timeSuffixWidth;
+			drawContext(context, client, y, xpPerSecondText, itemsText, textSuffix, xpPerSecondWidth, textSuffixWidth, x);
+
+			context.fill(barX, y + 15, barX + filled, y + 15 + barHeight, 0xFF00FF00);
+			context.fill(barX + filled, y + 15, barX + barWidth, y + 15 + barHeight, 0xFF555555);
+		} else if (mode == MeasurementMode.TIME_BASED) {
+			String textPrefix = Text.translatable("elements-utils.message.xpMeter.timeMode").getString();
+			String xpText = currentProgress + "XP ";
+			String timeRatio = String.format("§r(§e%.2fs§r/§e%.2fs §r| ", displayedElapsedSeconds, getTargetTime() / 1000.0);
+			String textSuffix = "§bXP/s§r)";
+			int prefixWidth = client.textRenderer.getWidth(textPrefix);
+			int xpTextWidth = client.textRenderer.getWidth(xpText);
+			int timeRatioWidth = client.textRenderer.getWidth(timeRatio);
+			int xpPerSecondWidth = client.textRenderer.getWidth(xpPerSecondText);
+			int textSuffixWidth = client.textRenderer.getWidth(textSuffix);
+			int itemsWidth = client.textRenderer.getWidth(itemsText);
+
+			int totalWidth = prefixWidth + xpTextWidth + timeRatioWidth + xpPerSecondWidth + textSuffixWidth + itemsWidth;
+			int x = width / 2 - totalWidth / 2;
+
+			context.drawText(client.textRenderer, textPrefix, x, y, 0xFF00FFFF, true);
+			x += prefixWidth;
+			context.drawText(client.textRenderer, xpText, x, y, 0xFF99FF99, true);
+			x += xpTextWidth;
+			context.drawText(client.textRenderer, timeRatio, x, y, 0xFFD3D3D3, true);
+			x += timeRatioWidth;
+			drawContext(context, client, y, xpPerSecondText, itemsText, textSuffix, xpPerSecondWidth, textSuffixWidth, x);
+
+			context.fill(barX, y + 15, barX + filled, y + 15 + barHeight, 0xFF00FFFF);
+			context.fill(barX + filled, y + 15, barX + barWidth, y + 15 + barHeight, 0xFF555555);
+		}
+	}
+
+	private static void drawContext(DrawContext context, MinecraftClient client, int y, String xpPerSecondText, String itemsText, String textSuffix, int xpPerSecondWidth, int textSuffixWidth, int x) {
+		context.drawText(client.textRenderer, xpPerSecondText, x, y, 0xFF00FFFF, true);
+		x += xpPerSecondWidth;
+		context.drawText(client.textRenderer, textSuffix, x, y, 0xFFFFFF, true);
+		x += textSuffixWidth;
+		context.drawText(client.textRenderer, itemsText, x, y, 0xFFD3D3D3, true);
 	}
 }

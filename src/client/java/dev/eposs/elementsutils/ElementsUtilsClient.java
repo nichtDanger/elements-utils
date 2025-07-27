@@ -13,7 +13,6 @@ import dev.eposs.elementsutils.util.DevUtil;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.Toml4jConfigSerializer;
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
@@ -32,7 +31,8 @@ import org.lwjgl.glfw.GLFW;
 public class ElementsUtilsClient implements ClientModInitializer {
     private static KeyBinding baseDisplayToggle;
     private static KeyBinding bossTimerToggle;
-    private static KeyBinding measureTrigger;
+    private static KeyBinding xpMeasureTrigger;
+    private static KeyBinding timeMeasureTrigger;
     private static KeyBinding devUtils;
 
     @Override
@@ -119,8 +119,14 @@ public class ElementsUtilsClient implements ClientModInitializer {
                 category
         ));
 
-        measureTrigger = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-                getKeyBindingTranslation("measureTrigger"),
+        xpMeasureTrigger = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+                getKeyBindingTranslation("xpMeasureTrigger"),
+                GLFW.GLFW_KEY_UNKNOWN,
+                category
+        ));
+
+        timeMeasureTrigger = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+                getKeyBindingTranslation("timeMeasureTrigger"),
                 GLFW.GLFW_KEY_UNKNOWN,
                 category
         ));
@@ -139,8 +145,11 @@ public class ElementsUtilsClient implements ClientModInitializer {
         while (bossTimerToggle.wasPressed()) {
             BossTimerDisplay.toggleDisplay(client);
         }
-        while (measureTrigger.wasPressed()) {
-            XpMeter.startMeasuring(client);
+        while (xpMeasureTrigger.wasPressed()) {
+            XpMeter.startXPMeasurement(client);
+        }
+        while (timeMeasureTrigger.wasPressed()) {
+            XpMeter.startTimeMeasurement(client);
         }
         while (devUtils.wasPressed()) {
             DevUtil.doSomething(client);

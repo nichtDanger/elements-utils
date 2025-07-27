@@ -83,7 +83,12 @@ public class ModConfig implements ConfigData {
 
     }
 
-    public Integer measuringXpTarget = 500;
+    @ConfigEntry.Gui.CollapsibleObject
+    public XPMeterConfig xpMeterConfig = new XPMeterConfig();
+    public static class XPMeterConfig {
+        public Integer measuringXpTarget = 500;
+        public Integer measuringTimeTarget = 300;
+    }
 
     @ConfigEntry.Gui.CollapsibleObject
     public DevUtilsConfig devUtils = new DevUtilsConfig();

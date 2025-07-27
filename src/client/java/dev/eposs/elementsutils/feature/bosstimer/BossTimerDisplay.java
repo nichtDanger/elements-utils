@@ -94,7 +94,7 @@ public class BossTimerDisplay {
             sb.append(minutes).append("m ");
         }
 
-        return Text.translatable("elements-utils.display.bosstimer.relative", sb.toString().trim());
+        return Text.translatable("elements-utils.display.bossTimer.relative", sb.toString().trim());
     }
 
     private static void drawText(MinecraftClient client, DrawContext context, int line, Text text) {
