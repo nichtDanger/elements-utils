@@ -31,4 +31,8 @@ public class Util {
 
         return null;
     }
+
+    public static String formatLevel(int level) {
+        return String.format("%,d", level).replace(',', '.');
+    }
 }

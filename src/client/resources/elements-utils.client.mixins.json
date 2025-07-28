@@ -5,7 +5,8 @@
   "client": [
     "ExampleClientMixin",
     "InGameHudAccessor",
-    "InGameHudMixin"
+    "InGameHudMixin",
+    "PlayerListHudMixin"
   ],
   "injectors": {
     "defaultRequire": 1

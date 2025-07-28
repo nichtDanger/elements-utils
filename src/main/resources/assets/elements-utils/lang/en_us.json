@@ -25,6 +25,8 @@
   "text.autoconfig.elements-utils.option.xpMeterConfig": "XP-Meter Config (Basalt)",
   "text.autoconfig.elements-utils.option.xpMeterConfig.measuringXpTarget": "XP-Measurement Target (XP)",
   "text.autoconfig.elements-utils.option.xpMeterConfig.measuringTimeTarget": "Time-Measurement Target (Seconds)",
+
+  "text.autoconfig.elements-utils.option.formatPlayerLevel": "Format player levels",
   
   "text.autoconfig.elements-utils.option.devUtils": "Development Utils (please ignore)",
   "text.autoconfig.elements-utils.option.devUtils.enable": "Enabled",

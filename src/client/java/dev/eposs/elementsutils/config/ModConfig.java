@@ -90,6 +90,8 @@ public class ModConfig implements ConfigData {
         public Integer measuringTimeTarget = 300;
     }
 
+    public boolean formatPlayerLevel = true;
+
     @ConfigEntry.Gui.CollapsibleObject
     public DevUtilsConfig devUtils = new DevUtilsConfig();
     public static class DevUtilsConfig {
