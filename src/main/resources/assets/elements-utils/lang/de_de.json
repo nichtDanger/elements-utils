@@ -26,7 +26,7 @@
   "text.autoconfig.elements-utils.option.xpMeterConfig.measuringXpTarget": "XP-Messung Ziel (XP)",
   "text.autoconfig.elements-utils.option.xpMeterConfig.measuringTimeTarget": "Zeit-Messung Ziel (Sekunden)",
 
-  "text.autoconfig.elements-utils.option.formatPlayerLevel": "Formatieren der Spielerlevel",
+  "text.autoconfig.elements-utils.option.formatPlayerLevel": "Formatierte Anzeige der Spielerlevel",
 
   "text.autoconfig.elements-utils.option.devUtils": "Development Utils (please ignore)",
   "text.autoconfig.elements-utils.option.devUtils.enable": "Enabled",

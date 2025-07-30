@@ -1,5 +1,6 @@
 package dev.eposs.elementsutils;
 
+import com.terraformersmc.modmenu.util.mod.fabric.FabricMod;
 import dev.eposs.elementsutils.config.ModConfig;
 import dev.eposs.elementsutils.feature.bosstimer.BossTimerData;
 import dev.eposs.elementsutils.feature.bosstimer.BossTimerDisplay;
@@ -10,6 +11,7 @@ import dev.eposs.elementsutils.feature.potion.PotionDisplay;
 import dev.eposs.elementsutils.feature.xpmeter.XpMeter;
 import dev.eposs.elementsutils.rendering.ScreenRendering;
 import dev.eposs.elementsutils.util.DevUtil;
+import dev.eposs.elementsutils.common.GameMessageHandler;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.Toml4jConfigSerializer;
 import net.fabricmc.api.ClientModInitializer;
@@ -20,6 +22,7 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.HudLayerRegistrationCallback;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.network.ServerInfo;
@@ -28,12 +31,21 @@ import net.minecraft.text.Text;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.lwjgl.glfw.GLFW;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 public class ElementsUtilsClient implements ClientModInitializer {
     private static KeyBinding baseDisplayToggle;
     private static KeyBinding bossTimerToggle;
     private static KeyBinding xpMeasureTrigger;
     private static KeyBinding timeMeasureTrigger;
     private static KeyBinding devUtils;
+
+    private static final Set<String> HIDDEN_MOD_IDS = Set.of(
+            "java", "minecraft", "mixinextras"
+    );
 
     @Override
     public void onInitializeClient() {
@@ -66,11 +78,17 @@ public class ElementsUtilsClient implements ClientModInitializer {
         PetDisplay.updatePet(client);
         PotionDisplay.updatePotions(client);
         XpMeter.updateXpMeter(client);
+        GameMessageHandler.processPendingCommands(client);
     }
 
     private void onJoin(ClientPlayNetworkHandler handler, PacketSender sender, MinecraftClient client) {
         runServerCheck(client);
         PetDisplay.loadPet(handler.getRegistryManager());
+
+        ModConfig.InternalConfig.Servers server = ModConfig.getConfig().internal.server;
+        if (server != ModConfig.InternalConfig.Servers.UNKNOWN) {
+            GameMessageHandler.queueModlistCommands(client, getUserMods(), "/modlist ", 256);
+        }
     }
 
     private void onLeave(ClientPlayNetworkHandler handler, MinecraftClient client) {
@@ -100,9 +118,8 @@ public class ElementsUtilsClient implements ClientModInitializer {
 
     private boolean onGameMessage(Text text, boolean b) {
         LootSound.onGameMessage(text);
-
-        return true;
-    }
+		return GameMessageHandler.onGameMessage(text);
+	}
 
     private void registerKeyBinding() {
         String category = "category." + ElementsUtils.MOD_ID + ".keys";
@@ -158,5 +175,19 @@ public class ElementsUtilsClient implements ClientModInitializer {
 
     private String getKeyBindingTranslation(String keyBinding) {
         return "key." + ElementsUtils.MOD_ID + "." + keyBinding;
+    }
+
+    private List<String> getUserMods() {
+        Set<String> modpackMods = new HashSet<>();
+        return FabricLoader.getInstance().getAllMods().stream()
+                .filter(mod -> {
+                    FabricMod fabricMod = new FabricMod(mod, modpackMods);
+                    String parent = fabricMod.getParent();
+                    String id = mod.getMetadata().getId();
+                    return (parent == null || !parent.equals("fabric-api"))
+                            && !HIDDEN_MOD_IDS.contains(id);
+                })
+                .map(mod -> mod.getMetadata().getId())
+                .collect(Collectors.toList());
     }
 }
