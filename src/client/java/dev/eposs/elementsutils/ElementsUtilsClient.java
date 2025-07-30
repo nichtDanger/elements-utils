@@ -1,6 +1,6 @@
 package dev.eposs.elementsutils;
 
-import com.terraformersmc.modmenu.util.mod.fabric.FabricMod;
+import dev.eposs.elementsutils.api.commonmods.CommonModIdsApi;
 import dev.eposs.elementsutils.config.ModConfig;
 import dev.eposs.elementsutils.feature.bosstimer.BossTimerData;
 import dev.eposs.elementsutils.feature.bosstimer.BossTimerDisplay;
@@ -31,9 +31,7 @@ import net.minecraft.text.Text;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.lwjgl.glfw.GLFW;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 public class ElementsUtilsClient implements ClientModInitializer {
@@ -42,10 +40,6 @@ public class ElementsUtilsClient implements ClientModInitializer {
     private static KeyBinding xpMeasureTrigger;
     private static KeyBinding timeMeasureTrigger;
     private static KeyBinding devUtils;
-
-    private static final Set<String> HIDDEN_MOD_IDS = Set.of(
-            "java", "minecraft", "mixinextras"
-    );
 
     @Override
     public void onInitializeClient() {
@@ -58,6 +52,7 @@ public class ElementsUtilsClient implements ClientModInitializer {
         registerEvents();
 
         BossTimerData.startUpdateTimers();
+        CommonModIdsApi.fetchCommonModIds();
     }
 
     private void registerEvents() {
@@ -178,14 +173,12 @@ public class ElementsUtilsClient implements ClientModInitializer {
     }
 
     private List<String> getUserMods() {
-        Set<String> modpackMods = new HashSet<>();
+        List<String> commonModIds = CommonModIdsApi.getCachedCommonModIds();
         return FabricLoader.getInstance().getAllMods().stream()
                 .filter(mod -> {
-                    FabricMod fabricMod = new FabricMod(mod, modpackMods);
-                    String parent = fabricMod.getParent();
-                    String id = mod.getMetadata().getId();
-                    return (parent == null || !parent.equals("fabric-api"))
-                            && !HIDDEN_MOD_IDS.contains(id);
+                    var meta = mod.getMetadata();
+                    boolean isCommon = commonModIds.contains(meta.getId());
+                    return !isCommon;
                 })
                 .map(mod -> mod.getMetadata().getId())
                 .collect(Collectors.toList());

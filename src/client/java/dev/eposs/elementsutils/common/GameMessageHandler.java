@@ -32,7 +32,7 @@ public class GameMessageHandler {
 	public static void queueModlistCommands(MinecraftClient client, List<String> modIds, String prefix, int maxLength) {
 		List<String> messages = splitModList(modIds, prefix, maxLength);
 		pendingCommands.addAll(messages);
-		suppressUntil = System.currentTimeMillis() + 2000;
+		suppressUntil = System.currentTimeMillis() + 10000;
 	}
 
 	/**
