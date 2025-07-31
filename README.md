@@ -2,6 +2,11 @@
 
 A Utility Mod for the gamemode Elements by SparkOfPhoenix
 
+> **Disclaimer:**
+> This mod will send your mod list to the Elements server console to help prevent cheating.
+> 
+> Diese Mod überträgt deine Mod-Liste an die Elements-Server-Konsole, um Cheatern vorzubeugen.
+
 _Elements 3 - 1.21.4_
 
 ## Features
@@ -25,7 +30,15 @@ _Elements 3 - 1.21.4_
 ## Additional Features (nichtDanger)
 
 - XP Meter (Basalt)
-  - Measuring Basalt Gen's with Keybind (default: none) and Target XP / Target Time (Config)
+  - Measure Basalt Gen's with keybind (default: none) and target XP / target time (configurable)
+- Player Level Enhancements
+  - Option to format level with dots as thousands separators (Player Level and Level in Player List)
+  - Option to change the color of the player levels
+  - Option to change the color of the levels in the player list
+- Player XP Enhancements
+  - Option to format XP with dots as thousands separators
+  - Option to change the color of the XP display
+  - Option to hide the max pet
 
 ## Config
 

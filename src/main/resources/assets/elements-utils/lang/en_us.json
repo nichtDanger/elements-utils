@@ -22,11 +22,19 @@
   "text.autoconfig.elements-utils.option.potionDisplay.show": "Show Potion Display",
   "text.autoconfig.elements-utils.option.potionDisplay.position": "Display Position",
 
-  "text.autoconfig.elements-utils.option.xpMeterConfig": "XP-Meter Config (Basalt)",
+  "text.autoconfig.elements-utils.option.xpMeterConfig": "XP-Meter (Basalt)",
   "text.autoconfig.elements-utils.option.xpMeterConfig.measuringXpTarget": "XP-Measurement Target (XP)",
   "text.autoconfig.elements-utils.option.xpMeterConfig.measuringTimeTarget": "Time-Measurement Target (Seconds)",
 
-  "text.autoconfig.elements-utils.option.formatPlayerLevel": "Format display of player levels",
+  "text.autoconfig.elements-utils.option.playerLevelConfig": "Player Level Options",
+  "text.autoconfig.elements-utils.option.playerLevelConfig.enabled": "Format Numbers of Player Levels",
+  "text.autoconfig.elements-utils.option.playerLevelConfig.formattedPlayerLevelColor": "Player Level Color",
+  "text.autoconfig.elements-utils.option.playerLevelConfig.formattedPlayerListLevelColor": "Player List Level Color",
+
+  "text.autoconfig.elements-utils.option.playerXPConfig": "Player XP Options",
+  "text.autoconfig.elements-utils.option.playerXPConfig.enabled": "Format Numbers of Player XP's",
+  "text.autoconfig.elements-utils.option.playerXPConfig.overlayMessageColor": "Overlay Message Color",
+  "text.autoconfig.elements-utils.option.playerXPConfig.hideMaxPetXP": "Hide Max Pet XP",
   
   "text.autoconfig.elements-utils.option.devUtils": "Development Utils (please ignore)",
   "text.autoconfig.elements-utils.option.devUtils.enable": "Enabled",
@@ -44,6 +52,7 @@
   
   "elements-utils.display.base.toggle": "Base display is now ",
 
+  "elements-utils.message.xpMeter.cancelled": "Measurement cancelled",
   "elements-utils.message.xpMeter.failed": "Measurement aborted: No XP displayed for 5 seconds",
   "elements-utils.message.xpMeter.startFailed": "Measurement could not be started (no Mining XP detected)",
   "elements-utils.message.xpMeter.xpMode": "XP-Measurement: ",

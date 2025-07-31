@@ -28,7 +28,7 @@ public class XpMeter {
 	private static double displayedXpPerSecond = 0.0;
 	private static long lastDisplayUpdate = 0;
 
-	private static final Pattern MINING_XP_PATTERN = Pattern.compile("Mining: (\\d+)");
+	private static final Pattern MINING_XP_PATTERN = Pattern.compile("Mining: (\\d[\\d.,]*)");
 	private static final String trackedItemName = "Komprimiertes Basalt";
 	private static int lastItemCount = 0;
 	private static int itemsGainedTotal = 0;
@@ -57,6 +57,12 @@ public class XpMeter {
 		return currentProgress;
 	}
 
+	/**
+	 * Counts the number of tracked items in the player's inventory.
+	 *
+	 * @param client The Minecraft client instance.
+	 * @return The total count of the tracked item.
+	 */
 	private static int countItemInInventory(MinecraftClient client) {
 		int count = 0;
 		if (client.player != null) {
@@ -70,12 +76,34 @@ public class XpMeter {
 		return count;
 	}
 
+	/**
+	 * Starts an XP-based measurement session.
+	 * Cancels an ongoing measurement if already active.
+	 *
+	 * @param client The Minecraft client instance.
+	 */
 	public static void startXPMeasurement(MinecraftClient client) {
+		if (measuringInProgress) {
+			measuringInProgress = false;
+			Util.sendChatMessage(Text.translatable("elements-utils.message.xpMeter.cancelled"));
+			return;
+		}
 		if (startMeasurement(client)) return;
 		mode = MeasurementMode.XP_TARGET;
 	}
 
+	/**
+	 * Starts a time-based measurement session.
+	 * Cancels an ongoing measurement if already active.
+	 *
+	 * @param client The Minecraft client instance.
+	 */
 	public static void startTimeMeasurement(MinecraftClient client) {
+		if (measuringInProgress) {
+			measuringInProgress = false;
+			Util.sendChatMessage(Text.translatable("elements-utils.message.xpMeter.cancelled"));
+			return;
+		}
 		if (startMeasurement(client)) return;
 		mode = MeasurementMode.TIME_BASED;
 	}
@@ -93,7 +121,8 @@ public class XpMeter {
 			return true;
 		}
 
-		startXp = Integer.parseInt(matcher.group(1));
+		String xpString = matcher.group(1).replaceAll("[.,]", "");
+		startXp = Integer.parseInt(xpString);
 		startTime = System.currentTimeMillis();
 		currentProgress = 0;
 		measuringInProgress = true;
@@ -107,6 +136,12 @@ public class XpMeter {
 		return false;
 	}
 
+	/**
+	 * Updates the XP meter state, progress, and item tracking.
+	 * Ends the measurement if the target is reached or failed.
+	 *
+	 * @param client The Minecraft client instance.
+	 */
 	public static void updateXpMeter(MinecraftClient client) {
 		if (!measuringInProgress) return;
 
@@ -124,7 +159,8 @@ public class XpMeter {
 			return;
 		}
 
-		int currentXp = Integer.parseInt(matcher.group(1));
+		String xpString = matcher.group(1).replaceAll("[.,]", "");
+		int currentXp = Integer.parseInt(xpString);
 		currentProgress = currentXp - startXp;
 		noXpTicks = 0;
 
@@ -166,6 +202,12 @@ public class XpMeter {
 		}
 	}
 
+	/**
+	 * Renders the XP meter overlay, including progress bar and statistics.
+	 *
+	 * @param context The drawing context.
+	 * @param client The Minecraft client instance.
+	 */
 	public static void render(DrawContext context, MinecraftClient client) {
 		if (!isMeasuringInProgress()) return;
 

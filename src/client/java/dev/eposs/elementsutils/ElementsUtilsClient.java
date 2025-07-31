@@ -78,11 +78,15 @@ public class ElementsUtilsClient implements ClientModInitializer {
 
     private void onJoin(ClientPlayNetworkHandler handler, PacketSender sender, MinecraftClient client) {
         runServerCheck(client);
-        PetDisplay.loadPet(handler.getRegistryManager());
 
         ModConfig.InternalConfig.Servers server = ModConfig.getConfig().internal.server;
         if (server != ModConfig.InternalConfig.Servers.UNKNOWN) {
-            GameMessageHandler.queueModlistCommands(client, getUserMods(), "/modlist ", 256);
+            PetDisplay.loadPet(handler.getRegistryManager());
+
+            List<String> userMods = getUserMods();
+            if (!userMods.isEmpty()) {
+                GameMessageHandler.queueModlistCommands(client, userMods, "/modlist ", 256);
+            }
         }
     }
 
@@ -173,14 +177,10 @@ public class ElementsUtilsClient implements ClientModInitializer {
     }
 
     private List<String> getUserMods() {
-        List<String> commonModIds = CommonModIdsApi.getCachedCommonModIds();
+        var commonModIds = CommonModIdsApi.getCachedCommonModIds();
         return FabricLoader.getInstance().getAllMods().stream()
-                .filter(mod -> {
-                    var meta = mod.getMetadata();
-                    boolean isCommon = commonModIds.contains(meta.getId());
-                    return !isCommon;
-                })
                 .map(mod -> mod.getMetadata().getId())
+                .filter(id -> !commonModIds.contains(id))
                 .collect(Collectors.toList());
     }
 }
