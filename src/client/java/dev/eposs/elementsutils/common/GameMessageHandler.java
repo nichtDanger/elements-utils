@@ -32,7 +32,7 @@ public class GameMessageHandler {
 	public static void queueModlistCommands(MinecraftClient client, List<String> modIds, String prefix, int maxLength) {
 		List<String> messages = splitModList(modIds, prefix, maxLength);
 		pendingCommands.addAll(messages);
-		suppressUntil = System.currentTimeMillis() + 60 * 1000;
+		suppressUntil = System.currentTimeMillis() + 20 * 1000;
 	}
 
 	/**
@@ -44,7 +44,10 @@ public class GameMessageHandler {
 	public static boolean onGameMessage(Text text) {
 		String msg = text.getString();
 		boolean suppress = System.currentTimeMillis() < suppressUntil;
-		return !suppress || !msg.startsWith("Unknown or incomplete command") || !msg.contains("modlist");
+		boolean isModlistError =
+				(msg.startsWith("Unknown or incomplete command") && msg.contains("modlist")) ||
+						(msg.startsWith("Unbekannter oder unvollständiger Befehl") && msg.contains("modlist"));
+		return !suppress || !isModlistError;
 	}
 
 	/**
