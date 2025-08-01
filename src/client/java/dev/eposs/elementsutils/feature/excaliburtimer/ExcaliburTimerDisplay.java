@@ -59,20 +59,20 @@ public class ExcaliburTimerDisplay {
 		if (!config.show) return;
 
 		var data = ExcaliburTimerData.getInstance();
-		Instant targetInstant = calculateTargetInstant(data.getTime());
-		Duration timeUntilTarget = targetInstant == null ? Duration.ZERO : Duration.between(Instant.now(), targetInstant);
+		ZonedDateTime targetTime = calculateTargetTime(data.getTime());
+		Duration timeUntilTarget = targetTime == null ? Duration.ZERO : Duration.between(Instant.now(), targetTime);
 
 		drawText(client, context, baseLine, Text.translatable("elements-utils.display.excaliburTime.title").formatted(Formatting.UNDERLINE));
 		drawText(client, context, baseLine + 1, Text.literal("")
 				.append(colorize(Text.translatable("elements-utils.display.excaliburTime.next_player"), config.colorExcaliburNames, Formatting.RED))
-				.append(colorize(Text.literal(data.getNext_user() == null ? "?" : data.getNext_user()), config.colorExcaliburNames, Formatting.GOLD))
+				.append(colorize(Text.literal(data.getNext_user().isEmpty() ? "?" : data.getNext_user()), config.colorExcaliburNames, Formatting.GOLD))
 		);
 		drawText(client, context, baseLine + 2, Text.literal("")
 				.append(colorize(Text.translatable("elements-utils.display.excaliburTime.time_left"), config.colorExcaliburTime, Formatting.AQUA))
 				.append(
 						(config.excaliburTimeFormat == ModConfig.TimeFormat.RELATIVE
 								? toRelativeTime(timeUntilTarget)
-								: Text.literal(formatTargetTime(targetInstant)
+								: Text.literal(formatTargetTime(targetTime)
 						).formatted(config.colorExcaliburTime ? Formatting.GREEN : Formatting.WHITE)))
 		);
 	}
@@ -115,12 +115,11 @@ public class ExcaliburTimerDisplay {
 	 * @param startTime The start time as an Instant.
 	 * @return The calculated target Instant, or null if startTime is null.
 	 */
-	private static Instant calculateTargetInstant(Instant startTime) {
+	private static ZonedDateTime calculateTargetTime(ZonedDateTime startTime) {
 		if (startTime == null) return null;
-		return ZonedDateTime.ofInstant(startTime, ZoneId.systemDefault())
+		return startTime
 				.plusDays(DAYS)
-				.plusSeconds(EXTRA_SECONDS)
-				.toInstant();
+				.plusSeconds(EXTRA_SECONDS);
 	}
 
 	/**
@@ -129,9 +128,9 @@ public class ExcaliburTimerDisplay {
 	 * @param targetInstant The target instant to format.
 	 * @return The formatted date-time string, or "?" if targetInstant is null.
 	 */
-	private static String formatTargetTime(Instant targetInstant) {
+	private static String formatTargetTime(ZonedDateTime targetInstant) {
 		if (targetInstant == null) return "?";
-		return FORMATTER.format(targetInstant.atZone(ZoneId.systemDefault()));
+		return FORMATTER.format(targetInstant);
 	}
 
 	/**

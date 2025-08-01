@@ -4,6 +4,8 @@ import dev.eposs.elementsutils.api.excaliburtimer.ExcaliburTimerApi;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.time.ZonedDateTime;
+import java.util.TimeZone;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicReference;
@@ -74,8 +76,9 @@ public class ExcaliburTimerData {
 	 *
 	 * @return The time as an Instant, or null.
 	 */
-	public Instant getTime() {
+	public ZonedDateTime getTime() {
 		if (time == null || time.isEmpty()) return null;
-		return Instant.parse(time);
+		ZonedDateTime zonedDateTime = ZonedDateTime.parse(time);
+		return zonedDateTime.isBefore(ZonedDateTime.ofInstant(Instant.EPOCH, zonedDateTime.getZone())) ? null : zonedDateTime;
 	}
 }
