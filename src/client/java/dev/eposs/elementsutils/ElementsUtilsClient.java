@@ -1,6 +1,5 @@
 package dev.eposs.elementsutils;
 
-import dev.eposs.elementsutils.api.commonmods.CommonModIdsApi;
 import dev.eposs.elementsutils.config.ModConfig;
 import dev.eposs.elementsutils.feature.bosstimer.BossTimerData;
 import dev.eposs.elementsutils.feature.bosstimer.BossTimerDisplay;
@@ -11,7 +10,6 @@ import dev.eposs.elementsutils.feature.potion.PotionDisplay;
 import dev.eposs.elementsutils.feature.xpmeter.XpMeter;
 import dev.eposs.elementsutils.rendering.ScreenRendering;
 import dev.eposs.elementsutils.util.DevUtil;
-import dev.eposs.elementsutils.common.GameMessageHandler;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.Toml4jConfigSerializer;
 import net.fabricmc.api.ClientModInitializer;
@@ -22,7 +20,6 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.HudLayerRegistrationCallback;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.network.ServerInfo;
@@ -30,9 +27,6 @@ import net.minecraft.client.option.KeyBinding;
 import net.minecraft.text.Text;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.lwjgl.glfw.GLFW;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class ElementsUtilsClient implements ClientModInitializer {
     private static KeyBinding baseDisplayToggle;
@@ -52,7 +46,6 @@ public class ElementsUtilsClient implements ClientModInitializer {
         registerEvents();
 
         BossTimerData.startUpdateTimers();
-        CommonModIdsApi.fetchCommonModIds();
     }
 
     private void registerEvents() {
@@ -73,7 +66,6 @@ public class ElementsUtilsClient implements ClientModInitializer {
         PetDisplay.updatePet(client);
         PotionDisplay.updatePotions(client);
         XpMeter.updateXpMeter(client);
-        GameMessageHandler.processPendingCommands(client);
     }
 
     private void onJoin(ClientPlayNetworkHandler handler, PacketSender sender, MinecraftClient client) {
@@ -82,11 +74,6 @@ public class ElementsUtilsClient implements ClientModInitializer {
         ModConfig.InternalConfig.Servers server = ModConfig.getConfig().internal.server;
         if (server != ModConfig.InternalConfig.Servers.UNKNOWN) {
             PetDisplay.loadPet(handler.getRegistryManager());
-
-            List<String> userMods = getUserMods();
-            if (!userMods.isEmpty()) {
-                GameMessageHandler.queueModlistCommands(client, userMods, "/modlist ", 256);
-            }
         }
     }
 
@@ -117,7 +104,7 @@ public class ElementsUtilsClient implements ClientModInitializer {
 
     private boolean onGameMessage(Text text, boolean b) {
         LootSound.onGameMessage(text);
-		return GameMessageHandler.onGameMessage(text);
+		return true;
 	}
 
     private void registerKeyBinding() {
@@ -174,13 +161,5 @@ public class ElementsUtilsClient implements ClientModInitializer {
 
     private String getKeyBindingTranslation(String keyBinding) {
         return "key." + ElementsUtils.MOD_ID + "." + keyBinding;
-    }
-
-    private List<String> getUserMods() {
-        var commonModIds = CommonModIdsApi.getCachedCommonModIds();
-        return FabricLoader.getInstance().getAllMods().stream()
-                .map(mod -> mod.getMetadata().getId())
-                .filter(id -> !commonModIds.contains(id))
-                .collect(Collectors.toList());
     }
 }
