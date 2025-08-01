@@ -2,11 +2,6 @@
 
 A Utility Mod for the gamemode Elements by SparkOfPhoenix
 
-> **Disclaimer:**
-> This mod will send your mod list to the Elements server console to help prevent cheating.
-> 
-> Diese Mod überträgt deine Mod-Liste an die Elements-Server-Konsole, um Cheatern vorzubeugen.
-
 _Elements 3 - 1.21.4_
 
 ## Features
@@ -39,6 +34,9 @@ _Elements 3 - 1.21.4_
   - Option to format XP with dots as thousands separators
   - Option to change the color of the XP display
   - Option to hide the max pet
+- Excalibur Time Display
+    - Show the time until the next Excalibur is available
+    - Show the next Player who can pull Excalibur
 
 ## Config
 

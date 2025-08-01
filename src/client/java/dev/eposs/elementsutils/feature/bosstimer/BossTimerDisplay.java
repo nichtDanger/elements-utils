@@ -11,28 +11,27 @@ import org.jetbrains.annotations.NotNull;
 import java.time.Duration;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
 import java.time.temporal.ChronoUnit;
 
 public class BossTimerDisplay {
     public static void toggleDisplay(@NotNull MinecraftClient client) {
         if (client.player == null || client.world == null) return;
 
-        ModConfig.getConfig().bossTimer.show = !ModConfig.getConfig().bossTimer.show;
+        ModConfig.getConfig().timeDisplays.show = !ModConfig.getConfig().timeDisplays.show;
         ModConfig.save();
 
-        if (ModConfig.getConfig().bossTimer.show) {
+        if (ModConfig.getConfig().timeDisplays.show) {
             BossTimerData.updateData();
         }
     }
 
     public static void render(DrawContext context, MinecraftClient client) {
-        ModConfig.BossTimerConfig config = ModConfig.getConfig().bossTimer;
+        ModConfig.TimeDisplaysConfig config = ModConfig.getConfig().timeDisplays;
         if (!config.show) return;
 
         BossTimerData timerData = BossTimerData.getInstance();
 
-        drawText(client, context, 0, Text.translatable("text.autoconfig.elements-utils.option.bossTimer").formatted(Formatting.UNDERLINE));
+        drawText(client, context, 0, Text.translatable("elements-utils.display.bossTimer.title").formatted(Formatting.UNDERLINE));
         drawText(client, context, 1, formattedText("Axolotl", Formatting.LIGHT_PURPLE, timerData.getAxolotl(), config));
         drawText(client, context, 2, formattedText("Zombie", Formatting.GREEN, timerData.getZombie(), config));
         drawText(client, context, 3, formattedText("Spider", Formatting.DARK_GRAY, timerData.getSpider(), config));
@@ -40,14 +39,16 @@ public class BossTimerDisplay {
         drawText(client, context, 5, formattedText("Piglin", Formatting.RED, timerData.getPiglin(), config));
     }
 
-    private static Text formattedText(String name, Formatting nameColor, ZonedDateTime time, ModConfig.BossTimerConfig config) {
+    private static final DateTimeFormatter ABSOLUTE_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
+
+    private static Text formattedText(String name, Formatting nameColor, ZonedDateTime time, ModConfig.TimeDisplaysConfig config) {
         return Text.literal("")
                 .append(Text.literal(name + ": ").formatted(config.colorBossNames ? nameColor : Formatting.WHITE))
                 .append(time == null ? Text.translatable("elements-utils.unknown") :
-                        config.timeFormat == ModConfig.BossTimerConfig.TimeFormat.RELATIVE
+                        config.bossTimeFormat == ModConfig.TimeDisplaysConfig.TimeFormat.RELATIVE
                                 ? toRelativeTime(time)
-                                : Text.literal(time.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT))))
-                .formatted(config.colorTime ? getTimeColor(time) : Formatting.WHITE);
+                                : Text.literal(time.format(ABSOLUTE_FORMATTER)))
+                .formatted(config.colorBossTime ? getTimeColor(time) : Formatting.WHITE);
     }
 
     private static Formatting getTimeColor(ZonedDateTime dateTime) {
@@ -99,11 +100,12 @@ public class BossTimerDisplay {
 
     private static void drawText(MinecraftClient client, DrawContext context, int line, Text text) {
         int lineHeight = client.textRenderer.fontHeight + 3;
+        boolean outline = ModConfig.getConfig().timeDisplays.textOutline;
         context.drawText(
                 client.textRenderer,
                 text,
                 4, (client.getWindow().getScaledHeight() / 2) - (lineHeight * 3) + (lineHeight * line),
-                Colors.WHITE, false
+                net.minecraft.util.Colors.WHITE, outline
         );
     }
 

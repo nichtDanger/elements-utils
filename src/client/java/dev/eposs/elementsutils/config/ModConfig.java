@@ -52,17 +52,23 @@ public class ModConfig implements ConfigData {
     }
 
     @ConfigEntry.Gui.CollapsibleObject
-    public BossTimerConfig bossTimer = new BossTimerConfig();
-    public static class BossTimerConfig {
+    public TimeDisplaysConfig timeDisplays = new TimeDisplaysConfig();
+    public static class TimeDisplaysConfig {
         public boolean show = true;
-        public TimeFormat timeFormat = TimeFormat.RELATIVE;
-        public boolean colorBossNames = true;
+        public boolean textOutline = true;
 
-        public boolean colorTime = true;
+        public TimeFormat bossTimeFormat = TimeFormat.RELATIVE;
+        public boolean colorBossNames = true;
+        public boolean colorBossTime = true;
+
+        public boolean colorExcaliburNames = true;
+        public boolean colorExcaliburTime = true;
+        public TimeFormat excaliburTimeFormat = TimeFormat.ABSOLUTE;
+
         public enum TimeFormat {
             RELATIVE,
             ABSOLUTE,
-            }
+        }
 
     }
 
@@ -79,7 +85,7 @@ public class ModConfig implements ConfigData {
         public enum Position {
             LEFT,
             RIGHT,
-            }
+        }
 
     }
 

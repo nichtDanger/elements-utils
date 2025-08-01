@@ -1,8 +1,8 @@
-package dev.eposs.elementsutils.feature.xpFormat;
+package dev.eposs.elementsutils.feature.xpformat;
 
 import java.util.regex.Pattern;
 
-public class xpFormat {
+public class XpFormat {
 	private static final Pattern NUMBER_PATTERN = Pattern.compile("\\d{4,}");
 
 	/**

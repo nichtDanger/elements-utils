@@ -3,6 +3,7 @@ package dev.eposs.elementsutils;
 import dev.eposs.elementsutils.config.ModConfig;
 import dev.eposs.elementsutils.feature.bosstimer.BossTimerData;
 import dev.eposs.elementsutils.feature.bosstimer.BossTimerDisplay;
+import dev.eposs.elementsutils.feature.excaliburtimer.ExcaliburTimerData;
 import dev.eposs.elementsutils.feature.loot.LootSound;
 import dev.eposs.elementsutils.feature.pet.PetDisplay;
 import dev.eposs.elementsutils.feature.playerbase.BaseBorderDisplay;
@@ -30,7 +31,7 @@ import org.lwjgl.glfw.GLFW;
 
 public class ElementsUtilsClient implements ClientModInitializer {
     private static KeyBinding baseDisplayToggle;
-    private static KeyBinding bossTimerToggle;
+    private static KeyBinding timeDisplaysToggle;
     private static KeyBinding xpMeasureTrigger;
     private static KeyBinding timeMeasureTrigger;
     private static KeyBinding devUtils;
@@ -45,6 +46,7 @@ public class ElementsUtilsClient implements ClientModInitializer {
         registerKeyBinding();
         registerEvents();
 
+        ExcaliburTimerData.startUpdateTimers();
         BossTimerData.startUpdateTimers();
     }
 
@@ -116,8 +118,8 @@ public class ElementsUtilsClient implements ClientModInitializer {
                 category
         ));
 
-        bossTimerToggle = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-                getKeyBindingTranslation("bossTimerToggle"),
+        timeDisplaysToggle = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+                getKeyBindingTranslation("timeDisplaysToggle"),
                 GLFW.GLFW_KEY_V,
                 category
         ));
@@ -145,7 +147,7 @@ public class ElementsUtilsClient implements ClientModInitializer {
         while (baseDisplayToggle.wasPressed()) {
             BaseBorderDisplay.toggleDisplay(client);
         }
-        while (bossTimerToggle.wasPressed()) {
+        while (timeDisplaysToggle.wasPressed()) {
             BossTimerDisplay.toggleDisplay(client);
         }
         while (xpMeasureTrigger.wasPressed()) {

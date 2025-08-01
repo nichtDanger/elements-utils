@@ -2,7 +2,7 @@ package dev.eposs.elementsutils.mixin.client;
 
 import dev.eposs.elementsutils.config.ModConfig;
 import dev.eposs.elementsutils.feature.pet.PetDisplay;
-import dev.eposs.elementsutils.feature.xpFormat.xpFormat;
+import dev.eposs.elementsutils.feature.xpformat.XpFormat;
 import dev.eposs.elementsutils.util.Util;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
@@ -64,7 +64,7 @@ public abstract class InGameHudMixin {
             }
 
             String formatted = ModConfig.getConfig().playerXPConfig.enabled
-                    ? xpFormat.formatNumbersWithDots(original)
+                    ? XpFormat.formatNumbersWithDots(original)
                     : original;
 
             var style = message.getStyle();
