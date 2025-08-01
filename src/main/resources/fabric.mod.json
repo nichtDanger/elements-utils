@@ -11,7 +11,7 @@
 	"contact": {
 		"homepage": "https://eposs.dev/"
 	},
-	"license": "CC0-1.0",
+	"license": "MIT",
 	"icon": "assets/elements-utils/icon.png",
 	"environment": "client",
 	"entrypoints": {
