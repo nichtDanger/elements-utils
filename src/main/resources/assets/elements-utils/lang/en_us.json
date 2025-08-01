@@ -43,8 +43,9 @@
   "text.autoconfig.elements-utils.option.playerXPConfig.enabled": "Format Numbers of Player XP's",
   "text.autoconfig.elements-utils.option.playerXPConfig.showXpPerSecond": "Show XP/s",
   "text.autoconfig.elements-utils.option.playerXPConfig.xpPerSecondColor": "XP/s Color",
-  "text.autoconfig.elements-utils.option.playerXPConfig.overlayMessageColor": "Overlay Message Color",
   "text.autoconfig.elements-utils.option.playerXPConfig.hideMaxPetXP": "Hide Max Pet XP",
+  "text.autoconfig.elements-utils.option.playerXPConfig.overlayMessageColor": "Overlay Message Color",
+  "text.autoconfig.elements-utils.option.playerXPConfig.overlayMessageYOffset": "Overlay Message Y-Offset",
 
   "text.autoconfig.elements-utils.option.devUtils": "Development Utils (please ignore)",
   "text.autoconfig.elements-utils.option.devUtils.enable": "Enabled",

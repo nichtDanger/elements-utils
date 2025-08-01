@@ -122,6 +122,19 @@ public abstract class InGameHudMixin {
         ci.cancel();
     }
 
+    @ModifyArg(
+            method = "renderOverlayMessage",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/client/gui/DrawContext;drawTextWithBackground(Lnet/minecraft/client/font/TextRenderer;Lnet/minecraft/text/Text;III I)I"
+            ),
+            index = 3
+    )
+    private int modifyOverlayMessageY(int originalY) {
+        int yOffset = ModConfig.getConfig().playerXPConfig.overlayMessageYOffset;
+        return originalY + yOffset;
+    }
+
     /**
      * Modifies the displayed experience level text.
      * Formats the level with dots if enabled in the config.

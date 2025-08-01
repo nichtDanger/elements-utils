@@ -141,6 +141,7 @@ public class ModConfig implements ConfigData {
         public KnownColor xpPerSecondColor = KnownColor.GRAY;
         public KnownColor overlayMessageColor = KnownColor.DARK_AQUA;
         public boolean hideMaxPetXP = false;
+        public int overlayMessageYOffset = 0;
     }
 
     @ConfigEntry.Gui.CollapsibleObject
