@@ -25,8 +25,6 @@ public abstract class InGameHudMixin {
     private Text overlayMessage;
     @Shadow
     private int overlayRemaining;
-    @Unique
-    private boolean petWasMaxLevel = false;
 
 	/**
      * Updates the pet XP display when an overlay message is shown.
@@ -59,14 +57,9 @@ public abstract class InGameHudMixin {
         if (message != null) {
             String original = message.getString();
 
-            boolean isMaxLevel = original.matches(".*Pet: [\\d,.]+/-1 XP$");
             if (ModConfig.getConfig().playerXPConfig.hideMaxPetXP) {
-                if (isMaxLevel && !petWasMaxLevel) {
-                    PetDisplay.setPetMaxLevel();
-                    petWasMaxLevel = true;
-                } else if (!isMaxLevel) {
-                    petWasMaxLevel = false;
-                }
+                boolean isMaxLevel = original.matches(".*Pet: [\\d,.]+/-1 XP$");
+                if (isMaxLevel) PetDisplay.setPetMaxLevel();
                 original = original.replaceFirst("XP.*(\\p{So}?\\s*Pet: [\\d,.]+/-1 XP)$", "XP");
             }
 
@@ -106,7 +99,7 @@ public abstract class InGameHudMixin {
         try {
             int level = Integer.parseInt(original);
             return Util.formatLevel(level);
-        } catch (NumberFormatException e) {
+        } catch (Exception e) {
             return original;
         }
     }

@@ -51,7 +51,7 @@ public class PetDisplay {
             String nextLvlXpStr = msg.substring(slash + slashText.length(), fromTooltip ? msg.length() : end).replaceAll("[.,]", "");
             currentXP = Integer.parseInt(currentXpStr);
             nextLvlXP = Integer.parseInt(nextLvlXpStr);
-        } catch (NumberFormatException e) {
+        } catch (Exception e) {
             ElementsUtils.LOGGER.debug("Failed to parse pet XP");
         }
     }
