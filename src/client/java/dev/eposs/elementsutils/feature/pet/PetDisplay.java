@@ -208,4 +208,8 @@ public class PetDisplay {
         currentXP = petData.currentXP;
         nextLvlXP = petData.nextLvlXP;
     }
+
+    public static void setPetMaxLevel() {
+        nextLvlXP = -1;
+    }
 }

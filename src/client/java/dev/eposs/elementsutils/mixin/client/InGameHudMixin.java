@@ -12,6 +12,7 @@ import net.minecraft.text.Text;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
@@ -24,11 +25,10 @@ public abstract class InGameHudMixin {
     private Text overlayMessage;
     @Shadow
     private int overlayRemaining;
-    @Final
-    @Shadow
-    private MinecraftClient client;
+    @Unique
+    private boolean petWasMaxLevel = false;
 
-    /**
+	/**
      * Updates the pet XP display when an overlay message is shown.
      *
      * @param context The drawing context.
@@ -59,7 +59,14 @@ public abstract class InGameHudMixin {
         if (message != null) {
             String original = message.getString();
 
+            boolean isMaxLevel = original.matches(".*Pet: [\\d,.]+/-1 XP$");
             if (ModConfig.getConfig().playerXPConfig.hideMaxPetXP) {
+                if (isMaxLevel && !petWasMaxLevel) {
+                    PetDisplay.setPetMaxLevel();
+                    petWasMaxLevel = true;
+                } else if (!isMaxLevel) {
+                    petWasMaxLevel = false;
+                }
                 original = original.replaceFirst("XP.*(\\p{So}?\\s*Pet: [\\d,.]+/-1 XP)$", "XP");
             }
 
