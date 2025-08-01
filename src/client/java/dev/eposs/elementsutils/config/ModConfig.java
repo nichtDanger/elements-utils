@@ -137,6 +137,8 @@ public class ModConfig implements ConfigData {
     public PlayerXPConfig playerXPConfig = new PlayerXPConfig();
     public static class PlayerXPConfig {
         public boolean enabled = true;
+        public boolean showXpPerSecond = false;
+        public KnownColor xpPerSecondColor = KnownColor.GRAY;
         public KnownColor overlayMessageColor = KnownColor.DARK_AQUA;
         public boolean hideMaxPetXP = false;
     }

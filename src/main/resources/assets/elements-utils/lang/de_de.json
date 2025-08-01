@@ -41,6 +41,8 @@
 
   "text.autoconfig.elements-utils.option.playerXPConfig": "Spieler XP Optionen",
   "text.autoconfig.elements-utils.option.playerXPConfig.enabled": "Formatiere Zahlen der Spieler-XP",
+  "text.autoconfig.elements-utils.option.playerXPConfig.showXpPerSecond": "XP/s anzeigen",
+  "text.autoconfig.elements-utils.option.playerXPConfig.xpPerSecondColor": "XP/s Farbe",
   "text.autoconfig.elements-utils.option.playerXPConfig.overlayMessageColor": "Farbe der Overlay-Nachricht",
   "text.autoconfig.elements-utils.option.playerXPConfig.hideMaxPetXP": "Max Pet-XP ausblenden",
 
