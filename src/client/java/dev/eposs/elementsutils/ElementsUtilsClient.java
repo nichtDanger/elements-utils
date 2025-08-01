@@ -4,6 +4,7 @@ import dev.eposs.elementsutils.config.ModConfig;
 import dev.eposs.elementsutils.feature.bosstimer.BossTimerData;
 import dev.eposs.elementsutils.feature.bosstimer.BossTimerDisplay;
 import dev.eposs.elementsutils.feature.excaliburtimer.ExcaliburTimerData;
+import dev.eposs.elementsutils.feature.excaliburtimer.ExcaliburTimerDisplay;
 import dev.eposs.elementsutils.feature.loot.LootSound;
 import dev.eposs.elementsutils.feature.pet.PetDisplay;
 import dev.eposs.elementsutils.feature.playerbase.BaseBorderDisplay;
@@ -31,7 +32,8 @@ import org.lwjgl.glfw.GLFW;
 
 public class ElementsUtilsClient implements ClientModInitializer {
     private static KeyBinding baseDisplayToggle;
-    private static KeyBinding timeDisplaysToggle;
+    private static KeyBinding bossTimerToggle;
+    private static KeyBinding excaliburTimeToggle;
     private static KeyBinding xpMeasureTrigger;
     private static KeyBinding timeMeasureTrigger;
     private static KeyBinding devUtils;
@@ -76,6 +78,8 @@ public class ElementsUtilsClient implements ClientModInitializer {
         ModConfig.InternalConfig.Servers server = ModConfig.getConfig().internal.server;
         if (server != ModConfig.InternalConfig.Servers.UNKNOWN) {
             PetDisplay.loadPet(handler.getRegistryManager());
+            BossTimerData.updateData();
+            ExcaliburTimerData.updateData();
         }
     }
 
@@ -118,9 +122,15 @@ public class ElementsUtilsClient implements ClientModInitializer {
                 category
         ));
 
-        timeDisplaysToggle = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-                getKeyBindingTranslation("timeDisplaysToggle"),
+        bossTimerToggle = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+                getKeyBindingTranslation("bossTimerToggle"),
                 GLFW.GLFW_KEY_V,
+                category
+        ));
+
+        excaliburTimeToggle = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+                getKeyBindingTranslation("excaliburTimeToggle"),
+                GLFW.GLFW_KEY_UNKNOWN,
                 category
         ));
 
@@ -147,8 +157,11 @@ public class ElementsUtilsClient implements ClientModInitializer {
         while (baseDisplayToggle.wasPressed()) {
             BaseBorderDisplay.toggleDisplay(client);
         }
-        while (timeDisplaysToggle.wasPressed()) {
+        while (bossTimerToggle.wasPressed()) {
             BossTimerDisplay.toggleDisplay(client);
+        }
+        while (excaliburTimeToggle.wasPressed()) {
+            ExcaliburTimerDisplay.toggleDisplay(client);
         }
         while (xpMeasureTrigger.wasPressed()) {
             XpMeter.startXPMeasurement(client);

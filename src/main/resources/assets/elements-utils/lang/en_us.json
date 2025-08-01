@@ -8,15 +8,19 @@
   "text.autoconfig.elements-utils.option.showPetDisplay": "Show Pet Display",
   "text.autoconfig.elements-utils.option.displayPosition": "Display Position",
 
-  "text.autoconfig.elements-utils.option.timeDisplays": "Time Displays",
-  "text.autoconfig.elements-utils.option.timeDisplays.show": "Show Time Displays",
-  "text.autoconfig.elements-utils.option.timeDisplays.textOutline": "Text Outline",
-  "text.autoconfig.elements-utils.option.timeDisplays.colorBossNames": "Show colored Boss Names",
-  "text.autoconfig.elements-utils.option.timeDisplays.colorBossTime": "Show colored Boss Time",
-  "text.autoconfig.elements-utils.option.timeDisplays.colorExcaliburNames": "Show colored Excalibur Names",
-  "text.autoconfig.elements-utils.option.timeDisplays.colorExcaliburTime": "Show colored Excalibur Time",
-  "text.autoconfig.elements-utils.option.timeDisplays.bossTimeFormat": "Boss Time Format",
-  "text.autoconfig.elements-utils.option.timeDisplays.excaliburTimeFormat": "Excalibur Time Format",
+  "text.autoconfig.elements-utils.option.bossTimer": "Dungeon Boss Death Times",
+  "text.autoconfig.elements-utils.option.bossTimer.show": "Show Display",
+  "text.autoconfig.elements-utils.option.bossTimer.textOutline": "Text Outline",
+  "text.autoconfig.elements-utils.option.bossTimer.colorBossNames": "Show colored Boss Names",
+  "text.autoconfig.elements-utils.option.bossTimer.colorBossTime": "Show colored Boss Time",
+  "text.autoconfig.elements-utils.option.bossTimer.bossTimeFormat": "Boss Time Format",
+
+  "text.autoconfig.elements-utils.option.excaliburTime": "Excalibur Time Display",
+  "text.autoconfig.elements-utils.option.excaliburTime.show": "Show Display",
+  "text.autoconfig.elements-utils.option.excaliburTime.textOutline": "Text Outline",
+  "text.autoconfig.elements-utils.option.excaliburTime.colorExcaliburNames": "Show colored Excalibur Names",
+  "text.autoconfig.elements-utils.option.excaliburTime.colorExcaliburTime": "Show colored Excalibur Time",
+  "text.autoconfig.elements-utils.option.excaliburTime.excaliburTimeFormat": "Excalibur Time Format",
 
   "text.autoconfig.elements-utils.option.playLootSound": "Play sound on Loot drop",
 
@@ -45,7 +49,8 @@
 
   "category.elements-utils.keys": "Elements Utils",
   "key.elements-utils.baseDisplayToggle": "Toggle Base Borders",
-  "key.elements-utils.timeDisplaysToggle": "Toggle Time Displays",
+  "key.elements-utils.bossTimerToggle": "Toggle Dungeon Boss Death Times",
+  "key.elements-utils.excaliburTimeToggle": "Toggle Excalibur Time Display",
   "key.elements-utils.xpMeasureTrigger": "XP-Measurement (Basalt) Trigger",
   "key.elements-utils.timeMeasureTrigger": "Time-Measurement (Basalt) Trigger",
   "key.elements-utils.devUtils": "Dev Utils (please ignore)",
@@ -55,12 +60,12 @@
   "elements-utils.display.bossTimer.title": "Dungeon Boss Death Times",
   "elements-utils.display.bossTimer.relative": "%s ago",
 
-  "elements-utils.display.excaliburtimer.title": "Excalibur Time",
-  "elements-utils.display.excaliburtimer.next_player": "Next player: ",
-  "elements-utils.display.excaliburtimer.time_left": "Time: ",
+  "elements-utils.display.excaliburTime.title": "Excalibur Time",
+  "elements-utils.display.excaliburTime.next_player": "Next player: ",
+  "elements-utils.display.excaliburTime.time_left": "Time: ",
 
-  "elements-utils.display.excaliburtimer.relative": "in %s",
-  "elements-utils.display.excaliburtimer.relative_after": "%s ago",
+  "elements-utils.display.excaliburTime.relative": "in %s",
+  "elements-utils.display.excaliburTime.relative_after": "%s ago",
 
   "elements-utils.display.base.toggle": "Base display is now ",
 
