@@ -3,48 +3,96 @@ package dev.eposs.elementsutils.feature.excaliburtimer;
 import dev.eposs.elementsutils.config.ModConfig;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
+import org.jetbrains.annotations.NotNull;
 
-import java.time.Duration;
+import java.time.*;
+import java.time.format.DateTimeFormatter;
 
+/**
+ * Handles the display and logic for the Excalibur timer overlay.
+ */
 public class ExcaliburTimerDisplay {
+	private static final int DAYS = 7;
+	private static final long EXTRA_SECONDS = DAYS * 20;
+	private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
+
+	/**
+	 * Toggles the visibility of the Excalibur timer overlay and updates data if enabled.
+	 *
+	 * @param client The Minecraft client instance. Must not be null.
+	 */
+	public static void toggleDisplay(@NotNull MinecraftClient client) {
+		if (client.player == null || client.world == null) return;
+
+		ModConfig.getConfig().excaliburTime.show = !ModConfig.getConfig().excaliburTime.show;
+		ModConfig.save();
+
+		if (ModConfig.getConfig().excaliburTime.show) {
+			ExcaliburTimerData.updateData();
+		}
+	}
+
+	/**
+	 * Colors the given text if enabled, otherwise returns the text unchanged.
+	 *
+	 * @param text   The text to colorize.
+	 * @param enabled Whether coloring is enabled.
+	 * @param color  The formatting color to apply.
+	 * @return The (possibly) colored text.
+	 */
+	private static MutableText colorize(MutableText text, boolean enabled, Formatting color) {
+		return enabled ? text.formatted(color) : text;
+	}
+
+	/**
+	 * Renders the Excalibur timer overlay on the screen.
+	 *
+	 * @param context  The draw context.
+	 * @param client   The Minecraft client instance.
+	 * @param baseLine The base line for vertical positioning.
+	 */
 	public static void render(DrawContext context, MinecraftClient client, int baseLine) {
-		ModConfig.TimeDisplaysConfig timeDisplaysConfig = ModConfig.getConfig().timeDisplays;
-		if (!timeDisplaysConfig.show) return;
+		var config = ModConfig.getConfig().excaliburTime;
+		if (!config.show) return;
 
-		ExcaliburTimerData data = ExcaliburTimerData.getInstance();
+		var data = ExcaliburTimerData.getInstance();
+		Instant targetInstant = calculateTargetInstant(data.getTime());
+		Duration timeUntilTarget = targetInstant == null ? Duration.ZERO : Duration.between(Instant.now(), targetInstant);
 
-		drawText(client, context, baseLine, Text.translatable("elements-utils.display.excaliburtimer.title")
-				.formatted(Formatting.UNDERLINE));
+		drawText(client, context, baseLine, Text.translatable("elements-utils.display.excaliburTime.title").formatted(Formatting.UNDERLINE));
 		drawText(client, context, baseLine + 1, Text.literal("")
-				.append(Text.translatable("elements-utils.display.excaliburtimer.next_player")
-						.formatted(Formatting.RED))
-				.append(Text.literal(data.getNext_user() == null ? "?" : data.getNext_user())
-						.formatted(timeDisplaysConfig.colorExcaliburNames ? Formatting.GOLD : Formatting.WHITE))
+				.append(colorize(Text.translatable("elements-utils.display.excaliburTime.next_player"), config.colorExcaliburNames, Formatting.RED))
+				.append(colorize(Text.literal(data.getNext_user() == null ? "?" : data.getNext_user()), config.colorExcaliburNames, Formatting.GOLD))
 		);
 		drawText(client, context, baseLine + 2, Text.literal("")
-				.append(Text.translatable("elements-utils.display.excaliburtimer.time_left")
-						.formatted(Formatting.AQUA))
+				.append(colorize(Text.translatable("elements-utils.display.excaliburTime.time_left"), config.colorExcaliburTime, Formatting.AQUA))
 				.append(
-						(timeDisplaysConfig.excaliburTimeFormat == ModConfig.TimeDisplaysConfig.TimeFormat.RELATIVE
-								? toRelativeTime(data.getTimeUntilNextExcalibur())
-								: Text.literal(formatAbsoluteTime(data.getTimeUntilNextExcalibur())
-						).formatted(timeDisplaysConfig.colorExcaliburTime ? Formatting.GREEN : Formatting.WHITE))
-				)
+						(config.excaliburTimeFormat == ModConfig.TimeFormat.RELATIVE
+								? toRelativeTime(timeUntilTarget)
+								: Text.literal(formatTargetTime(targetInstant)
+						).formatted(config.colorExcaliburTime ? Formatting.GREEN : Formatting.WHITE)))
 		);
 	}
 
+	/**
+	 * Converts a duration to a relative time text (e.g. "2d 3h 5m").
+	 *
+	 * @param duration The duration until or since the target time.
+	 * @return The formatted relative time as a Text object.
+	 */
 	private static Text toRelativeTime(Duration duration) {
-		ModConfig.TimeDisplaysConfig config = ModConfig.getConfig().timeDisplays;
+		var config = ModConfig.getConfig().excaliburTime;
 		boolean isPast = duration.isNegative();
-		Duration absDuration = duration.abs();
+		Duration abs = duration.abs();
 
-		long days = absDuration.toDays();
-		absDuration = absDuration.minusDays(days);
-		long hours = absDuration.toHours();
-		absDuration = absDuration.minusHours(hours);
-		long minutes = absDuration.toMinutes();
+		long days = abs.toDays();
+		abs = abs.minusDays(days);
+		long hours = abs.toHours();
+		abs = abs.minusHours(hours);
+		long minutes = abs.toMinutes();
 
 		StringBuilder sb = new StringBuilder();
 		if (days > 0) sb.append(days).append("d ");
@@ -54,26 +102,49 @@ public class ExcaliburTimerDisplay {
 		if (timeString.isEmpty()) timeString = "0m";
 
 		String key = isPast
-				? "elements-utils.display.excaliburtimer.relative_after"
-				: "elements-utils.display.excaliburtimer.relative";
+				? "elements-utils.display.excaliburTime.relative_after"
+				: "elements-utils.display.excaliburTime.relative";
 		Formatting color = config.colorExcaliburTime ? Formatting.GREEN : Formatting.WHITE;
 
 		return Text.translatable(key, timeString).formatted(color);
 	}
 
-	private static String formatAbsoluteTime(Duration duration) {
-		if (duration.isNegative() || duration.isZero()) {
-			return "?";
-		}
-		java.time.Instant target = java.time.Instant.now().plus(duration);
-		java.time.ZonedDateTime dateTime = java.time.ZonedDateTime.ofInstant(target, java.time.ZoneId.systemDefault());
-		java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
-		return dateTime.format(formatter);
+	/**
+	 * Calculates the target instant based on the given start time.
+	 *
+	 * @param startTime The start time as an Instant.
+	 * @return The calculated target Instant, or null if startTime is null.
+	 */
+	private static Instant calculateTargetInstant(Instant startTime) {
+		if (startTime == null) return null;
+		return ZonedDateTime.ofInstant(startTime, ZoneId.systemDefault())
+				.plusDays(DAYS)
+				.plusSeconds(EXTRA_SECONDS)
+				.toInstant();
 	}
 
+	/**
+	 * Formats the target instant as a date-time string.
+	 *
+	 * @param targetInstant The target instant to format.
+	 * @return The formatted date-time string, or "?" if targetInstant is null.
+	 */
+	private static String formatTargetTime(Instant targetInstant) {
+		if (targetInstant == null) return "?";
+		return FORMATTER.format(targetInstant.atZone(ZoneId.systemDefault()));
+	}
+
+	/**
+	 * Draws a line of text on the screen at the specified line index.
+	 *
+	 * @param client   The Minecraft client instance.
+	 * @param context  The draw context.
+	 * @param line     The line index for vertical positioning.
+	 * @param text     The text to draw.
+	 */
 	private static void drawText(MinecraftClient client, DrawContext context, int line, Text text) {
 		int lineHeight = client.textRenderer.fontHeight + 3;
-		boolean outline = ModConfig.getConfig().timeDisplays.textOutline;
+		boolean outline = ModConfig.getConfig().excaliburTime.textOutline;
 		context.drawText(
 				client.textRenderer,
 				text,

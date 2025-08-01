@@ -4,7 +4,6 @@ import dev.eposs.elementsutils.config.ModConfig;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.text.Text;
-import net.minecraft.util.Colors;
 import net.minecraft.util.Formatting;
 import org.jetbrains.annotations.NotNull;
 
@@ -17,16 +16,16 @@ public class BossTimerDisplay {
     public static void toggleDisplay(@NotNull MinecraftClient client) {
         if (client.player == null || client.world == null) return;
 
-        ModConfig.getConfig().timeDisplays.show = !ModConfig.getConfig().timeDisplays.show;
+        ModConfig.getConfig().bossTimer.show = !ModConfig.getConfig().bossTimer.show;
         ModConfig.save();
 
-        if (ModConfig.getConfig().timeDisplays.show) {
+        if (ModConfig.getConfig().bossTimer.show) {
             BossTimerData.updateData();
         }
     }
 
     public static void render(DrawContext context, MinecraftClient client) {
-        ModConfig.TimeDisplaysConfig config = ModConfig.getConfig().timeDisplays;
+        ModConfig.BossTimerConfig config = ModConfig.getConfig().bossTimer;
         if (!config.show) return;
 
         BossTimerData timerData = BossTimerData.getInstance();
@@ -41,11 +40,11 @@ public class BossTimerDisplay {
 
     private static final DateTimeFormatter ABSOLUTE_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
 
-    private static Text formattedText(String name, Formatting nameColor, ZonedDateTime time, ModConfig.TimeDisplaysConfig config) {
+    private static Text formattedText(String name, Formatting nameColor, ZonedDateTime time, ModConfig.BossTimerConfig config) {
         return Text.literal("")
                 .append(Text.literal(name + ": ").formatted(config.colorBossNames ? nameColor : Formatting.WHITE))
                 .append(time == null ? Text.translatable("elements-utils.unknown") :
-                        config.bossTimeFormat == ModConfig.TimeDisplaysConfig.TimeFormat.RELATIVE
+                        config.bossTimeFormat == ModConfig.TimeFormat.RELATIVE
                                 ? toRelativeTime(time)
                                 : Text.literal(time.format(ABSOLUTE_FORMATTER)))
                 .formatted(config.colorBossTime ? getTimeColor(time) : Formatting.WHITE);
@@ -100,7 +99,7 @@ public class BossTimerDisplay {
 
     private static void drawText(MinecraftClient client, DrawContext context, int line, Text text) {
         int lineHeight = client.textRenderer.fontHeight + 3;
-        boolean outline = ModConfig.getConfig().timeDisplays.textOutline;
+        boolean outline = ModConfig.getConfig().bossTimer.textOutline;
         context.drawText(
                 client.textRenderer,
                 text,
