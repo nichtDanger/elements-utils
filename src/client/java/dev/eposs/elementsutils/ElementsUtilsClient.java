@@ -3,16 +3,17 @@ package dev.eposs.elementsutils;
 import dev.eposs.elementsutils.config.ModConfig;
 import dev.eposs.elementsutils.feature.bosstimer.BossTimerData;
 import dev.eposs.elementsutils.feature.bosstimer.BossTimerDisplay;
+import dev.eposs.elementsutils.feature.excaliburtimer.ExcaliburTimerData;
 import dev.eposs.elementsutils.feature.loot.LootSound;
 import dev.eposs.elementsutils.feature.pet.PetDisplay;
 import dev.eposs.elementsutils.feature.playerbase.BaseBorderDisplay;
 import dev.eposs.elementsutils.feature.potion.PotionDisplay;
+import dev.eposs.elementsutils.feature.xpmeter.XpMeter;
 import dev.eposs.elementsutils.rendering.ScreenRendering;
 import dev.eposs.elementsutils.util.DevUtil;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.Toml4jConfigSerializer;
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
@@ -30,7 +31,9 @@ import org.lwjgl.glfw.GLFW;
 
 public class ElementsUtilsClient implements ClientModInitializer {
     private static KeyBinding baseDisplayToggle;
-    private static KeyBinding bossTimerToggle;
+    private static KeyBinding timeDisplaysToggle;
+    private static KeyBinding xpMeasureTrigger;
+    private static KeyBinding timeMeasureTrigger;
     private static KeyBinding devUtils;
 
     @Override
@@ -43,6 +46,7 @@ public class ElementsUtilsClient implements ClientModInitializer {
         registerKeyBinding();
         registerEvents();
 
+        ExcaliburTimerData.startUpdateTimers();
         BossTimerData.startUpdateTimers();
     }
 
@@ -63,11 +67,16 @@ public class ElementsUtilsClient implements ClientModInitializer {
         onKeyEvent(client);
         PetDisplay.updatePet(client);
         PotionDisplay.updatePotions(client);
+        XpMeter.updateXpMeter(client);
     }
 
     private void onJoin(ClientPlayNetworkHandler handler, PacketSender sender, MinecraftClient client) {
         runServerCheck(client);
-        PetDisplay.loadPet(handler.getRegistryManager());
+
+        ModConfig.InternalConfig.Servers server = ModConfig.getConfig().internal.server;
+        if (server != ModConfig.InternalConfig.Servers.UNKNOWN) {
+            PetDisplay.loadPet(handler.getRegistryManager());
+        }
     }
 
     private void onLeave(ClientPlayNetworkHandler handler, MinecraftClient client) {
@@ -97,9 +106,8 @@ public class ElementsUtilsClient implements ClientModInitializer {
 
     private boolean onGameMessage(Text text, boolean b) {
         LootSound.onGameMessage(text);
-
-        return true;
-    }
+		return true;
+	}
 
     private void registerKeyBinding() {
         String category = "category." + ElementsUtils.MOD_ID + ".keys";
@@ -110,9 +118,21 @@ public class ElementsUtilsClient implements ClientModInitializer {
                 category
         ));
 
-        bossTimerToggle = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-                getKeyBindingTranslation("bossTimerToggle"),
+        timeDisplaysToggle = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+                getKeyBindingTranslation("timeDisplaysToggle"),
                 GLFW.GLFW_KEY_V,
+                category
+        ));
+
+        xpMeasureTrigger = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+                getKeyBindingTranslation("xpMeasureTrigger"),
+                GLFW.GLFW_KEY_UNKNOWN,
+                category
+        ));
+
+        timeMeasureTrigger = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+                getKeyBindingTranslation("timeMeasureTrigger"),
+                GLFW.GLFW_KEY_UNKNOWN,
                 category
         ));
 
@@ -127,8 +147,14 @@ public class ElementsUtilsClient implements ClientModInitializer {
         while (baseDisplayToggle.wasPressed()) {
             BaseBorderDisplay.toggleDisplay(client);
         }
-        while (bossTimerToggle.wasPressed()) {
+        while (timeDisplaysToggle.wasPressed()) {
             BossTimerDisplay.toggleDisplay(client);
+        }
+        while (xpMeasureTrigger.wasPressed()) {
+            XpMeter.startXPMeasurement(client);
+        }
+        while (timeMeasureTrigger.wasPressed()) {
+            XpMeter.startTimeMeasurement(client);
         }
         while (devUtils.wasPressed()) {
             DevUtil.doSomething(client);

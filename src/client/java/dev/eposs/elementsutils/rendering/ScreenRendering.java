@@ -2,10 +2,12 @@ package dev.eposs.elementsutils.rendering;
 
 import dev.eposs.elementsutils.ElementsUtils;
 import dev.eposs.elementsutils.feature.bosstimer.BossTimerDisplay;
+import dev.eposs.elementsutils.feature.excaliburtimer.ExcaliburTimerDisplay;
 import dev.eposs.elementsutils.feature.moonphase.MoonPhaseDisplay;
 import dev.eposs.elementsutils.feature.pet.PetDisplay;
 import dev.eposs.elementsutils.feature.potion.PotionDisplay;
 import dev.eposs.elementsutils.feature.time.TimeDisplay;
+import dev.eposs.elementsutils.feature.xpmeter.XpMeter;
 import net.fabricmc.fabric.api.client.rendering.v1.IdentifiedLayer;
 import net.fabricmc.fabric.api.client.rendering.v1.LayeredDrawerWrapper;
 import net.minecraft.client.MinecraftClient;
@@ -31,7 +33,9 @@ public class ScreenRendering {
         MoonPhaseDisplay.render(context, client);
         TimeDisplay.render(context, client);
         BossTimerDisplay.render(context, client);
+        ExcaliburTimerDisplay.render(context, client, 6);
         PetDisplay.render(context, client);
         PotionDisplay.render(context, client);
+        XpMeter.render(context, client);
     }
 }

@@ -47,8 +47,10 @@ public class PetDisplay {
         int end = msg.indexOf(" XP", slash);
 
         try {
-            currentXP = Integer.parseInt(msg.substring(start + startText.length(), slash));
-            nextLvlXP = Integer.parseInt(msg.substring(slash + slashText.length(), fromTooltip ? msg.length() : end));
+            String currentXpStr = msg.substring(start + startText.length(), slash).replaceAll("[.,]", "");
+            String nextLvlXpStr = msg.substring(slash + slashText.length(), fromTooltip ? msg.length() : end).replaceAll("[.,]", "");
+            currentXP = Integer.parseInt(currentXpStr);
+            nextLvlXP = Integer.parseInt(nextLvlXpStr);
         } catch (NumberFormatException e) {
             ElementsUtils.LOGGER.debug("Failed to parse pet XP");
         }
@@ -205,5 +207,9 @@ public class PetDisplay {
         petNbtData = petData.data;
         currentXP = petData.currentXP;
         nextLvlXP = petData.nextLvlXP;
+    }
+
+    public static void setPetMaxLevel() {
+        nextLvlXP = -1;
     }
 }

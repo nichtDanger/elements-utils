@@ -4,7 +4,9 @@
   "compatibilityLevel": "JAVA_21",
   "client": [
     "ExampleClientMixin",
-    "InGameHudMixin"
+    "InGameHudAccessor",
+    "InGameHudMixin",
+    "PlayerListHudMixin"
   ],
   "injectors": {
     "defaultRequire": 1

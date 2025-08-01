@@ -52,17 +52,23 @@ public class ModConfig implements ConfigData {
     }
 
     @ConfigEntry.Gui.CollapsibleObject
-    public BossTimerConfig bossTimer = new BossTimerConfig();
-    public static class BossTimerConfig {
+    public TimeDisplaysConfig timeDisplays = new TimeDisplaysConfig();
+    public static class TimeDisplaysConfig {
         public boolean show = true;
-        public TimeFormat timeFormat = TimeFormat.RELATIVE;
-        public boolean colorBossNames = true;
+        public boolean textOutline = true;
 
-        public boolean colorTime = true;
+        public TimeFormat bossTimeFormat = TimeFormat.RELATIVE;
+        public boolean colorBossNames = true;
+        public boolean colorBossTime = true;
+
+        public boolean colorExcaliburNames = true;
+        public boolean colorExcaliburTime = true;
+        public TimeFormat excaliburTimeFormat = TimeFormat.ABSOLUTE;
+
         public enum TimeFormat {
             RELATIVE,
             ABSOLUTE,
-            }
+        }
 
     }
 
@@ -79,8 +85,54 @@ public class ModConfig implements ConfigData {
         public enum Position {
             LEFT,
             RIGHT,
-            }
+        }
 
+    }
+
+    @ConfigEntry.Gui.CollapsibleObject
+    public XPMeterConfig xpMeterConfig = new XPMeterConfig();
+    public static class XPMeterConfig {
+        public Integer measuringXpTarget = 500;
+        public Integer measuringTimeTarget = 300;
+    }
+
+    @ConfigEntry.Gui.CollapsibleObject
+    public PlayerLevelConfig playerLevelConfig = new PlayerLevelConfig();
+    public static class PlayerLevelConfig {
+        public boolean enabled = true;
+        public KnownColor formattedPlayerLevelColor = KnownColor.EXPERIENCE_GREEN;
+        public KnownColor formattedPlayerListLevelColor = KnownColor.YELLOW;
+    }
+
+    public enum KnownColor {
+        BLACK(0x000000),
+        DARK_BLUE(0x0000AA),
+        DARK_GREEN(0x00AA00),
+        DARK_AQUA(0x00AAAA),
+        DARK_RED(0xAA0000),
+        DARK_PURPLE(0xAA00AA),
+        GOLD(0xFFAA00),
+        GRAY(0xAAAAAA),
+        DARK_GRAY(0x555555),
+        BLUE(0x5555FF),
+        GREEN(0x55FF55),
+        EXPERIENCE_GREEN(0x80FF20),
+        AQUA(0x55FFFF),
+        RED(0xFF5555),
+        LIGHT_PURPLE(0xFF55FF),
+        YELLOW(0xFFFF55),
+        WHITE(0xFFFFFF);
+
+        public final int color;
+        KnownColor(int color) { this.color = color; }
+    }
+
+    @ConfigEntry.Gui.CollapsibleObject
+    public PlayerXPConfig playerXPConfig = new PlayerXPConfig();
+    public static class PlayerXPConfig {
+        public boolean enabled = true;
+        public KnownColor overlayMessageColor = KnownColor.DARK_AQUA;
+        public boolean hideMaxPetXP = false;
     }
 
     @ConfigEntry.Gui.CollapsibleObject
