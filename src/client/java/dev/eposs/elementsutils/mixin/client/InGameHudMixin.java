@@ -5,16 +5,13 @@ import dev.eposs.elementsutils.feature.pet.PetDisplay;
 import dev.eposs.elementsutils.feature.xpformat.FarmingXpTracker;
 import dev.eposs.elementsutils.feature.xpformat.XpFormat;
 import dev.eposs.elementsutils.util.Util;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.hud.InGameHud;
 import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
@@ -122,11 +119,18 @@ public abstract class InGameHudMixin {
         ci.cancel();
     }
 
+    /**
+     * Modifies the Y position of the overlay message.
+     * Adds a configurable offset to the original Y position.
+     *
+     * @param originalY The original Y position of the overlay message.
+     * @return The modified Y position with the offset applied.
+     */
     @ModifyArg(
             method = "renderOverlayMessage",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/client/gui/DrawContext;drawTextWithBackground(Lnet/minecraft/client/font/TextRenderer;Lnet/minecraft/text/Text;III I)I"
+                    target = "Lnet/minecraft/client/gui/DrawContext;drawTextWithBackground(Lnet/minecraft/client/font/TextRenderer;Lnet/minecraft/text/Text;IIII)I"
             ),
             index = 3
     )

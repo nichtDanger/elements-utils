@@ -34,9 +34,11 @@ _Elements 3 - 1.21.4_
   - Option to format XP with dots as thousands separators
   - Option to change the color of the XP display
   - Option to hide the max pet
+  - Option to show a XP/s indicator
+  - Option to make a Y-Axis offset for the XP display
 - Excalibur Time Display
-    - Show the time until the next Excalibur is available
-    - Show the next Player who can pull Excalibur
+  - Show the time until the next Excalibur is available
+  - Show the next Player who can pull Excalibur
 
 ## Config
 
