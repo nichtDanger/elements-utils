@@ -35,4 +35,8 @@ public class Util {
     public static String formatLevel(int level) {
         return String.format("%,d", level).replace(',', '.');
     }
+
+    public static int parseXp(String xp) {
+        return Integer.parseInt(xp.replace(".", "").replace(",", ""));
+    }
 }

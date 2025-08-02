@@ -1,5 +1,6 @@
 package dev.eposs.elementsutils.mixin.client;
 
+import dev.eposs.elementsutils.common.tracker.SkillTracker;
 import dev.eposs.elementsutils.config.ModConfig;
 import dev.eposs.elementsutils.feature.pet.PetDisplay;
 import dev.eposs.elementsutils.feature.xpformat.FarmingXpTracker;
@@ -63,6 +64,9 @@ public abstract class InGameHudMixin {
     )
     private void onSetOverlayMessage(Text message, boolean tinted, CallbackInfo ci) {
         if (message == null) return;
+        
+        // Update SkillTracker PlayerData
+        SkillTracker.update(message);
 
         String original = message.getString();
         String formatted = ModConfig.getConfig().playerXPConfig.enabled
