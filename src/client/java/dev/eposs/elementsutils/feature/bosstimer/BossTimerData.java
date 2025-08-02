@@ -1,11 +1,11 @@
 package dev.eposs.elementsutils.feature.bosstimer;
 
 import dev.eposs.elementsutils.api.timer.BossTimerApi;
+import dev.eposs.elementsutils.util.TimerUtil;
 
 import java.time.Duration;
 import java.time.Instant;
 import java.time.ZonedDateTime;
-import java.util.TimeZone;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicReference;
@@ -22,7 +22,7 @@ public class BossTimerData {
     private static Instant lastUpdate = Instant.MIN;
 
     public static void startUpdateTimers() {
-        new Timer("Boss Death Update Timer").scheduleAtFixedRate(new TimerTask() {
+        new Timer("BossTimerData Update Timer").scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
                 updateData();
@@ -34,7 +34,7 @@ public class BossTimerData {
         // Only update data every 10 seconds to prevent spamming the API
         if (lastUpdate.isAfter(Instant.now().minusSeconds(10))) return;
 
-        Thread.ofVirtual().name("Boss Timer Data Update Thread").start(() -> {
+        Thread.ofVirtual().name("BossTimerData Update Thread").start(() -> {
             lastUpdate = Instant.now();
 
             BossTimerData data = new BossTimerApi().getTimerData();
@@ -49,32 +49,22 @@ public class BossTimerData {
     }
 
     public ZonedDateTime getAxolotl() {
-        if (axolotl == null || axolotl.isEmpty()) return null;
-        return parseTime(axolotl);
+        return TimerUtil.parseTime(axolotl);
     }
 
     public ZonedDateTime getZombie() {
-        if (zombie == null || zombie.isEmpty()) return null;
-        return parseTime(zombie);
+        return TimerUtil.parseTime(zombie);
     }
 
     public ZonedDateTime getSpider() {
-        if (spider == null || spider.isEmpty()) return null;
-        return parseTime(spider);
+        return TimerUtil.parseTime(spider);
     }
 
     public ZonedDateTime getBogged() {
-        if (bogged == null || bogged.isEmpty()) return null;
-        return parseTime(bogged);
+        return TimerUtil.parseTime(bogged);
     }
 
     public ZonedDateTime getPiglin() {
-        if (piglin == null || piglin.isEmpty()) return null;
-        return parseTime(piglin);
-    }
-
-    private ZonedDateTime parseTime(String time) {
-        ZonedDateTime zonedDateTime = ZonedDateTime.parse(time).withZoneSameLocal(TimeZone.getDefault().toZoneId());
-        return zonedDateTime.isBefore(ZonedDateTime.ofInstant(Instant.EPOCH, zonedDateTime.getZone())) ? null : zonedDateTime;
+        return TimerUtil.parseTime(piglin);
     }
 }
