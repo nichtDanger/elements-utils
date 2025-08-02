@@ -3,10 +3,13 @@
   "package": "dev.eposs.elementsutils.mixin.client",
   "compatibilityLevel": "JAVA_21",
   "client": [
+    "ArmorFeatureRendererMixin",
     "ExampleClientMixin",
     "InGameHudAccessor",
     "InGameHudMixin",
-    "PlayerListHudMixin"
+    "PlayerListHudMixin",
+    "TextDisplayEntityRendererMixin",
+    "TextDisplayEntityRenderStateAccessor"
   ],
   "injectors": {
     "defaultRequire": 1
