@@ -1,16 +1,19 @@
 package dev.eposs.elementsutils.feature.bosstimer;
 
 import dev.eposs.elementsutils.config.ModConfig;
+import dev.eposs.elementsutils.util.TimerUtil;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.Duration;
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
+
+import static dev.eposs.elementsutils.util.TimerUtil.getDuration;
+import static dev.eposs.elementsutils.util.TimerUtil.optionalFormattedText;
 
 public class BossTimerDisplay {
     public static void toggleDisplay(@NotNull MinecraftClient client) {
@@ -19,9 +22,7 @@ public class BossTimerDisplay {
         ModConfig.getConfig().bossTimer.show = !ModConfig.getConfig().bossTimer.show;
         ModConfig.save();
 
-        if (ModConfig.getConfig().bossTimer.show) {
-            BossTimerData.updateData();
-        }
+        if (ModConfig.getConfig().bossTimer.show) BossTimerData.updateData();
     }
 
     public static void render(DrawContext context, MinecraftClient client) {
@@ -38,16 +39,17 @@ public class BossTimerDisplay {
         drawText(client, context, 5, formattedText("Piglin", Formatting.RED, timerData.getPiglin(), config));
     }
 
-    private static final DateTimeFormatter ABSOLUTE_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
-
     private static Text formattedText(String name, Formatting nameColor, ZonedDateTime time, ModConfig.BossTimerConfig config) {
         return Text.literal("")
-                .append(Text.literal(name + ": ").formatted(config.colorBossNames ? nameColor : Formatting.WHITE))
-                .append(time == null ? Text.translatable("elements-utils.unknown") :
+                .append(TimerUtil.optionalFormattedText(Text.literal(name + ": "), config.colorBossNames, nameColor))
+                .append(time == null
+                        ? Text.translatable("elements-utils.unknown")
+                        : optionalFormattedText(
                         config.bossTimeFormat == ModConfig.TimeFormat.RELATIVE
                                 ? toRelativeTime(time)
-                                : Text.literal(time.format(ABSOLUTE_FORMATTER)))
-                .formatted(config.colorBossTime ? getTimeColor(time) : Formatting.WHITE);
+                                : Text.literal(time.format(TimerUtil.ABSOLUTE_TIME_FORMATTER)),
+                        config.colorBossTime, getTimeColor(time))
+                );
     }
 
     private static Formatting getTimeColor(ZonedDateTime dateTime) {
@@ -59,57 +61,22 @@ public class BossTimerDisplay {
 
         long hours = duration.toHours();
 
-        if (hours >= 36 && hours < 48) {
-            return Formatting.YELLOW;
-        }
+        if (hours >= 36 && hours < 48) return Formatting.YELLOW;
 
-        if (hours >= 48) {
-            return Formatting.RED;
-        }
+        if (hours >= 48) return Formatting.RED;
 
         return Formatting.GREEN;
     }
 
-    private static Text toRelativeTime(@NotNull ZonedDateTime dateTime) {
+    private static MutableText toRelativeTime(@NotNull ZonedDateTime dateTime) {
         Duration duration = getDuration(dateTime);
+        if (duration.isNegative()) return Text.translatable("elements-utils.unknown");
 
-        if (duration.isNegative()) {
-            return Text.translatable("elements-utils.unknown");
-        }
-
-        long days = duration.toDays();
-        duration = duration.minus(days, ChronoUnit.DAYS);
-        long hours = duration.toHours();
-        duration = duration.minus(hours, ChronoUnit.HOURS);
-        long minutes = duration.toMinutes();
-
-        StringBuilder sb = new StringBuilder();
-        if (days > 0) {
-            sb.append(days).append("d ");
-        }
-        if (hours > 0) {
-            sb.append(hours).append("h ");
-        }
-        if (minutes > 0) {
-            sb.append(minutes).append("m ");
-        }
-
-        return Text.translatable("elements-utils.display.bossTimer.relative", sb.toString().trim());
+        return Text.literal(TimerUtil.toRelativeTime(duration));
     }
 
     private static void drawText(MinecraftClient client, DrawContext context, int line, Text text) {
-        int lineHeight = client.textRenderer.fontHeight + 3;
         boolean outline = ModConfig.getConfig().bossTimer.textOutline;
-        context.drawText(
-                client.textRenderer,
-                text,
-                4, (client.getWindow().getScaledHeight() / 2) - (lineHeight * 3) + (lineHeight * line),
-                net.minecraft.util.Colors.WHITE, outline
-        );
-    }
-
-    private static Duration getDuration(@NotNull ZonedDateTime dateTime) {
-        ZonedDateTime now = ZonedDateTime.now();
-        return Duration.between(dateTime, now);
+        TimerUtil.drawText(client, context, line, text, outline);
     }
 }
