@@ -3,10 +3,6 @@ package dev.eposs.elementsutils.util;
 import dev.eposs.elementsutils.ElementsUtils;
 import dev.eposs.elementsutils.config.ModConfig;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 
 public class DevUtil {
     public static void doSomething(MinecraftClient client) {

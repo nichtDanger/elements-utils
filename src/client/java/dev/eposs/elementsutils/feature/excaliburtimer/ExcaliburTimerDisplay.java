@@ -10,12 +10,10 @@ import org.jetbrains.annotations.NotNull;
 
 import java.time.Duration;
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 
 public class ExcaliburTimerDisplay {
     private static final int DAYS = 7;
     private static final long EXTRA_SECONDS = DAYS * 20;
-    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
 
     public static void toggleDisplay(@NotNull MinecraftClient client) {
         if (client.player == null || client.world == null) return;
