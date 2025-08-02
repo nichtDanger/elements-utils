@@ -11,13 +11,13 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
 
-public abstract class TimerApi<T> {
+public abstract class AbstractTimerApi<T> {
 
     private final Class<T> type;
 
     private final String apiUrl;
 
-    public TimerApi(Class<T> type, String apiUrl) {
+    public AbstractTimerApi(Class<T> type, String apiUrl) {
         this.type = type;
         this.apiUrl = apiUrl;
     }
