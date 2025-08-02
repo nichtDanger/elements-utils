@@ -1,6 +1,6 @@
 package dev.eposs.elementsutils.feature.bosstimer;
 
-import dev.eposs.elementsutils.api.bosstimer.BossTimerApi;
+import dev.eposs.elementsutils.api.timer.BossTimerApi;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -37,7 +37,7 @@ public class BossTimerData {
         Thread.ofVirtual().name("Boss Timer Data Update Thread").start(() -> {
             lastUpdate = Instant.now();
 
-            BossTimerData data = BossTimerApi.getBossTimerData();
+            BossTimerData data = new BossTimerApi().getTimerData();
             if (data != null) {
                 INSTANCE.set(data); // atomic write
             }

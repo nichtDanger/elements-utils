@@ -1,11 +1,10 @@
 package dev.eposs.elementsutils.feature.excaliburtimer;
 
-import dev.eposs.elementsutils.api.excaliburtimer.ExcaliburTimerApi;
+import dev.eposs.elementsutils.api.timer.ExcaliburTimerApi;
 
 import java.time.Duration;
 import java.time.Instant;
 import java.time.ZonedDateTime;
-import java.util.TimeZone;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicReference;
@@ -46,7 +45,7 @@ public class ExcaliburTimerData {
 
 		Thread.ofVirtual().name("Excalibur Timer Data Update Thread").start(() -> {
 			lastUpdate = Instant.now();
-			ExcaliburTimerData data = ExcaliburTimerApi.getExcaliburTimerData();
+			ExcaliburTimerData data = new ExcaliburTimerApi().getTimerData();
 			if (data != null) {
 				INSTANCE.set(data);
 			}
