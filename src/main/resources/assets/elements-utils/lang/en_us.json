@@ -26,6 +26,10 @@
 
   "text.autoconfig.elements-utils.option.showBaseDisplay": "Show Player Base Borders",
 
+  "text.autoconfig.elements-utils.option.chatEnhancements": "Chat Enhancements",
+  "text.autoconfig.elements-utils.option.chatEnhancements.showLuckyDropSummary": "Show Lucky Drop Summary",
+  "text.autoconfig.elements-utils.option.chatEnhancements.luckyDropSummaryMinutes": "Lucky Drop Summary Minutes",
+
   "text.autoconfig.elements-utils.option.playerEnhancements": "Player Enhancements",
   "text.autoconfig.elements-utils.option.playerEnhancements.hideOwnArmor": "Hide Own Armor",
   "text.autoconfig.elements-utils.option.playerEnhancements.hideHelmet": "Hide Helmet",
@@ -49,6 +53,8 @@
   "text.autoconfig.elements-utils.option.elementsXPConfig": "Elements XP Options",
   "text.autoconfig.elements-utils.option.elementsXPConfig.enabled": "Format Numbers of Elements XP's",
   "text.autoconfig.elements-utils.option.elementsXPConfig.showXpPerSecond": "Show XP/s",
+  "text.autoconfig.elements-utils.option.elementsXPConfig.maxAgeSeconds": "XP/s Max Data Age (Seconds)",
+  "text.autoconfig.elements-utils.option.elementsXPConfig.resetTimeoutSeconds": "XP/s Data Reset Timeout (Seconds)",
   "text.autoconfig.elements-utils.option.elementsXPConfig.xpPerSecondColor": "XP/s Color",
   "text.autoconfig.elements-utils.option.elementsXPConfig.hideMaxPetXP": "Hide Max Pet XP",
   "text.autoconfig.elements-utils.option.elementsXPConfig.overlayMessageColor": "Overlay Message Color",

@@ -4,6 +4,7 @@
   "compatibilityLevel": "JAVA_21",
   "client": [
     "ArmorFeatureRendererMixin",
+    "ChatHudMixin",
     "ExampleClientMixin",
     "InGameHudAccessor",
     "InGameHudMixin",

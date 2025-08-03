@@ -95,6 +95,14 @@ public class ModConfig implements ConfigData {
     }
 
     @ConfigEntry.Gui.CollapsibleObject
+    public ChatEnhancementsConfig chatEnhancements = new ChatEnhancementsConfig();
+
+    public static class ChatEnhancementsConfig {
+        public boolean showLuckyDropSummary = false;
+        public int luckyDropSummaryMinutes = 60;
+    }
+
+    @ConfigEntry.Gui.CollapsibleObject
     public PlayerEnhancementsConfig playerEnhancements = new PlayerEnhancementsConfig();
 
     public static class PlayerEnhancementsConfig {
@@ -119,6 +127,8 @@ public class ModConfig implements ConfigData {
         public boolean enabled = true;
         public boolean showXpPerSecond = false;
         public KnownColor xpPerSecondColor = KnownColor.GRAY;
+        public int maxAgeSeconds = 20;
+        public int resetTimeoutSeconds = 5;
         public KnownColor overlayMessageColor = KnownColor.DARK_AQUA;
         public boolean hideMaxPetXP = false;
         public int overlayMessageYOffset = 0;
