@@ -40,6 +40,8 @@ _Elements 3 - 1.21.4_
   - Option to hide the max pet
   - Option to show a XP/s indicator with customizable Calculation
   - Option to make a Y-Axis offset for the XP display
+- Overlay Settings
+  - Option for Override the AFK-Title Stay Time - INFINITY or Seconds 
 - Excalibur Time Display
   - Show the time until the next Excalibur is available
   - Show the next Player who can pull Excalibur
