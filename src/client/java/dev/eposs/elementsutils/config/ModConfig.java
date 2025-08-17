@@ -87,6 +87,8 @@ public class ModConfig implements ConfigData {
         public boolean show = true;
 
         public Position position = Position.RIGHT;
+
+		public int xOffset = 0;
         public enum Position {
             LEFT,
             RIGHT,

@@ -40,6 +40,7 @@
   "text.autoconfig.elements-utils.option.potionDisplay": "Heil/Mana-Tränke Display",
   "text.autoconfig.elements-utils.option.potionDisplay.show": "Tränke anzeigen",
   "text.autoconfig.elements-utils.option.potionDisplay.position": "Display Position",
+  "text.autoconfig.elements-utils.option.potionDisplay.xOffset": "X-Position Offset",
 
   "text.autoconfig.elements-utils.option.xpMeterConfig": "XP-Meter Config (Basalt)",
   "text.autoconfig.elements-utils.option.xpMeterConfig.measuringXpTarget": "XP-Messung Ziel (XP)",

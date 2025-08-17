@@ -28,6 +28,7 @@ import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 
 import java.util.List;
+import java.util.Map;
 
 public class PetDisplay {
     private static ItemStack pet = ItemStack.EMPTY;
@@ -124,60 +125,82 @@ public class PetDisplay {
         context.drawText(client.textRenderer, levelText, position.x() + 32, position.y() + 6 + 8 + 4, Colors.WHITE, false); // y: marginTop + textHeight + gap
     }
 
-    private static void renderCircle(@NotNull DrawContext context, @NotNull Position centerPosition) {
-        int segments = 64;
-        float innerRadius = 10;
-        float outerRadius = 12;
-        float centerX = centerPosition.x();
-        float centerY = centerPosition.y();
+	private static void renderCircle(@NotNull DrawContext context, @NotNull Position centerPosition) {
+		int segments = 64;
+		float innerRadius = 10;
+		float outerRadius = 12;
+		float centerX = centerPosition.x();
+		float centerY = centerPosition.y();
 
-        Matrix4f transformationMatrix = context.getMatrices().peek().getPositionMatrix();
-        Tessellator tessellator = Tessellator.getInstance();
+		float progress = getLevelProgress();
 
-        BufferBuilder buffer = tessellator.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
-        for (int i = 0; i < segments; i++) {
-            // Start at the top
-            float angle = (float) (Math.PI * (2.0F * i / segments + 1.5F));
-            float angleNext = (float) (Math.PI * (2.0F * (i + 1) / segments + 1.5F));
+		Matrix4f transformationMatrix = context.getMatrices().peek().getPositionMatrix();
+		Tessellator tessellator = Tessellator.getInstance();
 
-            float outerX1 = centerX + MathHelper.cos(angle) * outerRadius;
-            float outerY1 = centerY + MathHelper.sin(angle) * outerRadius;
+		BufferBuilder buffer = tessellator.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
+		for (int i = 0; i < segments; i++) {
+			float angle = (float) (Math.PI * (2.0F * i / segments + 1.5F));
+			float angleNext = (float) (Math.PI * (2.0F * (i + 1) / segments + 1.5F));
 
-            float outerX2 = centerX + MathHelper.cos(angleNext) * outerRadius;
-            float outerY2 = centerY + MathHelper.sin(angleNext) * outerRadius;
+			float outerX1 = centerX + MathHelper.cos(angle) * outerRadius;
+			float outerY1 = centerY + MathHelper.sin(angle) * outerRadius;
+			float outerX2 = centerX + MathHelper.cos(angleNext) * outerRadius;
+			float outerY2 = centerY + MathHelper.sin(angleNext) * outerRadius;
+			float innerX1 = centerX + MathHelper.cos(angle) * innerRadius;
+			float innerY1 = centerY + MathHelper.sin(angle) * innerRadius;
+			float innerX2 = centerX + MathHelper.cos(angleNext) * innerRadius;
+			float innerY2 = centerY + MathHelper.sin(angleNext) * innerRadius;
 
-            float innerX1 = centerX + MathHelper.cos(angle) * innerRadius;
-            float innerY1 = centerY + MathHelper.sin(angle) * innerRadius;
+			int color = Colors.GREEN;
+			if ((float) i / segments > progress) color = Colors.LIGHT_GRAY;
 
-            float innerX2 = centerX + MathHelper.cos(angleNext) * innerRadius;
-            float innerY2 = centerY + MathHelper.sin(angleNext) * innerRadius;
+			buffer.vertex(transformationMatrix, innerX1, innerY1, 0).color(color);
+			buffer.vertex(transformationMatrix, innerX2, innerY2, 0).color(color);
+			buffer.vertex(transformationMatrix, outerX2, outerY2, 0).color(color);
+			buffer.vertex(transformationMatrix, outerX1, outerY1, 0).color(color);
+		}
+		RenderSystem.setShader(ShaderProgramKeys.POSITION_COLOR);
+		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+		BufferRenderer.drawWithGlobalProgram(buffer.end());
+	}
 
-            int color = Colors.GREEN;
-            if (nextLvlXP > 0 && (float) i / segments > (float) currentXP / nextLvlXP) color = Colors.LIGHT_GRAY;
+	private static final Map<Integer, Integer> LEVEL_START_XP = Map.of(
+			1, 0,
+			2, 5000,
+			3, 20000,
+			4, 50000,
+			5, 100000,
+			6, 200000,
+			7, 350000,
+			8, 550000,
+			9, 750000,
+			10, 1000000
+	);
 
-            buffer.vertex(transformationMatrix, innerX1, innerY1, 0).color(color);
-            buffer.vertex(transformationMatrix, innerX2, innerY2, 0).color(color);
-            buffer.vertex(transformationMatrix, outerX2, outerY2, 0).color(color);
-            buffer.vertex(transformationMatrix, outerX1, outerY1, 0).color(color);
-        }
-        RenderSystem.setShader(ShaderProgramKeys.POSITION_COLOR);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        BufferRenderer.drawWithGlobalProgram(buffer.end());
-    }
+	private static int getLevelStartXP(int level) {
+		return LEVEL_START_XP.getOrDefault(level, 0);
+	}
 
-    private static int getPetLevel() {
-        if (nextLvlXP == 5000) return 1;
-        if (nextLvlXP == 20000) return 2;
-        if (nextLvlXP == 50000) return 3;
-        if (nextLvlXP == 100000) return 4;
-        if (nextLvlXP == 200000) return 5;
-        if (nextLvlXP == 350000) return 6;
-        if (nextLvlXP == 550000) return 7;
-        if (nextLvlXP == 750000) return 8;
-        if (nextLvlXP == 1000000) return 9;
-        if (nextLvlXP == -1) return 10;
-        return 0;
-    }
+	private static int getPetLevel() {
+		int level = 1;
+		for (int i = 1; i <= 10; i++) {
+			if (currentXP >= getLevelStartXP(i)) {
+				level = i;
+			} else {
+				break;
+			}
+		}
+		if (nextLvlXP == -1) return 10;
+		return level;
+	}
+
+	private static float getLevelProgress() {
+		int level = getPetLevel();
+		int startXP = getLevelStartXP(level);
+		int maxXP = Math.max(1, nextLvlXP - startXP);
+		int progressXP = Math.max(0, currentXP - startXP);
+		return (float) progressXP / maxXP;
+	}
 
     public static void savePet() {
         ElementsUtils.LOGGER.info("Saving Pet Data...");
