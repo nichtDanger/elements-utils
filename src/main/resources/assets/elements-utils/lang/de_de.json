@@ -56,8 +56,13 @@
   "text.autoconfig.elements-utils.option.elementsXPConfig.showXpPerSecond": "XP/s anzeigen",
   "text.autoconfig.elements-utils.option.elementsXPConfig.maxAgeSeconds": "XP/s Max Daten Alter (Sekunden)",
   "text.autoconfig.elements-utils.option.elementsXPConfig.resetTimeoutSeconds": "XP/s Daten Reset Timeout (Sekunden)",
+  "text.autoconfig.elements-utils.option.elementsXPConfig.showLevelCounter": "Level Counter anzeigen (ohne Hochrechnung)",
+  "text.autoconfig.elements-utils.option.elementsXPConfig.excludeLuckyDropsFromLevelCounter": "Lucky Drops vom Counter ausschließen",
+  "text.autoconfig.elements-utils.option.elementsXPConfig.levelCounterMinutes": "Level Counter Minuten",
+  "text.autoconfig.elements-utils.option.elementsXPConfig.hideBaseMessage": "\"Base ✔\" Nachricht ausblenden",
   "text.autoconfig.elements-utils.option.elementsXPConfig.xpPerSecondColor": "XP/s Farbe",
   "text.autoconfig.elements-utils.option.elementsXPConfig.hideMaxPetXP": "Max Pet-XP ausblenden",
+  "text.autoconfig.elements-utils.option.elementsXPConfig.hideLevelForecast": "Level Hochrechnung (Spark's Funktion) ausblenden",
   "text.autoconfig.elements-utils.option.elementsXPConfig.overlayMessageColor": "Farbe der Overlay-Nachricht",
   "text.autoconfig.elements-utils.option.elementsXPConfig.overlayMessageYOffset": "Overlay Nachricht Y-Offset",
 
@@ -71,6 +76,7 @@
   "text.autoconfig.elements-utils.option.devUtils.enable": "Enabled",
 
   "category.elements-utils.keys": "Elements Utils",
+  "key.elements-utils.configScreen": "Config Screen öffnen",
   "key.elements-utils.baseDisplayToggle": "Spieler Base Grenzen umschalten",
   "key.elements-utils.bossTimerToggle": "Dungeon Boss Todeszeiten umschalten",
   "key.elements-utils.excaliburTimeToggle": "Excalibur Zeit Anzeige umschalten",

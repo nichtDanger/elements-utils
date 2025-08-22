@@ -56,8 +56,13 @@
   "text.autoconfig.elements-utils.option.elementsXPConfig.showXpPerSecond": "Show XP/s",
   "text.autoconfig.elements-utils.option.elementsXPConfig.maxAgeSeconds": "XP/s Max Data Age (Seconds)",
   "text.autoconfig.elements-utils.option.elementsXPConfig.resetTimeoutSeconds": "XP/s Data Reset Timeout (Seconds)",
+  "text.autoconfig.elements-utils.option.elementsXPConfig.showLevelCounter": "Show Level Counter (Without Forecast)",
+  "text.autoconfig.elements-utils.option.elementsXPConfig.excludeLuckyDropsFromLevelCounter": "Exclude Lucky Drops from Level Counter",
+  "text.autoconfig.elements-utils.option.elementsXPConfig.levelCounterMinutes": "Level Counter Minutes",
+  "text.autoconfig.elements-utils.option.elementsXPConfig.hideBaseMessage": "Hide \"Base ✔\" Message",
   "text.autoconfig.elements-utils.option.elementsXPConfig.xpPerSecondColor": "XP/s Color",
   "text.autoconfig.elements-utils.option.elementsXPConfig.hideMaxPetXP": "Hide Max Pet XP",
+  "text.autoconfig.elements-utils.option.elementsXPConfig.hideLevelForecast": "Hide Level Forecast (Spark's Function)",
   "text.autoconfig.elements-utils.option.elementsXPConfig.overlayMessageColor": "Overlay Message Color",
   "text.autoconfig.elements-utils.option.elementsXPConfig.overlayMessageYOffset": "Overlay Message Y-Offset",
 
@@ -71,6 +76,7 @@
   "text.autoconfig.elements-utils.option.devUtils.enable": "Enabled",
 
   "category.elements-utils.keys": "Elements Utils",
+  "key.elements-utils.configScreen": "Open Config Screen",
   "key.elements-utils.baseDisplayToggle": "Toggle Base Borders",
   "key.elements-utils.bossTimerToggle": "Toggle Dungeon Boss Death Times",
   "key.elements-utils.excaliburTimeToggle": "Toggle Excalibur Time Display",

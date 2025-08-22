@@ -131,8 +131,13 @@ public class ModConfig implements ConfigData {
         public KnownColor xpPerSecondColor = KnownColor.GRAY;
         public int maxAgeSeconds = 20;
         public int resetTimeoutSeconds = 5;
+		public boolean showLevelCounter = false;
+		public boolean excludeLuckyDropsFromLevelCounter = false;
+		public int levelCounterMinutes = 60;
+		public boolean hideBaseMessage = false;
         public KnownColor overlayMessageColor = KnownColor.DARK_AQUA;
         public boolean hideMaxPetXP = false;
+		public boolean hideLevelForecast = false;
         public int overlayMessageYOffset = 0;
     }
 

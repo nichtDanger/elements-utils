@@ -17,7 +17,9 @@ import dev.eposs.elementsutils.util.DevUtil;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.Toml4jConfigSerializer;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientWorldEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
@@ -28,17 +30,21 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.network.ServerInfo;
 import net.minecraft.client.option.KeyBinding;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.text.Text;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.lwjgl.glfw.GLFW;
 
 public class ElementsUtilsClient implements ClientModInitializer {
-    private static KeyBinding baseDisplayToggle;
+	private static KeyBinding configScreenKey;
+	private static KeyBinding baseDisplayToggle;
     private static KeyBinding bossTimerToggle;
     private static KeyBinding excaliburTimeToggle;
     private static KeyBinding xpMeasureTrigger;
     private static KeyBinding timeMeasureTrigger;
     private static KeyBinding devUtils;
+
+	private boolean wasInWorld = false;
 
     @Override
     public void onInitializeClient() {
@@ -62,19 +68,24 @@ public class ElementsUtilsClient implements ClientModInitializer {
         WorldRenderEvents.LAST.register(BaseBorderDisplay::render);
 
         ClientPlayConnectionEvents.JOIN.register(this::onJoin);
-        ClientPlayConnectionEvents.DISCONNECT.register(this::onLeave);
 
         ClientTickEvents.END_CLIENT_TICK.register(this::clientTick);
 
         ClientReceiveMessageEvents.ALLOW_GAME.register(this::onGameMessage);
     }
 
-    private void clientTick(MinecraftClient client) {
-        onKeyEvent(client);
-        PetDisplay.updatePet(client);
-        PotionDisplay.updatePotions(client);
-        XpMeter.updateXpMeter(client);
-    }
+	private void clientTick(MinecraftClient client) {
+		onKeyEvent(client);
+		PetDisplay.updatePet(client);
+		PotionDisplay.updatePotions(client);
+		XpMeter.updateXpMeter(client);
+
+		boolean inWorld = client.world != null;
+		if (!inWorld && wasInWorld) {
+			PetDisplay.savePet();
+		}
+		wasInWorld = inWorld;
+	}
 
     private void onJoin(ClientPlayNetworkHandler handler, PacketSender sender, MinecraftClient client) {
         runServerCheck(client);
@@ -120,6 +131,11 @@ public class ElementsUtilsClient implements ClientModInitializer {
     private void registerKeyBinding() {
         String category = "category." + ElementsUtils.MOD_ID + ".keys";
 
+		configScreenKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+				getKeyBindingTranslation("configScreen"),
+				GLFW.GLFW_KEY_UNKNOWN,
+				category
+		));
         baseDisplayToggle = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 getKeyBindingTranslation("baseDisplayToggle"),
                 GLFW.GLFW_KEY_Z,
@@ -158,6 +174,9 @@ public class ElementsUtilsClient implements ClientModInitializer {
     }
 
     private void onKeyEvent(MinecraftClient client) {
+		while (configScreenKey.wasPressed()) {
+			client.setScreen(AutoConfig.getConfigScreen(ModConfig.class, client.currentScreen).get());
+		}
         while (baseDisplayToggle.wasPressed()) {
             BaseBorderDisplay.toggleDisplay(client);
         }

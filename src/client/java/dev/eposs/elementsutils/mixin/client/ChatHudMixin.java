@@ -1,7 +1,8 @@
 package dev.eposs.elementsutils.mixin.client;
 
-import dev.eposs.elementsutils.ElementsUtils;
 import dev.eposs.elementsutils.config.ModConfig;
+import dev.eposs.elementsutils.feature.leveltracker.LevelState;
+import dev.eposs.elementsutils.feature.leveltracker.PlayerLevelTracker;
 import net.minecraft.client.gui.hud.ChatHud;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
@@ -113,10 +114,14 @@ public abstract class ChatHudMixin {
 			return;
 		}
 
-		if (ModConfig.getConfig().chatEnhancements.showLuckyDropSummary) {
-			Matcher matcher = LUCKY_DROP_PATTERN.matcher(msg);
-			if (matcher.find()) {
-				int level = Integer.parseInt(matcher.group(1));
+		Matcher matcher = LUCKY_DROP_PATTERN.matcher(msg);
+		if (matcher.find()) {
+			int level = Integer.parseInt(matcher.group(1));
+			PlayerLevelTracker.onLuckyDrop(LevelState.lastKnownLevel, LevelState.lastKnownLevel + level);
+			LevelState.lastKnownLevel += level;
+			PlayerLevelTracker.update(LevelState.lastKnownLevel);
+
+			if (ModConfig.getConfig().chatEnhancements.showLuckyDropSummary) {
 				long now = System.currentTimeMillis();
 				luckyDropHistory.add(new AbstractMap.SimpleEntry<>(now, level));
 				luckyDropHistory.removeIf(entry -> now - entry.getKey() > ModConfig.getConfig().chatEnhancements.luckyDropSummaryMinutes * MILLIS_PER_MINUTE);
